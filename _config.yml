@@ -5,7 +5,6 @@ description: >
   or interesting. Basically, something more permanent than a spiral notebook.
 baseurl: ""
 url: "https://remexre.xyz"
-twitter_username: remexre
 github_username:  remexre
 
 markdown: kramdown
