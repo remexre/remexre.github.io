@@ -1,4 +1,5 @@
 ---
+layout: rfc
 title: "Monto Version 3 Specification, Draft 1"
 ---
 

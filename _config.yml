@@ -8,7 +8,6 @@ url: "https://remexre.xyz"
 github_username:  remexre
 
 markdown: kramdown
-theme: minima
 gems:
   - jekyll-feed
 exclude:

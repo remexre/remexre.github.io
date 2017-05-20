@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	{% include head.html %}
+	<body>
+		<header>
+			<h1>{{ page.title | escape }}</h1>
+		</header>
+		<main>
+			{{ content }}
+		</main>
+	</body>
+</html>
