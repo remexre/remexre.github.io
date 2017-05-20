@@ -77,11 +77,24 @@ Client Protocol version 3.0.0 and Service Protocol version 3.0.0.
 
 ### 3.1. The Client Protocol
 
-Upon initiating a connection to a Broker, a Client MUST attempt to use
-an HTTP/2 connection if the Client supports HTTP/2. If the Client does
-not, it SHALL use the same protocol, but over HTTP/1.1 instead. If
-a Client is using HTTP/1.1, it MAY open multiple connections to the server
-in order to have multiple requests "in flight" at the same time.
+The Client Protocol dictates communication between Clients and Brokers.
+
+#### 3.1.1. Connection Initiation
+
+A Client SHALL initiate a connection to a Broker either when it starts, or
+when Monto capabilities are requested. Although Monto can occur over any
+port, Clients SHOULD default to connected to port 28888 on the current
+machine, and Brokers SHOULD default to serving on that port. Clients and
+Brokers SHOULD be able to connect to and serve on other ports, if
+configured to do so.
+
+Upon initiating a connection to a Broker, a Client MUST attempt to use an
+HTTP/2 connection if the Client supports HTTP/2. If the Client does not,
+it SHALL use the same protocol, but over HTTP/1.1 instead. If a Client is
+using HTTP/1.1, it MAY open multiple connections to the server in order
+to have multiple requests "in flight" at the same time.
+
+#### 3.1.2. Version Negotiation
 
 After the HTTP connection is established, the Client SHALL make a POST
 request to the `/monto/version` path, with
@@ -99,9 +112,23 @@ using the Semantic Versioning rules. Additionally, a Client MAY reject
 a Broker that is known to not follow this specification correctly, and
 vice versa.
 
+#### 3.1.3. Discovery
+
+TODO
+
+#### 3.1.4. Requesting Products
+
 TODO
 
 ### 3.2. The Service Protocol
+
+The Service Protocol dictates communication between Brokers and Services.
+
+#### 3.2.1. Connection Initiation
+
+TODO
+
+#### 3.2.2. Version Negotiation
 
 TODO
 
@@ -167,6 +194,16 @@ Messages are documented with [JSON Schema](http://json-schema.org/).
 	}
 }
 ```
+
+#### 4.1.2. `ClientRequest`
+
+##### 4.1.2.1. Schema
+
+TODO
+
+##### 4.1.2.2. Example
+
+TODO
 
 ### 4.2. Broker Messages
 
@@ -241,7 +278,12 @@ TODO
 
 The Broker sends arbitrary files to Services, which may be running on
 a different machine. A malicious service could therefore request
-a sensitive file (for example, `~/.ssh/id_rsa`) 
+a sensitive file (for example, `~/.ssh/id_rsa`). As a result, a Broker MAY
+claim such a file does not exist.
+
+Furthermore, a security-concious user MAY run the Broker in a virtual
+machine or container, only giving access to user files in specific
+directories.
 
 ### 6.2. Encrypted Transport
 
