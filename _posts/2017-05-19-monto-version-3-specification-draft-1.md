@@ -1,13 +1,15 @@
-# Monto Version 3 Specification Draft
+---
+title: "Monto Version 3 Specification, Draft 1"
+---
 
-## Abstract
+# Abstract
 
 This specification describes an improved iteration of the Monto protocol
 for Disintegrated Development Environments ([\[MONTO\]](#monto)). These
 improvements allow for simpler implementations for Clients. They also make
 it feasible to have multiple Clients sharing a single Service.
 
-## 1. Conventions and Terminology
+# 1. Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
 "SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
@@ -42,7 +44,7 @@ Service Protocol
 Monto Protocols
 : The Client Protocol and Service Protocol.
 
-## 2. Introduction
+# 2. Introduction
 
 Monto makes it easy to interface the information provided by a language's
 compiler with various editors, without the compiler developer needing to
@@ -58,7 +60,7 @@ asynchronous processing of events. As these changes are not backwards
 compatible with existing Clients and Services, these changes are
 collectively known as Monto Version 3.
 
-## 3. Protocol Overview
+# 3. Protocol Overview
 
 The Monto Protocols are built on top of HTTP/2 ([\[RFC7540\]](#rfc7540)),
 with each request being a POST request to a special Monto endpoint. Both
@@ -75,11 +77,11 @@ Both the Client Protocol and Service Protocol are versioned according to
 Semantic Versioning ([\[SEMVER\]](#semver)). This document describes
 Client Protocol version 3.0.0 and Service Protocol version 3.0.0.
 
-### 3.1. The Client Protocol
+## 3.1. The Client Protocol
 
 The Client Protocol dictates communication between Clients and Brokers.
 
-#### 3.1.1. Connection Initiation
+### 3.1.1. Connection Initiation
 
 A Client SHALL initiate a connection to a Broker either when it starts, or
 when Monto capabilities are requested. Although Monto can occur over any
@@ -94,7 +96,7 @@ it SHALL use the same protocol, but over HTTP/1.1 instead. If a Client is
 using HTTP/1.1, it MAY open multiple connections to the server in order
 to have multiple requests "in flight" at the same time.
 
-#### 3.1.2. Version Negotiation
+### 3.1.2. Version Negotiation
 
 After the HTTP connection is established, the Client SHALL make a POST
 request to the `/monto/version` path, with
@@ -112,35 +114,35 @@ using the Semantic Versioning rules. Additionally, a Client MAY reject
 a Broker that is known to not follow this specification correctly, and
 vice versa.
 
-#### 3.1.3. Discovery
+### 3.1.3. Discovery
 
 TODO
 
-#### 3.1.4. Requesting Products
+### 3.1.4. Requesting Products
 
 TODO
 
-### 3.2. The Service Protocol
+## 3.2. The Service Protocol
 
 The Service Protocol dictates communication between Brokers and Services.
 
-#### 3.2.1. Connection Initiation
+### 3.2.1. Connection Initiation
 
 TODO
 
-#### 3.2.2. Version Negotiation
+### 3.2.2. Version Negotiation
 
 TODO
 
-## 4. Messages
+# 4. Messages
 
 Messages are documented with [JSON Schema](http://json-schema.org/).
 
-### 4.1. Client Messages
+## 4.1. Client Messages
 
-#### 4.1.1. `ClientVersion`
+### 4.1.1. `ClientVersion`
 
-##### 4.1.1.1. Schema
+#### 4.1.1.1. Schema
 
 ```json
 {
@@ -176,7 +178,7 @@ Messages are documented with [JSON Schema](http://json-schema.org/).
 }
 ```
 
-##### 4.1.1.2. Example
+#### 4.1.1.2. Example
 
 ```json
 {
@@ -195,21 +197,21 @@ Messages are documented with [JSON Schema](http://json-schema.org/).
 }
 ```
 
-#### 4.1.2. `ClientRequest`
+### 4.1.2. `ClientRequest`
 
-##### 4.1.2.1. Schema
-
-TODO
-
-##### 4.1.2.2. Example
+#### 4.1.2.1. Schema
 
 TODO
 
-### 4.2. Broker Messages
+#### 4.1.2.2. Example
 
-#### 4.2.1. `BrokerVersion`
+TODO
 
-##### 4.2.1.1. Schema
+## 4.2. Broker Messages
+
+### 4.2.1. `BrokerVersion`
+
+#### 4.2.1.1. Schema
 
 ```json
 {
@@ -245,7 +247,7 @@ TODO
 }
 ```
 
-##### 4.2.1.2. Example
+#### 4.2.1.2. Example
 
 ```json
 {
@@ -264,17 +266,17 @@ TODO
 }
 ```
 
-# 4.3. Service Messages
+ 4.3. Service Messages
 
 TODO
 
-## 5. Products
+# 5. Products
 
 TODO
 
-## 6. Security Considerations
+# 6. Security Considerations
 
-### 6.1. Remote Access To Local Files
+## 6.1. Remote Access To Local Files
 
 The Broker sends arbitrary files to Services, which may be running on
 a different machine. A malicious service could therefore request
@@ -285,7 +287,7 @@ Furthermore, a security-concious user MAY run the Broker in a virtual
 machine or container, only giving access to user files in specific
 directories.
 
-### 6.2. Encrypted Transport
+## 6.2. Encrypted Transport
 
 HTTP/2 optionally supports TLS encryption. Most HTTP/2 implementations
 require encryption, so Clients, Brokers, and Services MAY support TLS
@@ -293,25 +295,25 @@ encryption. Due to the relative difficulty of obtaining a TLS certificate
 for a local service, Clients MUST support connecting to a Broker that does
 not support TLS.
 
-## 7. Further Work
+# 7. Further Work
 
-### 7.1. MessagePack
+## 7.1. MessagePack
 
 A speed boost could potentially be gained by moving to
 [MessagePack](http://msgpack.org/) or a similar format. This could be
 added in a backwards-compatible way by using the existing Content-Type
 negotiation mechanisms in HTTP.
 
-### 7.2. Asynchronous Communication
+## 7.2. Asynchronous Communication
 
 Re-adding support for asynchronous communication between Clients and
 Brokers on an opt-in basis would be a desirable goal. This could be
 implemented either by polling, which is relatively efficient in HTTP/2, or
 with a chunked response in HTTP/1.1.
 
-## 8. References
+# 8. References
 
-### 8.1. Normative References
+## 8.1. Normative References
 
 [](){:name="monto"}
 [MONTO]: Keidel, S., Pfeiffer, W., and S. Erdweg., "The IDE Portability
