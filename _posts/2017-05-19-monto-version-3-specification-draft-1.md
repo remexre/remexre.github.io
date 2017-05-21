@@ -51,8 +51,8 @@ Monto makes it easy to interface the information provided by a language's
 compiler with various editors, without the compiler developer needing to
 implement language support for each editor. Unfortunately, the native APIs
 of various popular editors vary widely with respect to how well they
-support the features required by Monto, namely the ability to bind to
-[ZeroMQ](http://zeromq.org/) and the ability to perform actions with an
+support the features required by Monto, namely the ability to bind to ØMQ
+([\[ZEROMQ\]](#zeromq)) and the ability to perform actions with an
 extremely high degree of asynchronicity.
 
 This document suggests changes to the Monto Protocols which are focused on
@@ -67,16 +67,19 @@ The Monto Protocols are built on top of HTTP/2 ([\[RFC7540\]](#rfc7540)),
 with each request being a POST request to a special Monto endpoint. Both
 request and response bodies are JSON ([\[RFC7159\]](#rfc7159)). This
 allows for the reuse of the many technologies that are capable of
-debugging this relatively common protocol combination, such as
-[mitmproxy](https://mitmproxy.org/),
-[Postman](https://www.getpostman.com/), and others. Furthermore, almost
-every mainstream programming language supports HTTP and JSON, meaning the
-wide variety of client programming languages (e.g. CoffeeScript, Emacs
-Lisp, Java, Python, etc.) can all interoperate with it.
+debugging this relatively common protocol combination, such as mitmproxy
+([\[MITMPROXY\]](#mitmproxy)), Postman ([\[POSTMAN\]](#postman)), and
+others. Furthermore, almost every mainstream programming language supports
+HTTP and JSON, meaning the wide variety of client programming languages
+(e.g. CoffeeScript, Emacs Lisp, Java, Python, etc.) can all interoperate
+with it.
 
 Both the Client Protocol and Service Protocol are versioned according to
 Semantic Versioning ([\[SEMVER\]](#semver)). This document describes
 Client Protocol version 3.0.0 and Service Protocol version 3.0.0.
+
+Unless specified otherwise, a Message is serialized as JSON and sent with
+a Content-Type of `application/json`.
 
 ## 3.1. The Client Protocol
 
@@ -85,11 +88,11 @@ The Client Protocol dictates communication between Clients and Brokers.
 ### 3.1.1. Connection Initiation
 
 A Client SHALL initiate a connection to a Broker either when it starts, or
-when Monto capabilities are requested. Although Monto can occur over any
-port, Clients SHOULD default to connected to port 28888 on the current
-machine, and Brokers SHOULD default to serving on that port. Clients and
-Brokers SHOULD be able to connect to and serve on other ports, if
-configured to do so.
+when Monto capabilities are requested. Although Monto can operate over
+connections on any port, Clients SHOULD default to connecting to port
+28888 on the current machine, and Brokers SHOULD default to serving on
+that port. Clients and Brokers SHOULD be able to connect to and serve on
+other ports, if configured to do so.
 
 Upon initiating a connection to a Broker, a Client MUST attempt to use an
 HTTP/2 connection if the Client supports HTTP/2. If the Client does not,
@@ -101,27 +104,39 @@ to have multiple requests "in flight" at the same time.
 
 After the HTTP connection is established, the Client SHALL make a POST
 request to the `/monto/version` path, with
-a [`ClientVersion`](#411-clientversion) message as the body. The Broker
+a [`ClientVersion`](#411-clientversion) Message as the body. The Broker
 SHALL check that it is compatible with the client. The Broker SHALL
-respond with a [`BrokerVersion`](#421-brokerversion) message. If the
+respond with a [`BrokerVersion`](#421-brokerversion) Message. If the
 Broker is compatible with the client, this response SHALL have an HTTP
 Status of 200. If the Broker and Client are not compatible, the response
-SHALL instead have an HTTP status of 409. The Client SHALL check that it
-is compatible with the Broker. If the Client and Broker are not
-compatible, the Client SHOULD inform the user.
+SHALL instead have an HTTP Status of 409.
 
-Compatibility between versions of the Client Protocol SHALL BE determined
+If the HTTP Status is 200, the Client SHALL check that it is compatible
+with the Broker. If the HTTP Status is not 200 or the Client and Broker
+are not compatible as determined by the Client, the Client SHOULD inform
+the user and MUST close the connection.
+
+Compatibility between versions of the Client Protocol SHALL be determined
 using the Semantic Versioning rules. Additionally, a Client MAY reject
 a Broker that is known to not follow this specification correctly, and
 vice versa.
 
-### 3.1.3. Discovery
+### 3.1.3. Service Discovery
 
-TODO
+To perform service discovery, the Client SHALL make a GET request to the
+`/monto/services` path. The Broker SHALL respond with an HTTP Status of
+200 and a [`BrokerServiceList`](#422-brokerservicelist) Message,
+cooresponding to the services connected to the Broker.
 
 ### 3.1.4. Requesting Products
 
-TODO
+A Client SHALL request Products by making a POST request to the
+`/monto/products` path, with a [`ClientRequest`](#412-clientrequest)
+Message as the body.
+
+The Broker SHALL then acquire the appropriate Products, and respond with
+an HTTP Status of 200 and a [`BrokerResponse`](#423-brokerresponse)
+Message as the body.
 
 ## 3.2. The Service Protocol
 
@@ -137,7 +152,7 @@ TODO
 
 # 4. Messages
 
-Messages are documented with [JSON Schema](http://json-schema.org/).
+Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 
 ## 4.1. Client Messages
 
@@ -202,11 +217,83 @@ Messages are documented with [JSON Schema](http://json-schema.org/).
 
 #### 4.1.2.1. Schema
 
-TODO
+```json
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "ClientRequest",
+	"type": "object",
+	"properties": {
+		"path": { "type": "string" },
+		"request": {
+			"type": "array",
+			"minItems": 1,
+			"items": { "$ref": "#/definitions/productRequest" },
+			"uniqueItems": true
+		}
+	},
+	"additionalProperties": false,
+	"required": ["path", "request"],
+	"definitions": {
+		"productName": {
+			"type": "string",
+			"anyOf": [
+				{
+					"type": "string",
+					"enum": [
+						"errors",
+						"highlighting",
+						"outline"
+						// TODO
+					]
+				},
+				{
+					"type": "string",
+					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\._-]+$"
+				}
+			]
+		},
+		"productRequest": {
+			"type": "object",
+			"properties": {
+				"product": { "$ref": "#/definitions/productName" },
+				"service": { "$ref": "#/definitions/serviceName" }
+			},
+			"additionalProperties": false,
+			"required": ["product", "service"]
+		},
+		"serviceName": {
+			"type": "string",
+			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+		}
+	}
+}
+```
 
 #### 4.1.2.2. Example
 
-TODO
+```json
+{
+	"path": "/home/example/foo/bar.c",
+	"request": [
+		{
+			"service": "com.example.quux",
+			"product": "highlighting"
+		},
+		{
+			"service": "com.example.quux",
+			"product": "outline"
+		},
+		{
+			"service": "com.example.xyzzy",
+			"product": "errors"
+		},
+		{
+			"service": "com.example.spam",
+			"product": "com.example.spam/eggs"
+		}
+	]
+}
+```
 
 ## 4.2. Broker Messages
 
@@ -267,6 +354,30 @@ TODO
 }
 ```
 
+### 4.2.2. `BrokerServiceList`
+
+#### 4.2.2.1. Schema
+
+```json
+```
+
+#### 4.2.2.2. Example
+
+```json
+```
+
+### 4.2.3. `BrokerResponse`
+
+#### 4.2.3.1. Schema
+
+```json
+```
+
+#### 4.2.3.2. Example
+
+```json
+```
+
 ## 4.3. Service Messages
 
 TODO
@@ -298,12 +409,13 @@ not support TLS.
 
 # 7. Further Work
 
-## 7.1. MessagePack
+## 7.1. Binary Encoding instead of JSON
 
-A speed boost could potentially be gained by moving to
-[MessagePack](http://msgpack.org/) or a similar format. This could be
-added in a backwards-compatible way by using the existing Content-Type
-negotiation mechanisms in HTTP.
+A speed boost could potentially be gained by using CBOR
+([\[RFC7049\]](#rfc7049)), MessagePack
+([\[MSGPACK\]](http://msgpack.org/)) or a similar format instead of JSON.
+This could be added in a backwards-compatible way by using the existing
+Content-Type negotiation mechanisms in HTTP if desired.
 
 ## 7.2. Asynchronous Communication
 
@@ -316,16 +428,39 @@ with a chunked response in HTTP/1.1.
 
 ## 8.1. Normative References
 
+[](){:name="json-schema"}
+[JSONSCHEMA]: Wright, A., Ed., and H. Andrews, Ed., "JSON Schema: A Media
+Type for Describing JSON Documents",
+[draft-wright-json-schema-01](https://tools.ietf.org/html/draft-wright-json-schema-01),
+April 2017.
+
+[](){:name="mitmproxy"}
+[MITMPROXY]: "mitmproxy - home",
+[https://mitmproxy.org/](https://mitmproxy.org/).
+
 [](){:name="monto"}
 [MONTO]: Keidel, S., Pfeiffer, W., and S. Erdweg., "The IDE Portability
 Problem and Its Solution in Monto",
 [doi:10.1145/2997364.2997368](http://dx.doi.org/10.1145/2997364.2997368),
 November 2016.
 
+[](){:name="msgpack"}
+[MSGPACK]: Furuhashi, S., "MessagePack: It's like JSON, but fast and
+small.", [https://msgpack.org/](https://msgpack.org/).
+
+[](){:name="postman"}
+[POSTMAN]: "Postman | Supercharge your API workflow",
+[https://www.getpostman.com/](https://www.getpostman.com/).
+
 [](){:name="rfc2119"}
 [RFC2119]: Bradner, S., "Key words for use in RFCs to Indicate Requirement
 Levels", [BCP 14](https://tools.ietf.org/html/bcp14), [RFC
 2119](https://tools.ietf.org/html/rfc2119), March 1997.
+
+[](){:name="rfc7049"}
+[RFC7049]: Bormann, C., and P. Hoffman, "Concise Binary Object
+Representation (CBOR)", [RFC 7049](https://tools.ietf.org/html/rfc7049),
+October 2013.
 
 [](){:name="rfc7159"}
 [RFC7159]: Bray, T., "The JavaScript Object Notation (JSON) Data
@@ -339,4 +474,8 @@ Protocol Version 2 (HTTP/2)", [RFC
 
 [](){:name="semver"}
 [SEMVER]: "Semantic Versioning 2.0.0",
-[http://semver.org/spec/v2.0.0.html]().
+[http://semver.org/spec/v2.0.0.html](http://semver.org/spec/v2.0.0.html).
+
+[](){:name="zeromq"}
+[ZEROMQ]: "Distributed Messaging - zeromq",
+[http://zeromq.org/](http://zeromq.org/).
