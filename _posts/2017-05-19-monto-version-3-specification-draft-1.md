@@ -256,12 +256,12 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 			"type": "object",
 			"properties": {
 				"product": { "$ref": "#/definitions/productName" },
-				"service": { "$ref": "#/definitions/serviceName" }
+				"service": { "$ref": "#/definitions/serviceId" }
 			},
 			"additionalProperties": false,
 			"required": ["product", "service"]
 		},
-		"serviceName": {
+		"serviceId": {
 			"type": "string",
 			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
 		}
@@ -359,11 +359,83 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.2.2.1. Schema
 
 ```json
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"title": "BrokerServiceList",
+	"type": "object",
+	"properties": {
+		"id": { "$ref": "#/definitions/serviceId" },
+		"name": { "type": "string" },
+		"vendor": { "type": "string" },
+		"products": {
+			"type": "array",
+			"items": { "$ref": "#/definitions/productName" }
+		},
+		"config": {
+			"type": "object",
+			"patternProperties": {
+				".+": { "$ref": "TODO" }
+			},
+			"additionalProperties": false
+		}
+	},
+	"additionalProperties": false,
+	"definitions": {
+		"productName": {
+			"type": "string",
+			"anyOf": [
+				{
+					"type": "string",
+					"enum": [
+						"errors",
+						"highlighting",
+						"outline"
+						// TODO
+					]
+				},
+				{
+					"type": "string",
+					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\._-]+$"
+				}
+			]
+		},
+		"serviceId": {
+			"type": "string",
+			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+		}
+	}
+}
 ```
 
 #### 4.2.2.2. Example
 
 ```json
+[
+	{
+		"id": "com.example.quux",
+		"name": "Quux as a Service",
+		"vendor": "Example Vendor",
+		"products": [
+			"highlighting",
+			"outline"
+		],
+		"config": {
+			"type": "object",
+			"properties": {
+				"PATH": {
+					"type": "array",
+					"items": { "type": "string" }
+				},
+				"debug": { "type": "boolean" },
+				"optimization": {
+					"type": "integer",
+					"minimum": 0,
+					"maximum": 3
+				}
+			}
+		}
+	}
+]
 ```
 
 ### 4.2.3. `BrokerResponse`
@@ -423,6 +495,15 @@ Re-adding support for asynchronous communication between Clients and
 Brokers on an opt-in basis would be a desirable goal. This could be
 implemented either by polling, which is relatively efficient in HTTP/2, or
 with a chunked response in HTTP/1.1.
+
+## 7.3. Commands
+
+Previous versions of Monto supported arbitrary commands being run by the
+service, for example, renaming a function everywhere it appears (in all
+files). This is difficult to do while allowing Services to be run on
+remote machines. It could be achieved by allowing Services to request file
+writes in addition to reads, but would probably require a large amount of
+overhead, and come with its own security risks.
 
 # 8. References
 
