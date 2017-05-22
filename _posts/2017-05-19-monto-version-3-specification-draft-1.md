@@ -382,7 +382,9 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 					},
 					"additionalProperties": false
 				}
-			}
+			},
+			"required": ["id", "name", "products", "config"],
+			"additionalProperties": false
 		},
 		"productName": {
 			"type": "string",
