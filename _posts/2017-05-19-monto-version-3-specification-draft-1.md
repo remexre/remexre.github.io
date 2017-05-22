@@ -378,7 +378,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 				"config": {
 					"type": "object",
 					"patternProperties": {
-						".+": { "$ref": "TODO Link to JSON Schema's schema" }
+						".+": { "$ref": "http://json-schema.org/draft-04/schema#" }
 					},
 					"additionalProperties": false
 				}
