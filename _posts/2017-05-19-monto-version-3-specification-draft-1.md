@@ -362,25 +362,28 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 {
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"title": "BrokerServiceList",
-	"type": "object",
-	"properties": {
-		"id": { "$ref": "#/definitions/serviceId" },
-		"name": { "type": "string" },
-		"vendor": { "type": "string" },
-		"products": {
-			"type": "array",
-			"items": { "$ref": "#/definitions/productName" }
-		},
-		"config": {
-			"type": "object",
-			"patternProperties": {
-				".+": { "$ref": "TODO" }
-			},
-			"additionalProperties": false
-		}
-	},
-	"additionalProperties": false,
+	"type": "array",
+	"items": { "$ref": "#/definitions/brokerService" },
 	"definitions": {
+		"brokerService": {
+			"type": "object",
+			"properties": {
+				"id": { "$ref": "#/definitions/serviceId" },
+				"name": { "type": "string" },
+				"vendor": { "type": "string" },
+				"products": {
+					"type": "array",
+					"items": { "$ref": "#/definitions/productName" }
+				},
+				"config": {
+					"type": "object",
+					"patternProperties": {
+						".+": { "$ref": "TODO" }
+					},
+					"additionalProperties": false
+				}
+			}
+		},
 		"productName": {
 			"type": "string",
 			"anyOf": [
@@ -395,13 +398,13 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 				},
 				{
 					"type": "string",
-					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\._-]+$"
+					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\\._-]+$"
 				}
 			]
 		},
 		"serviceId": {
 			"type": "string",
-			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
+			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
 		}
 	}
 }
