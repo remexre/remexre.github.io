@@ -243,7 +243,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 						"errors",
 						"highlighting",
 						"outline"
-						// TODO
+						// TODO What other built-in products should exist?
 					]
 				},
 				{
@@ -378,7 +378,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 				"config": {
 					"type": "object",
 					"patternProperties": {
-						".+": { "$ref": "TODO" }
+						".+": { "$ref": "TODO Link to JSON Schema's schema" }
 					},
 					"additionalProperties": false
 				}
@@ -393,7 +393,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 						"errors",
 						"highlighting",
 						"outline"
-						// TODO
+						// TODO What other built-in products should exist?
 					]
 				},
 				{
