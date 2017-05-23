@@ -38,6 +38,9 @@ a millisecond on any modern network. In exchange, it makes it feasible for
 multiple brokers to be connected to a single service, and for services to
 be much more easily written in purely functional languages.
 
+If overhead becomes a serious problem, compression could probably be used
+to minimize it.
+
 # Pull-based instead of push-based
 
 This makes predicting the responses the client will get much simpler, and
@@ -54,12 +57,16 @@ services are allowed to perform direct filesystem access or not. For many
 languages (including C), dynamic dependencies are insufficient to express
 the search model the language uses for dependency resolution.
 
+The service sending requests to the broker is done so that services can be
+run on a different machine. The caching mechanism should lower the
+overhead to a single roundtrip.
+
 # Commands not implemented
 
 I can't find a good way to reconcile "service might be on a different
 machine" and "commands can perform arbitrary tasks" without having the
-broker expose something quite like a filesystem to the service, which is
-hackish, inefficient, and insecure.
+broker expose something quite like a *writable* filesystem to the service,
+which feels hackish, inefficient, and insecure.
 
 # Broker connects to a service
 
