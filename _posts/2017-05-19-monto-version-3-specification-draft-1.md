@@ -13,7 +13,7 @@ it feasible to have multiple Clients sharing a single Service.
 # 1. Conventions and Terminology
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-"SHOULD", "SHOULD NOT", "RECOMMENDED",  "MAY", and "OPTIONAL" in this
+"SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
 document are to be interpreted as described in RFC 2119.
 
 Other terms used in this specification are as follows.
@@ -105,9 +105,9 @@ to have multiple requests "in flight" at the same time.
 After the HTTP connection is established, the Client SHALL make a POST
 request to the `/monto/version` path, with
 a [`ClientVersion`](#411-clientversion) Message as the body. The Broker
-SHALL check that it is compatible with the client. The Broker SHALL
+SHALL check that it is compatible with the Client. The Broker SHALL
 respond with a [`BrokerVersion`](#421-brokerversion) Message. If the
-Broker is compatible with the client, this response SHALL have an HTTP
+Broker is compatible with the Client, this response SHALL have an HTTP
 Status of 200. If the Broker and Client are not compatible, the response
 SHALL instead have an HTTP Status of 409.
 
@@ -123,16 +123,19 @@ vice versa.
 
 ### 3.1.3. Service Discovery
 
-To perform service discovery, the Client SHALL make a GET request to the
+To perform Service discovery, the Client SHALL make a GET request to the
 `/monto/services` path. The Broker SHALL respond with an HTTP Status of
 200 and a [`BrokerServiceList`](#422-brokerservicelist) Message,
-cooresponding to the services connected to the Broker.
+corresponding to the Services connected to the Broker.
 
 ### 3.1.4. Requesting Products
 
 A Client SHALL request Products by making a POST request to the
 `/monto/products` path, with a [`ClientRequest`](#412-clientrequest)
 Message as the body.
+
+For the purposes of dependency resolution, the "source" field of the
+`ClientRequest` is a "source" product.
 
 The Broker SHALL then acquire the appropriate Products, and respond with
 an HTTP Status of 200 and a [`BrokerResponse`](#423-brokerresponse)
@@ -144,9 +147,51 @@ The Service Protocol dictates communication between Brokers and Services.
 
 ### 3.2.1. Connection Initiation
 
-TODO
+A Broker SHALL initiate a connection to the Services requested by the user
+when it starts. Brokers MUST be able to connect to a Service on any port,
+and Services MUST be able to serve on any port.
+
+Brokers MUST first attempt to use HTTP/2, and MAY support HTTP/1.1 as
+well. Services SHOULD support HTTP/2 if at all possible, as the pipelining
+it allows is more useful than for the Client Protocol, as it is more
+likely that there are several in-flight requests at once.
 
 ### 3.2.2. Version Negotiation
+
+After the HTTP connection is established, the Broker SHALL make a POST
+request to the `/monto/version` path, with
+a [`BrokerVersion`](#421-brokerversion) Message as the body. The Service
+SHALL check that it is compatible with the Broker. The Service SHALL
+respond with a [`ServiceVersion`](#431-serviceversion) Message. If the
+Service is compatible with the Broker, this response SHALL have an HTTP
+Status of 200. If the Service and Broker are not compatible, the response
+SHALL instead have an HTTP Status of 409.
+
+If the HTTP Status is 200, the Broker SHALL check that it is compatible
+with the Service. If the HTTP Status is not 200 or the Broker and Service
+are not compatible as determined by the Broker, the Broker SHOULD inform
+the user and MUST close the connection.
+
+Compatibility between versions of the Service Protocol SHALL be determined
+using the Semantic Versioning rules. Additionally, a Broker MAY reject
+a Service that is known to not follow this specification correctly, and
+vice versa.
+
+### 3.2.3. Requesting Products
+
+To request Products, the Broker SHALL send
+a [`BrokerRequest`](#424-brokerrequest) Message to the appropriate
+Service. If the Service requires additional input Products to create the
+requested Product, it SHALL respond with
+a [`ServiceDependency`](#432-servicedependency) Message and an HTTP Status
+of 400. If the Service encountered another error (for example, a syntax
+error when requesting an outline), it SHALL respond with an HTTP status of
+500 and a [`ServiceError`](#433-serviceerror) Message. If the requested
+
+Product was successfully created, it SHALL be returned directly (i.e.
+encoded as itself in JSON) with an HTTP status of 200.
+
+### 3.2.4. Caching
 
 TODO
 
@@ -161,37 +206,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.1.1.1. Schema
 
 ```json
-{
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "ClientVersion",
-	"type": "object",
-	"properties": {
-		"monto": {
-			"type": "object",
-			"properties": {
-				"major": { "type": "integer" },
-				"minor": { "type": "integer" },
-				"patch": { "type": "integer" }
-			},
-			"additionalProperties": false,
-			"required": ["major", "minor", "patch"]
-		},
-		"client": {
-			"type": "object",
-			"properties": {
-				"name": { "type": "string" },
-				"vendor": { "type": "string" },
-				"major": { "type": "integer" },
-				"minor": { "type": "integer" },
-				"patch": { "type": "integer" }
-			},
-			"additionalProperties": false,
-			"required": ["name", "major", "minor", "patch"]
-		}
-	},
-	"additionalProperties": false,
-	"required": ["monto"]
-}
+{% include monto-schemas/ClientVersion.json %}
 ```
 
 #### 4.1.1.2. Example
@@ -218,55 +233,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.1.2.1. Schema
 
 ```json
-{
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "ClientRequest",
-	"type": "object",
-	"properties": {
-		"path": { "type": "string" },
-		"request": {
-			"type": "array",
-			"minItems": 1,
-			"items": { "$ref": "#/definitions/productRequest" },
-			"uniqueItems": true
-		}
-	},
-	"additionalProperties": false,
-	"required": ["path", "request"],
-	"definitions": {
-		"productName": {
-			"type": "string",
-			"anyOf": [
-				{
-					"type": "string",
-					"enum": [
-						"errors",
-						"highlighting",
-						"outline"
-						// TODO What other built-in products should exist?
-					]
-				},
-				{
-					"type": "string",
-					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\._-]+$"
-				}
-			]
-		},
-		"productRequest": {
-			"type": "object",
-			"properties": {
-				"product": { "$ref": "#/definitions/productName" },
-				"service": { "$ref": "#/definitions/serviceId" }
-			},
-			"additionalProperties": false,
-			"required": ["product", "service"]
-		},
-		"serviceId": {
-			"type": "string",
-			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
-		}
-	}
-}
+{% include monto-schemas/ClientRequest.json %}
 ```
 
 #### 4.1.2.2. Example
@@ -302,37 +269,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.2.1.1. Schema
 
 ```json
-{
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "ClientVersion",
-	"type": "object",
-	"properties": {
-		"monto": {
-			"type": "object",
-			"properties": {
-				"major": { "type": "integer" },
-				"minor": { "type": "integer" },
-				"patch": { "type": "integer" }
-			},
-			"additionalProperties": false,
-			"required": ["major", "minor", "patch"]
-		},
-		"broker": {
-			"type": "object",
-			"properties": {
-				"name": { "type": "string" },
-				"vendor": { "type": "string" },
-				"major": { "type": "integer" },
-				"minor": { "type": "integer" },
-				"patch": { "type": "integer" }
-			},
-			"additionalProperties": false,
-			"required": ["name", "major", "minor", "patch"]
-		}
-	},
-	"additionalProperties": false,
-	"required": ["monto"]
-}
+{% include monto-schemas/BrokerVersion.json %}
 ```
 
 #### 4.2.1.2. Example
@@ -359,57 +296,7 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.2.2.1. Schema
 
 ```json
-{
-	"$schema": "http://json-schema.org/draft-04/schema#",
-	"title": "BrokerServiceList",
-	"type": "array",
-	"items": { "$ref": "#/definitions/brokerService" },
-	"definitions": {
-		"brokerService": {
-			"type": "object",
-			"properties": {
-				"id": { "$ref": "#/definitions/serviceId" },
-				"name": { "type": "string" },
-				"vendor": { "type": "string" },
-				"products": {
-					"type": "array",
-					"items": { "$ref": "#/definitions/productName" }
-				},
-				"config": {
-					"type": "object",
-					"patternProperties": {
-						".+": { "$ref": "http://json-schema.org/draft-04/schema#" }
-					},
-					"additionalProperties": false
-				}
-			},
-			"required": ["id", "name", "products", "config"],
-			"additionalProperties": false
-		},
-		"productName": {
-			"type": "string",
-			"anyOf": [
-				{
-					"type": "string",
-					"enum": [
-						"errors",
-						"highlighting",
-						"outline"
-						// TODO What other built-in products should exist?
-					]
-				},
-				{
-					"type": "string",
-					"pattern": "^[a-zA-Z][a-zA-Z0-9]*(\\.[a-zA-Z][a-zA-Z0-9]*)*/[a-zA-Z0-9\\._-]+$"
-				}
-			]
-		},
-		"serviceId": {
-			"type": "string",
-			"pattern": "^[a-zA-Z_][a-zA-Z0-9_]*(\\.[a-zA-Z_][a-zA-Z0-9_]*)*$"
-		}
-	}
-}
+{% include monto-schemas/BrokerServiceList.json %}
 ```
 
 #### 4.2.2.2. Example
@@ -427,12 +314,12 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 		"config": {
 			"type": "object",
 			"properties": {
-				"PATH": {
+				"Debugging Symbols": { "type": "boolean" },
+				"Include Path": {
 					"type": "array",
 					"items": { "type": "string" }
 				},
-				"debug": { "type": "boolean" },
-				"optimization": {
+				"Optimization Level": {
 					"type": "integer",
 					"minimum": 0,
 					"maximum": 3
@@ -448,16 +335,30 @@ Messages are documented with JSON Schema ([\[JSONSCHEMA\]](#json-schema)).
 #### 4.2.3.1. Schema
 
 ```json
+TODO
 ```
 
 #### 4.2.3.2. Example
 
 ```json
+TODO
 ```
 
 ## 4.3. Service Messages
 
+### 4.3.1. `ServiceVersion`
+
+#### 4.3.1.1. Schema
+
+```json
+{% include monto-schemas/ServiceVersion.json %}
+```
+
+#### 4.3.1.2. Example
+
+```json
 TODO
+```
 
 # 5. Products
 
@@ -468,7 +369,7 @@ TODO
 ## 6.1. Remote Access To Local Files
 
 The Broker sends arbitrary files to Services, which may be running on
-a different machine. A malicious service could therefore request
+a different machine. A malicious Service could therefore request
 a sensitive file (for example, `~/.ssh/id_rsa`). As a result, a Broker MAY
 claim such a file does not exist.
 
@@ -481,7 +382,7 @@ directories.
 HTTP/2 optionally supports TLS encryption. Most HTTP/2 implementations
 require encryption, so Clients, Brokers, and Services MAY support TLS
 encryption. Due to the relative difficulty of obtaining a TLS certificate
-for a local service, Clients MUST support connecting to a Broker that does
+for a local Service, Clients MUST support connecting to a Broker that does
 not support TLS.
 
 # 7. Further Work
@@ -504,7 +405,7 @@ with a chunked response in HTTP/1.1.
 ## 7.3. Commands
 
 Previous versions of Monto supported arbitrary commands being run by the
-service, for example, renaming a function everywhere it appears (in all
+Service, for example, renaming a function everywhere it appears (in all
 files). This is difficult to do while allowing Services to be run on
 remote machines. It could be achieved by allowing Services to request file
 writes in addition to reads, but would probably require a large amount of

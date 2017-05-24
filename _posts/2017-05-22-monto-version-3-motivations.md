@@ -43,6 +43,14 @@ to minimize it.
 
 # Pull-based instead of push-based
 
+In Monto v2 (push-based), when a file is changed, it gets sent to the
+broker, and the broker then walks the graph "forwards", trying to get
+every possible product from the network of services.
+
+In Monto v3 (pull-based), the client sends a list of products it wants to
+the broker, which then walks the graph "backwards" to figure out how to
+make all of them from the source code.
+
 This makes predicting the responses the client will get much simpler, and
 allows for greater granularity. This also mitigates the increase in
 response time from the server, as only the products which are needed in
