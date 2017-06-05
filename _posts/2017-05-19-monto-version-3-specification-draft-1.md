@@ -8,7 +8,7 @@ title: "Monto Version 3 Specification, Draft 1"
  - What should the service error format be?
  - What error should the broker return if a service dies during a request?
  - What if the service can't be reached at all?
-  - Hard failure or soft?
+   - Hard failure or soft?
 
 # Abstract
 
