@@ -36,7 +36,7 @@ The overhead is assumed to be negligible. In reality, it'll probably
 amount to a few hundred bytes at most, which should take well under
 a millisecond on any modern network. In exchange, it makes it feasible for
 multiple brokers to be connected to a single service, and for services to
-be much more easily written in purely functional languages.
+be much more easily written as pure functions.
 
 If overhead becomes a serious problem, compression could probably be used
 to minimize it.
