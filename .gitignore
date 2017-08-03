@@ -1,4 +1,7 @@
+*~
 .*
 !.gitignore
+!.travis.yml
 
-_site/
+public/
+tmp/
