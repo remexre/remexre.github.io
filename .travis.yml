@@ -3,6 +3,10 @@ language: go
 # TODO Update after https://github.com/travis-ci/gimme/issues/93 is resolved.
 go: 1.8.3
 
+branches:
+  only:
+  - authoring
+
 addons:
   apt:
     packages:
@@ -10,8 +14,6 @@ addons:
 
 install:
  - go get -u -v github.com/gohugoio/hugo
- - go get -u -v github.com/santhosh-tekuri/jsonschema/cmd/jv
- - go get -u -v github.com/wjdp/htmltest
 script:
  - hugo -v
 
@@ -19,6 +21,6 @@ deploy:
   github_token: $GITHUB_TOKEN
   local_dir: public
   on:
-    branch: master
+    branch: authoring
   provider: pages
   skip_cleanup: true
