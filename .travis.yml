@@ -10,7 +10,7 @@ branches:
 addons:
   apt:
     packages:
-     - python-pygments==2.1.3
+     - python-pygments=2.1.3
 
 install:
  - go get -u -v github.com/gohugoio/hugo
@@ -18,9 +18,11 @@ script:
  - hugo -v
 
 deploy:
+  fqdn: remexre.xyz
   github_token: $GITHUB_TOKEN
   local_dir: public
   on:
     branch: authoring
   provider: pages
   skip_cleanup: true
+  target_branch: master
