@@ -2,4 +2,4 @@ baseURL = "https://remexre.xyz/"
 taxonomies = {}
 title = "remexre.xyz"
 PygmentsCodeFences = true
-PygmentsStyle = "emacs"
+PygmentsStyle = "colorful"
