@@ -1,5 +1,9 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-	body { font-family: monospace; }
+	body {
+		font-family: monospace;
+		/* font-size: 12pt; */
+	}
 	code, pre {
 		background-color: #f8f8f8;
 		display: inline-block;
@@ -10,5 +14,9 @@
 	main p { margin-left: 10px; }
 	.anchorjs-link { color: #7f7f7f; }
 	#TableOfContents { float: right; }
+
+	@media only screen and (max-device-width: 500px) {
+		#TableOfContents { display: none; }
+	}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.min.js"></script>

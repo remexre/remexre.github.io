@@ -24,7 +24,9 @@ Simply put, a functor is a container for values.
 The definition of functor is:
 
 ```haskell
+-- This defines a typeclass called Functor
 class Functor f where
+  -- Which has one function, fmap, of type ((a -> b) -> f a -> f b)
   fmap :: (a -> b) -> f a -> f b
 ```
 
