@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+
+<html lang="en">
+	<head>
+		{{ partial "head.html" }}
+		<title>Tags &mdash; {{ .Site.Title }}</title>
+	</head>
+	<body>
+		<header>
+			<nav>
+				<span><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></span>
+			</nav>
+			<h1>Tags</h1>
+		</header>
+		<main class="tags">
+			{{ range .Data.Terms.ByCount }}
+				<span class="tag">
+					<a href="{{ .Name | urlize }}">{{ .Name }}</a> ({{ .Count }})
+				</span>
+			{{ end }}
+		</main>
+	</body>
+</html>

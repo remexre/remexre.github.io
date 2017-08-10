@@ -1,5 +1,9 @@
 baseURL = "https://remexre.xyz/"
-taxonomies = {}
-title = "remexre.xyz"
+enableRobotsTXT = true
+preserveTaxonomyNames = true
 PygmentsCodeFences = true
 PygmentsStyle = "colorful"
+title = "remexre.xyz"
+
+[taxonomies]
+tag = "tags"

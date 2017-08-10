@@ -7,13 +7,12 @@
 	</head>
 	<body>
 		<header>
-			<h1><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
+			<nav>
+				<span><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></span>
+				<span><a href="{{ (.Site.GetPage "taxonomyTerm" .Data.Plural).Permalink }}">{{ .Data.Plural | title }}</a></span>
+			</nav>
+			<h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
 		</header>
-		<nav id="navbar">
-			<a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}">Tags</a>
-			<hr/>
-			<a href="https://github.com/remexre">GitHub</a>
-		</nav>
 		<main>
 			{{ range .Data.Pages.ByDate.Reverse }}
 			<article>

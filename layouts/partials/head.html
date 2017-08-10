@@ -1,21 +1,82 @@
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto+Condensed|Source+Sans+Pro" rel="stylesheet">
 <style>
-	body {
-		font-family: monospace;
-		/* font-size: 12pt; */
+	a.post-title, .post-tags > li > a {
+		color: black;
+		text-decoration: none;
+	}
+	a.post-title:hover, .post-tags > li > a:hover {
+		text-decoration: underline;
+	}
+	article { margin-bottom: 1em; }
+	body { font-family: "Source Sans Pro", sans-serif; }
+	body > nav {
+		float: right;
+		padding: 0 40px;
 	}
 	code, pre {
 		background-color: #f8f8f8;
+		font-family: Inconsolata, monospace;
 		display: inline-block;
 		tab-size: 4;
 	}
 	dt { font-weight: bold; }
-	header > h1 { font-size: 30px; }
-	main p { margin-left: 10px; }
+	h1, h2, h3, h4, h5, h6 { font-family: "Roboto Condensed", sans-serif; }
+	header {
+		margin-bottom: 2em;
+		margin-left: 2.5em;
+		margin-top: 2em;
+	}
+	header > h1 {
+		font-size: 2.5em;
+		margin: 0;
+	}
+	header > h1 > a {
+		color: black;
+		text-decoration: none;
+	}
+	header > nav { padding-bottom: 0.5em; }
+	header > nav > span:after { content: " > "; }
+	header > nav > span:last-child:after { content: unset; }
+	header > nav > span > a {
+		color: black;
+		text-decoration: none;
+	}
+	header > nav > span:hover > a { text-decoration: underline; }
+	main { margin-left: 20px; }
+	main p { margin-left: 20px; }
 	.anchorjs-link { color: #7f7f7f; }
-	#TableOfContents { float: right; }
+	.post-tags {
+		display: flex;
+		list-style: none;
+		margin-top: 1em;
+		padding-left: 0;
+	}
+	.post-tags > li {
+		display: inline-block;
+		padding: 0 1em;
+	}
+	.tag {
+		font-size: 2em;
+		padding: 1em;
+	}
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: space-around;
+	}
 
-	@media only screen and (max-device-width: 500px) {
+	@media only screen and (max-width: 500px) {
+		.tag { align-self: center; }
+		.tags {
+			flex-direction: column;
+			flex-wrap: nowrap;
+		}
+		#navbar {
+			color: red;
+		}
 		#TableOfContents { display: none; }
 	}
 </style>

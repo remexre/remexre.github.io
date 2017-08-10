@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
 	<head>
-		<meta charset="utf-8">
-		<title>{{ .Title }} &mdash; {{ .Site.Title }}</title>
 		{{ partial "head.html" . }}
+		<title>{{ .Title }} &mdash; {{ .Site.Title }}</title>
 	</head>
 	<body>
 		<header>
-			<h1>{{ .Title }}</h1>
-			{{ .TableOfContents }}
+			<nav>
+				<span><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></span>
+			</nav>
+			<h1><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
+			<ul class="post-tags">
+				{{ range .Params.tags }}
+				<li><a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}{{ urlize . }}">{{ . }}</a></li>
+				{{ end }}
+			</ul>
 		</header>
+		{{ .TableOfContents }}
 		<main>
 			{{ .Content }}
 		</main>
@@ -19,15 +26,6 @@
 			sectionAnchors.options.class = "section-anchor";
 			sectionAnchors.options.icon = "#";
 			sectionAnchors.add("main h1, main h2, main h3, main h4, main h5, main h6");
-
-			// Re-enable after https://github.com/bryanbraun/anchorjs/issues/14 is closed.
-			/*
-			var paragraphAnchors = new AnchorJS();
-			paragraphAnchors.options.class = "paragraph-anchor";
-			paragraphAnchors.options.icon = "¶";
-			paragraphAnchors.options.placement = "left";
-			paragraphAnchors.add("main p");
-			*/
 		</script>
 	</body>
 </html>

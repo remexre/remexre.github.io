@@ -1,7 +1,8 @@
 +++
-title = "Monads: Another Explanation"
 date = "2017-08-04"
 draft = true
+tags = ["monads", "theory"]
+title = "Monads: Another Explanation"
 +++
 
 # What is a Monad?
@@ -449,6 +450,7 @@ fn baz_future() -> BoxFuture<usize, Error> {
 
 Well, that looked familiar again!
 `Future` again has many of the monadic methods that `Option` and `Result` share.
+However, it's still not possible to write "sequential-looking" code with `Future`s; a TODO.
 
 ## Consistency
 
@@ -521,18 +523,14 @@ Let's see how Haskell does it.
 
 ```haskell
 nextUserInput :: Async String
-nextUserInput = undefined
 
-type Fetch a = EitherT ConnectError Async (Either ReadError a)
+type Fetch a = EitherT ConnectError AsyncT (Either ReadError a)
 fetch :: String -> Fetch String
-fetch = undefined
 
 type Parse a = Either ParseError a
 parseFooList :: String -> Parse [Foo]
-parseFooList = undefined
 
 barrestFoo :: [Foo] -> Maybe Foo
-barrestFoo = undefined
 
 data GetFooError
   = Connect ConnectError
@@ -549,7 +547,7 @@ selectAFoo = do -- TODO Fixme
 
 ## Extensibility
 
-There are other useful monads, such as "with monads" (which simplify scoped resource management).
+There are other useful monads, such as ["with monads"]({{< relref "with-monad.md" >}}) (which simplify scoped resource management).
 Having a simple, fixed interface for which helpers such as `sequence` can operate upon eases the burden of defining these other monads.
 
 TODO
