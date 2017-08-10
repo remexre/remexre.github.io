@@ -1,15 +1,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{{ if .RSSLink }}
+<link href="{{ .RSSLink }}" rel="alternate" type="application/rss+xml" title="{{ .Site.Title }}" />
+<link href="{{ .RSSLink }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
+{{ end }}
 <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Inconsolata|Roboto+Condensed|Source+Sans+Pro" rel="stylesheet">
 <style>
-	a.post-title, .post-tags > li > a {
+	a {
 		color: black;
 		text-decoration: none;
 	}
-	a.post-title:hover, .post-tags > li > a:hover {
-		text-decoration: underline;
-	}
+	a:hover { text-decoration: underline; }
 	article { margin-bottom: 1em; }
 	body { font-family: "Source Sans Pro", sans-serif; }
 	body > nav {
@@ -33,18 +35,10 @@
 		font-size: 2.5em;
 		margin: 0;
 	}
-	header > h1 > a {
-		color: black;
-		text-decoration: none;
-	}
+	header > h1 > a:hover { text-decoration: none; }
 	header > nav { padding-bottom: 0.5em; }
 	header > nav > span:after { content: " > "; }
 	header > nav > span:last-child:after { content: unset; }
-	header > nav > span > a {
-		color: black;
-		text-decoration: none;
-	}
-	header > nav > span:hover > a { text-decoration: underline; }
 	main { margin-left: 20px; }
 	main p { margin-left: 20px; }
 	.anchorjs-link { color: #7f7f7f; }
@@ -66,6 +60,13 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-around;
+	}
+	#navbar {
+		display: flex;
+		flex-direction: column;
+	}
+	#navbar > a, #navbar > span {
+		margin: 0.5em;
 	}
 
 	@media only screen and (max-width: 500px) {

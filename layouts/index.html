@@ -11,8 +11,9 @@
 		</header>
 		<nav id="navbar">
 			<a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}">Tags</a>
-			<hr/>
+			<span class="spacer"></span>
 			<a href="https://github.com/remexre">GitHub</a>
+			<a href="{{ .Site.RSSLink }}" type="application/rss+xml">RSS</a>
 		</nav>
 		<main>
 			{{ range .Data.Pages.ByDate.Reverse }}
