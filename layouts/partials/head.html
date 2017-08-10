@@ -39,8 +39,11 @@
 	header > nav { padding-bottom: 0.5em; }
 	header > nav > span:after { content: " > "; }
 	header > nav > span:last-child:after { content: unset; }
-	main { margin-left: 20px; }
-	main p { margin-left: 20px; }
+	main { margin: 0 1em; }
+	main p { margin: 1em; }
+	main p a { text-decoration: underline; }
+	main p a:hover { text-decoration: none; }
+	pre { padding: 0.5em; }
 	.anchorjs-link { color: #7f7f7f; }
 	.post-tags {
 		display: flex;
@@ -52,6 +55,8 @@
 		display: inline-block;
 		padding: 0 1em;
 	}
+	.side-by-side { display: flex; }
+	.side-by-side > div { padding: 0 1em; }
 	.tag {
 		font-size: 2em;
 		padding: 1em;
