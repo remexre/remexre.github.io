@@ -1,5 +1,6 @@
 +++
 date = "2017-05-10"
+publishDate = "2017-08-10"
 tags = ["ableC", "concurrency"]
 title = "The State of Async I/O"
 +++
@@ -98,3 +99,5 @@ it would theoretically be possible to implement a goroutine-style library for ab
 In practice though, you're linking to libcurl, ZeroMQ, etc., and unless you recompile them, you can't do more than `NUM_THREADS` parallel I/O calls.
 And if you do recompile them, you can't use them with "normal" C code.
 So in effect, you've reinvented Go.
+
+To be continued...
