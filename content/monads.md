@@ -85,6 +85,7 @@ It is defined as:
 ```haskell
 class Functor f => Applicative f where
   pure :: a -> f a
+  -- This defines an infix operator <*>, so you can write e.g. f <*> x
   (<*>) :: f (a -> b) -> f a -> f b
 ```
 
