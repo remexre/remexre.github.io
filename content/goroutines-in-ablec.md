@@ -2,10 +2,14 @@
 date = "2017-05-10"
 publishDate = "2017-08-10"
 tags = ["ableC", "concurrency"]
-title = "The State of Async I/O"
+title = "Why ableC-goConcurrency shouldn't emulate Go"
 +++
 
-# Platform Support
+# I/O Issues
+
+The first problem with implementing a coroutine-based green-thread system as an ableC extension is I/O; it would require annotating every blocking I/O function as such, and redirecting calls to them to instead send requests to a scheduler thread.
+The scheduler would then perform an async call, and suspend the coroutine.
+This would require a per-platform implementation, which is hard.
 
 ## Async File I/O Is Broken on Linux
 
@@ -37,7 +41,7 @@ The least dysfunctional is probably `epoll`, although care is needed to ensure t
 > There's no better word to describe them.
 > If anything in Windows was done right, it's completion ports.
 > 
-> -- [Damon on StackOverflow](https://stackoverflow.com/a/5284537/1333945)
+> -- Damon on [StackOverflow](https://stackoverflow.com/a/5284537/1333945)
 
 Windows has I/O Completion Ports, or IOCPs.
 They're essentially a lock that threads can wait on.
@@ -46,13 +50,10 @@ They can also handle inter-thread messages.
 Additionally, they have a mechanism to limit the number of threads doing processing to the number of cores the CPU has.
 
 The only limitation of IOCPs seems to be that they don't work for `stdin`/`stdout` or anonymous pipes.
-Overall, however, these are relatively small limitations.
+Overall, however, these are relatively small limitations; (hopefully) nobody's bottleneck is stdio.
 
-# Implementing for ableC
+# Loops Block
 
-The first problem with implementing a coroutine-based green-thread system as an ableC extension is the I/O problem mentioned above.
-It would require annotating every blocking I/O function, and redirecting calls to them to send requests to a scheduler thread.
-The scheduler would then perform an async call, and "suspend" the coroutine.
 The next problem is that for a machine that spreads the coroutines among *N* threads, latency dramatically increases as soon as *N* compute-heavy tasks are scheduled.
 The core issue here is essentially that a tight loop prevents any calls to the scheduler, so once all the compute tasks are running, any other tasks must wait for a compute task to complete.
 The traditional solution to this is to unroll these loops, then add a check to an atomic per-thread "block soon" variable.
@@ -86,18 +87,41 @@ The core assumption this makes is that the overhead of the preempt check is rela
 This generally turns out to be a safe assumption -- the branch is *extremely* predictable, and the check typically is two instructions (when not taken) on amd64 machines.
 Spread over an eight-fold unrolling, this comes to a quarter of an instruction per iteration.
 
+# "Foreign" Calls
+
+> Excessive cgo usage breaks Go’s promise of lightweight concurrency.
+>
+> -- [Dave Cheney](https://dave.cheney.net) on [golang-nuts](https://groups.google.com/d/msg/golang-nuts/8gszDBRZh_4/Jj3pfIdrutYJ)
+
+Even after we hook into I/O calls and unroll loops, we still run into the issue of other code that contains I/O or loops.
+For example, let's look at `libcurl`.
+libcurl both performs network I/O and potentially blocks; getting it to cooperate with scheduled ableC code would therefore require one of:
+
+ - Compiling `libcurl` (and all other libraries that perform I/O or have loops) with ableC,
+ - Moving C calls onto their own dedicated threads, or
+ - Allowing "foreign" calls (to non-ableC C libraries) to block an OS thread
+
+The disadvantage of the first option should be clear: at that point, you've created a distinct language from C that cannot freely interoperate with it.
+
+The second option allows long-running calls to not block any scheduler threads, but *significantly* increases the overhead of all C calls.
+
+The last option is what Go uses.
+The advantage of this method is the low overhead when making "quick" C calls, around `100ns`.
+If this method is implemented in ableC, the overhead would likely be lower.
+However, this comes with the same issues Go has.
+
+As mentioned above, Go can't handle large-scale use of cgo without losing concurrency.
+Once `GOMAXPROCS` concurrent C calls are performed at the same time, no more can be performed.
+
 # Conclusion
 
 Assuming one wanted to go through the effort of:
 
  - replacing every I/O-performing function with a copy that instead enqueues the I/O job to a scheduler thread,
  - performing a code-injection while unrolling loops (which we don't currently do),
- - and implementing this on all relevant platforms
+ - recompiling all dependencies, and
+ - implementing this on all relevant platforms
 
 it would theoretically be possible to implement a goroutine-style library for ableC.
-
-In practice though, you're linking to libcurl, ZeroMQ, etc., and unless you recompile them, you can't do more than `NUM_THREADS` parallel I/O calls.
-And if you do recompile them, you can't use them with "normal" C code.
-So in effect, you've reinvented Go.
 
 To be continued...

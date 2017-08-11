@@ -102,6 +102,7 @@ void transfer(int amount, stm int from, stm int to) {
 Clearly, the transaction-using version is much simpler.
 There is also a difference in functionality between the two versions, however.
 The lock-using variant can potentially deadlock, if `thread1()` acquires `alice_balance_lock` after `thread2()` acquires `bob_balance_lock`.
+(See [here](https://deadlockempire.github.io/#L2-deadlock) for an interactive example of the unsafety.)
 This can be worked around, but the work-arounds don't generalize to variable numbers of locks being required.
 Additionally, checking for deadlocks requires observing all the code that acquires a lock in the entire program.
 
