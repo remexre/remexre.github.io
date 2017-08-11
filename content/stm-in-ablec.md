@@ -112,7 +112,7 @@ The commit operation is performed by `run_transaction` in the above example.
 If a conflict (e.g. another thread has written to variables we read from/write to) is detected, the transaction is *aborted* (rolled back) and *retried*.
 
 This gives the same speed characteristics as a hand-crafted lock-free data structure, without the complexity of implementing one.
-With the algorithm described in [Transactional Locking II](http://dx.doi.org/10.1007/11864219_14), the TL2 STM algorithm was benchmarked against using mutexes, and resulted in an order-of-magnitude reduction in program run time.
+With the algorithm described in [Transactional Locking II](http://dx.doi.org/10.1007/11864219_14), STM was benchmarked against mutexes, and resulted in an order-of-magnitude reduction in program run time in a benchmark.
 
 # Implementing in ableC
 
