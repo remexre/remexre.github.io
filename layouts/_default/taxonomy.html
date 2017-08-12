@@ -3,24 +3,26 @@
 <html lang="en">
 	<head>
 		{{ partial "head.html" }}
-		<title>{{ .Site.Title }}</title>
+		<title>{{ .Title }} &mdash; {{ .Site.Title }}</title>
 	</head>
 	<body>
-		<header>
-			<nav>
-				<span><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></span>
-				<span><a href="{{ (.Site.GetPage "taxonomyTerm" .Data.Plural).Permalink }}">{{ .Data.Plural | title }}</a></span>
-			</nav>
-			<h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
-		</header>
-		<main>
-			{{ range .Data.Pages.ByDate.Reverse }}
-			<article>
-				<span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
-				&mdash;
-				<a class="post-title" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
-			</article>
-			{{ end }}
-		</main>
+		<div id="main-container">
+			<header>
+				<nav>
+					<span><a href="/">{{ .Site.Title }}</a></span>
+					<span><a href="{{ (.Site.GetPage "taxonomyTerm" .Data.Plural).Permalink }}">{{ .Data.Plural | title }}</a></span>
+				</nav>
+				<h1><a href="{{ .Permalink }}">{{ .Title }}</a></h1>
+			</header>
+			<main>
+				{{ range .Data.Pages.ByDate.Reverse }}
+				<article>
+					<span class="post-date">{{ .Date.Format "2006-01-02" }}</span>
+					&mdash;
+					<a class="post-title" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+				</article>
+				{{ end }}
+			</main>
+		</div>
 	</body>
 </html>

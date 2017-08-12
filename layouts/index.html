@@ -6,29 +6,31 @@
 		<title>{{ .Site.Title }}</title>
 	</head>
 	<body>
-		<header>
-			<h1><a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></h1>
-		</header>
-		<nav id="navbar">
-			<a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}">Tags</a>
-			<span class="spacer"></span>
-			<a href="https://github.com/remexre">GitHub</a>
-			<a href="{{ .Site.RSSLink }}" type="application/rss+xml">RSS</a>
-		</nav>
-		<main>
-			{{ range .Data.Pages.ByPublishDate.Reverse }}
-			<article {{ if .Draft }}class="draft"{{ end }}>
-				<span class="post-date">
-					{{ if .Draft }}
-						{{ .Date.Format "2006-01-02" }}
-					{{ else }}
-						{{ .PublishDate.Format "2006-01-02" }}
-					{{ end }}
-				</span>&mdash;
-				<a class="post-title" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
-				{{ if .Draft }}(Draft){{ end }}
-			</article>
-			{{ end }}
-		</main>
+		<div id="main-container">
+			<header>
+				<h1><a href="/">{{ .Site.Title }}</a></h1>
+			</header>
+			<nav id="navbar">
+				<a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}">Tags</a>
+				<span class="spacer"></span>
+				<a href="https://github.com/remexre">GitHub</a>
+				<a href="{{ .Site.RSSLink }}" type="application/rss+xml">RSS</a>
+			</nav>
+			<main>
+				{{ range .Data.Pages.ByPublishDate.Reverse }}
+				<article {{ if .Draft }}class="draft"{{ end }}>
+					<span class="post-date">
+						{{ if .Draft }}
+							{{ .Date.Format "2006-01-02" }}
+						{{ else }}
+							{{ .PublishDate.Format "2006-01-02" }}
+						{{ end }}
+					</span>&mdash;
+					<a class="post-title" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+					{{ if .Draft }}(Draft){{ end }}
+				</article>
+				{{ end }}
+			</main>
+		</div>
 	</body>
 </html>

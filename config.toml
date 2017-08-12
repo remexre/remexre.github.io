@@ -1,5 +1,6 @@
 baseURL = "https://remexre.xyz/"
-enableRobotsTXT = true
+canonifyURLs = true
+relativeURLs = true
 preserveTaxonomyNames = true
 PygmentsCodeFences = true
 PygmentsStyle = "colorful"

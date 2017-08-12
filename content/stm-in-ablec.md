@@ -17,7 +17,6 @@ Simply put, STM is a way to synchronize concurrent data accesses that is composa
 It does this by grouping data accesses to shared memory into transactions.
 For example, the two pieces of code are roughly equivalent:
 
-{{% side-by-side %}}
 ```c
 // With locks in C11
 
@@ -62,42 +61,31 @@ void transfer(int amount, int* from, int* to, mtx_t *fromLock, mtx_t *toLock) {
 // With transactions in ableC
 
 stm int alice_balance = 0;
-
-
 stm int bob_balance = 0;
-
 
 void transfer(int amount, stm int from, stm int to);
 
 int main() {
 	// No init needed!
 
-
 	// thread1() and thread2() get spawned off
 }
 
 void thread1() {
 	transfer(100, alice_balance, bob_balance);
-
 }
 
 void thread2() {
 	transfer(45, bob_balance, alice_balance);
-
 }
 
 void transfer(int amount, stm int from, stm int to) {
 	run_transaction(transaction {
-
-
 		from -= amount;
 		to += amount;
-
-
 	});
 }
 ```
-{{% /side-by-side %}}
 
 Clearly, the transaction-using version is much simpler.
 There is also a difference in functionality between the two versions, however.

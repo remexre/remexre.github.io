@@ -5,24 +5,22 @@ a {
 a:hover { text-decoration: underline; }
 article { margin-bottom: 1em; }
 body {
-	background-color: #f0f8ff;
+	display: flex;
+	flex-direction: column;
 	font-family: "Source Sans Pro", sans-serif;
-}
-body > nav {
-	float: right;
-	padding: 0 40px;
+	font-size: 1.1em;
+	line-height: 1.3;
 }
 code, pre {
 	background-color: #ffffff;
-	font-family: Inconsolata, monospace;
 	display: inline-block;
+	font-family: Inconsolata, monospace;
 	tab-size: 4;
 }
 dt { font-weight: bold; }
 h1, h2, h3, h4, h5, h6 { font-family: "Roboto Condensed", sans-serif; }
 header {
 	margin-bottom: 2em;
-	margin-left: 2.5em;
 	margin-top: 2em;
 }
 header > h1 {
@@ -33,8 +31,8 @@ header > h1 > a:hover { text-decoration: none; }
 header > nav { padding-bottom: 0.5em; }
 header > nav > span:after { content: " > "; }
 header > nav > span:last-child:after { content: unset; }
-main { margin: 0 1em; }
-main p { margin: 1em; }
+main { margin: 0; }
+main p { margin: 1em 0; }
 main p a { text-decoration: underline; }
 main p a:hover { text-decoration: none; }
 pre {
@@ -42,6 +40,14 @@ pre {
 	padding: 0.5em;
 }
 .anchorjs-link { color: #7f7f7f; }
+.highlight {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+.highlight > pre {
+	align-self: center;
+}
 .post-tags {
 	display: flex;
 	list-style: none;
@@ -52,8 +58,6 @@ pre {
 	display: inline-block;
 	padding: 0 1em;
 }
-.side-by-side { display: flex; }
-.side-by-side > div { padding: 0 1em; }
 .tag {
 	font-size: 2em;
 	padding: 1em;
@@ -63,6 +67,14 @@ pre {
 	flex-wrap: wrap;
 	justify-content: space-around;
 }
+#main-container {
+	align-self: center;
+	max-width: 800px;
+}
+#main-container> nav {
+	float: right;
+	padding: 0 40px;
+}
 #navbar {
 	display: flex;
 	flex-direction: column;
@@ -71,6 +83,9 @@ pre {
 	margin: 0.5em;
 }
 
+@media only screen and (min-width: 800px) {
+	#main-container { min-width: 800px; }
+}
 @media only screen and (max-width: 500px) {
 	.tag { align-self: center; }
 	.tags {
