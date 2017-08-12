@@ -3,6 +3,7 @@ enableRobotsTXT = true
 preserveTaxonomyNames = true
 PygmentsCodeFences = true
 PygmentsStyle = "colorful"
+pygmentsUseClasses = true
 title = "remexre.xyz"
 
 [taxonomies]

@@ -1,7 +1,7 @@
 +++
 date = "2017-08-09"
 draft = true
-tags = ["sketches"]
+tags = ["databases", "sketches"]
 title = "My Ideal Everyday Database"
 +++
 
