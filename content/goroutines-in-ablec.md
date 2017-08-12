@@ -1,7 +1,7 @@
 +++
 date = "2017-05-10"
 publishDate = "2017-08-10"
-tags = ["ableC", "concurrency"]
+tags = ["ableC", "Concurrency"]
 title = "Why ableC-goConcurrency shouldn't emulate Go"
 +++
 

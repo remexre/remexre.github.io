@@ -11,7 +11,10 @@
 				<nav>
 					<span><a href="/">{{ .Site.Title }}</a></span>
 				</nav>
-				<h1><a href="{{ .Permalink }}">{{ .Title | markdownify }}</a></h1>
+				<h1>
+					<a href="{{ .Permalink }}">{{ .Title | markdownify }}</a>
+					{{ if .Draft }}(Draft){{ end }}
+				</h1>
 				<ul class="post-tags">
 					{{ range .Params.tags }}
 					<li><a href="{{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }}{{ urlize . }}">{{ . }}</a></li>

@@ -1,7 +1,7 @@
 +++
 date = "2017-08-08"
 draft = true
-tags = ["humanities", "rants"]
+tags = ["Humanities", "Rants"]
 title = "Peacock for Dinner; or, 3461 Considered Harmful"
 +++
 

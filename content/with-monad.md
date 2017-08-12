@@ -1,7 +1,7 @@
 +++
 date = "2017-08-04"
 draft = true
-tags = ["monads"]
+tags = ["Monads"]
 title = "The `with` Monad"
 +++
 
