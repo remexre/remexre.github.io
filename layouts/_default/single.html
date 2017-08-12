@@ -3,7 +3,7 @@
 <html lang="en">
 	<head>
 		{{ partial "head.html" . }}
-		<title>{{ .Title }} &mdash; {{ .Site.Title }}</title>
+		<title>{{ .Title | markdownify | plainify }} &mdash; {{ .Site.Title }}</title>
 	</head>
 	<body>
 		<div id="main-container">

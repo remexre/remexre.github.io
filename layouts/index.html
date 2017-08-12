@@ -18,17 +18,7 @@
 			</nav>
 			<main>
 				{{ range .Data.Pages.ByPublishDate.Reverse }}
-				<article {{ if .Draft }}class="draft"{{ end }}>
-					<span class="post-date">
-						{{ if .Draft }}
-							{{ .Date.Format "2006-01-02" }}
-						{{ else }}
-							{{ .PublishDate.Format "2006-01-02" }}
-						{{ end }}
-					</span>&mdash;
-					<a class="post-title" href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
-					{{ if .Draft }}(Draft){{ end }}
-				</article>
+				{{ partial "describe.html" . }}
 				{{ end }}
 			</main>
 		</div>
