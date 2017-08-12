@@ -115,13 +115,9 @@ Once `GOMAXPROCS` concurrent C calls are performed at the same time, no more can
 
 # Conclusion
 
-Assuming one wanted to go through the effort of:
+Implementing a goroutine runtime would therefore require:
 
  - replacing every I/O-performing function with a copy that instead enqueues the I/O job to a scheduler thread,
  - performing a code-injection while unrolling loops (which we don't currently do),
- - recompiling all dependencies, and
- - implementing this on all relevant platforms
-
-it would theoretically be possible to implement a goroutine-style library for ableC.
-
-To be continued...
+ - choosing and implementing a "FFI" strategy, and
+ - implementing this on all relevant platforms.
