@@ -14,7 +14,7 @@ Edges are directed, and hold a single symbol and value.
 
 All operations on the database are STM transactions; see [STM in OftLisp]({{< relref "oftlisp-stm.md" >}}).
 
-```
+```oftlisp
 (new-graph-db) => graph-db
 
 (add-node graph-db node-name) => stm bool
