@@ -547,7 +547,8 @@ selectAFoo = do -- TODO Fixme
 
 ## Extensibility
 
-There are other useful monads, such as ["with monads"]({{< relref "with-monad.md" >}}) (which simplify scoped resource management).
-Having a simple, fixed interface for which helpers such as `sequence` can operate upon eases the burden of defining these other monads.
+There are other useful monads, such as the Reader monad (which simplifies scoped resource management).
+Having a simple, fixed interface for which `do`-notation and helpers such as `sequence` can operate upon eases the burden of defining these other monads.
+In addition, a generic "monad cons" would be useful for defining monad stacks, rather than monad transformers.
 
 TODO
