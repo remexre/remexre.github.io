@@ -17,7 +17,7 @@
 				<a href="{{ .Site.RSSLink }}" type="application/rss+xml">RSS</a>
 			</nav>
 			<main>
-				{{ range .Data.Pages.ByPublishDate.Reverse }}
+				{{ range (.Site.GetPage "section" "posts").Pages.ByPublishDate.Reverse }}
 				{{ partial "describe.html" . }}
 				{{ end }}
 			</main>
