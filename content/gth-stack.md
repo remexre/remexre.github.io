@@ -51,7 +51,7 @@ Once you have a working Pygments lexer, just run `python setup.py install --user
 Check to make sure it shows up in `pygmentize -L`.
 If it does, you can use it in Markdown code blocks with any of its aliases.
 
-## Pygments Caching
+## Caching
 
 {{< tweet 447202124753952768 >}}
 
