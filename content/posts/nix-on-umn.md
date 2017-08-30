@@ -116,7 +116,7 @@ source ~/.local/etc/profile.d/nix.sh
 If you use zsh, run
 
 ```shell
-ls -s ~/.profile ~/.zprofile
+ln -s ~/.profile ~/.zprofile
 ```
 
 `zsh` prefers to have profile settings in `~/.zprofile` instead.
