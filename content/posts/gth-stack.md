@@ -44,7 +44,7 @@ Hugo uses Pygments for syntax highlighting, meaning that a custom lexer can be u
 ```oftlisp
 (defn foo (x y z)
   (def xy (mod x y))
-  (map \(+ xy @) z))
+  (map \(+ xy #) z))
 ```
 
 Once you have a working Pygments lexer, just run `python setup.py install --user`.

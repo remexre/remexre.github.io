@@ -65,7 +65,7 @@ f s = 1 + length s
 f' :: Maybe String -> Maybe Int
 f' = fmap f
 
-x :: Maybe String
+x :: Int
 x = f "foo"
 -- x = 4
 
@@ -142,6 +142,14 @@ x = f 3 8
 y :: Maybe String
 y = f <$> Just 3 <*> Just 8
 -- y = Just "3 + 8 = 11"
+
+p :: Maybe String
+p = f <$> Nothing <*> Just 8
+-- p = Nothing
+
+q :: Maybe String
+q = f <$> Just 3 <*> Nothing
+-- q = Nothing
 ```
 
 This works because:
@@ -226,13 +234,17 @@ data Maybe a
 ```
 
 It's essentially a nullable value.
-Did the proofreaders get this far? Mention code samples having weird margins if you did.
 Syntax similar to do-notation already exists in some languages as the "Elvis" operator.
 For example, the C# code:
 
 ```csharp
 // As an object type, string is implicitly possibly-null.
-int? foo(string bar) {
+string getString() {
+	// ...
+}
+
+int? foo() {
+    string bar = getString();
 	return bar?.Length;
 }
 ```
@@ -242,24 +254,23 @@ bears a striking resemblance to the Haskell:
 ```haskell
 foo :: String -> Int
 foo bar = do
-  bar' <- bar
-  return (length bar')
+  bar <- getString
+  return (length bar)
 ```
 
-## Result
+## Either
 
-`Result` is used for error handling without exceptions.
-It is also known as `Either`.
+`Either` is used for error handling without exceptions.
 
 It is defined as:
 
 ```haskell
-data Result e a
+data Either e a
   = Ok a
   | Err e
 ```
 
-Note that while `Result` is not a monad, `Result e` is for any `e`.
+Note that while `Either` is not a monad, `Either e` is for any `e`.
 
 ## Async
 
@@ -285,7 +296,6 @@ function asyncPrint(value) {
 const out = wait(1000, "one second passed")
 	.then(s => s.length)
 	.then(asyncPrint);
-// out == undefined
 ```
 
 versus
@@ -295,7 +305,9 @@ wait :: Int -> a -> Async a
 asyncPrint :: Int -> Async ()
 
 out :: Async ()
-out = wait 1000 "one second passed" >>= (\s -> length s) >>= asyncPrint
+out = wait 1000 "one second passed"
+  >>= (\s -> length s)
+  >>= asyncPrint
 ```
 
 If C# is more to your liking, note that `async` and `await` are also equivalent to `do`-notation:
@@ -334,7 +346,7 @@ baz = do
 
 ## A Comparison with Rust
 
-Rust has `Maybe a`, `Result e a`, and `Async a` (as `Option<T>`, `Result<T, E>`, and `Future<Item=T, Error=E>`), but hasn't felt the need to unite the three.
+Rust has `Maybe a`, `Either e a`, and `Async a` (as `Option<T>`, `Result<T, E>`, and `Future<Item=T, Error=E>`), but hasn't felt the need to unite the three.
 Haskell that would be written:
 
 ```haskell
@@ -450,7 +462,7 @@ fn baz_future() -> BoxFuture<usize, Error> {
 
 Well, that looked familiar again!
 `Future` again has many of the monadic methods that `Option` and `Result` share.
-However, it's still not possible to write "sequential-looking" code with `Future`s; a TODO.
+However, it's still not possible to write "sequential-looking" code with `Future`s; [a syntax extension](https://github.com/alexcrichton/futures-await) exists to add async and away, but they are not part of the core language and rely on several unstable features.
 
 ## Consistency
 
@@ -524,7 +536,7 @@ Let's see how Haskell does it.
 ```haskell
 nextUserInput :: Async String
 
-type Fetch a = EitherT ConnectError AsyncT (Either ReadError a)
+type Fetch a = AsyncT (Either NetworkError) a
 fetch :: String -> Fetch String
 
 type Parse a = Either ParseError a
@@ -533,13 +545,12 @@ parseFooList :: String -> Parse [Foo]
 barrestFoo :: [Foo] -> Maybe Foo
 
 data GetFooError
-  = Connect ConnectError
-  | Read ReadError
+  = Network NetworkError
   | Parse ParseError
 
 selectAFoo :: AsyncT (EitherT GetFooError Maybe) Foo
 selectAFoo = do -- TODO Fixme
-  resourceName <- nextUserInput
+  resourceName <- liftAsync nextUserInput
   body <- lift (fetch resourceName)
   foos <- lift (parseFooList body)
   barrestFoo foos
@@ -547,7 +558,7 @@ selectAFoo = do -- TODO Fixme
 
 ## Extensibility
 
-There are other useful monads, such as the Reader monad (which simplifies scoped resource management).
+There are other useful monads, such as the Reader monad (which simplifies scoped resource management) and the State monad, which allows mutability in an otherwise immutable language.
 Having a simple, fixed interface for which `do`-notation and helpers such as `sequence` can operate upon eases the burden of defining these other monads.
 In addition, a generic "monad cons" would be useful for defining monad stacks, rather than monad transformers.
 
