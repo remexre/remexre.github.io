@@ -67,7 +67,7 @@ pre {
 	flex-wrap: wrap;
 	justify-content: space-around;
 }
-#main-container {
+#main-container, img {
 	align-self: center;
 	max-width: 800px;
 }

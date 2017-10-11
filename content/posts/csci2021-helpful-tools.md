@@ -32,6 +32,8 @@ VV @ sym.initialize_bomb
 
 You can now use the arrow keys or Vim-style `hjkl` scrolling to pan around the control-flow graph of your bomb.
 
+![](../../img/radare2-cfg.png)
+
 # godbolt
 
 [godbolt](https://gcc.godbolt.org/) is a useful online tool for reading the assembly output of C code.
