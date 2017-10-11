@@ -13,7 +13,7 @@ addons:
      - python-pip
 
 install:
- - pip install pygments==2.1.3
+ - pip install --user pygments==2.1.3
  - git clone https://github.com/oftlisp/oftlisp-lexer-pygments.git /tmp/lexer
  - cd /tmp/lexer
  - python setup.py install --user
