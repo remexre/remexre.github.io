@@ -40,7 +40,8 @@ You can now use the arrow keys or Vim-style `hjkl` scrolling to pan around the c
 It highlights the lines different blocks of assembly come from too, which makes reading it much easier.
 
 Protip: Use `-O1` in the "Compiler Flags" field -- it makes the code a lot more efficient without sacrificing much readability (and sometimes improving it).
-Try it on the default `square` example to see what I mean.
+
+![](../../img/godbolt-o1-example.png)
 
 # clang
 
