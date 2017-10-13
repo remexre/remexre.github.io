@@ -134,13 +134,13 @@ This may look difficult to read, but the important part is the middle section:
 
 Let's break this down line-by-line.
 
-### `Invalid read of size 1`
+**`Invalid read of size 1`**
 
 The error in your program is that it tried to read one byte from memory in a way that was invalid.
 
 The only common one-byte type is a char, so we can be pretty sure that it was that.
 
-### `at 0x108611: main (main.c:3)`
+**`at 0x108611: main (main.c:3)`**
 
 You can ignore `0x108611` -- it's the memory address the code was at.
 If it's the only piece of information present, you might've tried to call a string as a function or something similar.
@@ -149,8 +149,142 @@ Otherwise, the other two pieces of information are much more useful.
 We know that it's in the `main` function, specifically at line 3 of `main.c`.
 If a line number isn't present, compile your program with `-g` and run it again.
 
-### `Address 0x0 is not stack'd, malloc'd or (recently) free'd`
+**`Address 0x0 is not stack'd, malloc'd or (recently) free'd`**
 
 From this, we know that the memory address we couldn't read from was `0x0`.
 Since this is `NULL`, we know that we're trying to read from a null pointer.
 `not stack'd, malloc'd or (recently) free'd` tells us that this pointer is neither a stack nor a heap pointer, which is obviously true for `NULL`.
+
+# NASM
+
+[NASM](http://nasm.us/) is an assembler that is often preferred to GAS (the assembler taught directly in class).
+It uses the more intuitive Intel syntax rather than the AT&T syntax used by GAS, and is versatile enough to have your entire attacklab payload be created from a single assembly file, rather than needing to stich together a bunch of `printf` calls with `cat`.
+
+## Intel vs. AT&T Syntax
+
+C version:
+
+```c
+int main(void) {
+	int n = 20;
+	while(n != 1) {
+		if(n % 2 == 0) {
+			n = n / 2;
+		} else {
+			n = 3 * n + 1;
+		}
+	}
+	return n - 1;
+}
+```
+
+GAS/AT&T Syntax version:
+
+```gas
+main:
+	movl $20, %eax               # int n = 20;
+	jmp .test                    # while(n != 1) {
+.loop:
+	testl $1, %eax
+	jz .if_true                  #   if(n % 2 == 0)
+.if_true:                        #   {
+    shrl $1, %eax                #     n = n / 2;
+	jmp .test                    #   }
+.if_false:                       #   else {
+	leal 1(%rax, %rax, 2), %eax  #     n = 3 * n + 1;
+.test:                           #   }
+	cmpl $1, %eax
+	jne .loop                    # }
+.end:
+	dec %eax                     # return n - 1;
+	ret
+```
+
+Intel Syntax version:
+
+```nasm
+main:
+	mov eax, 20                ; int n = 20;
+	jmp .test                  ; while(n != 1) {
+.loop:
+	test eax, 1
+	jz .if_true                ;   if(n % 2 == 0)
+.if_true:                      ;   {
+	shr eax, 1                 ;     n = n / 2;
+	jmp .test                  ;   }
+.if_false:                     ;   else {
+	lea eax, [eax + 2*eax + 1] ;     n = 3 * n + 1;
+.test:                         ;   }
+	cmp eax, 1
+	jne .loop                  ; }
+.end:
+	dec eax                    ; return n - 1;
+	ret
+```
+
+As you can see, the Intel syntax version is more C-like (`n = 20` becomes `mov eax, 20`), and has less visual noise (`20` is obviously a number, you don't need to call it `$20`).
+This is especially noticeable in the `lea` instructions corresponding to `n = 3 * n + 1`:
+
+```nasm
+; Intel
+lea eax, [eax + 2*eax + 1]
+```
+
+```gas
+# AT&T
+leal 1(%rax, %rax, 2), %eax
+```
+
+I really have no idea what the person who came up with `1(%rax, %rax, 2)` was thinking...
+
+# Misc. Tips
+
+## Argument Passing Order
+
+The mnemonic to remember is:
+
+ - **Di**ane's
+ - **Si**lk
+ - **D**ress
+ - **C**ost
+ - **8**
+ - **9**
+ - **$**
+
+From first to last, these are:
+
+ - `r`**`di`**
+ - `r`**`si`**
+ - `r`**`d`**`x`
+ - `r`**`c`**`x`
+ - `r`**`8`**
+ - `r`**`9`**
+ - The **$**tack
+
+So if we have the code:
+
+```c
+int foo(int x, unsigned int y, char* z);
+
+int main(void) {
+	foo(1, 2, NULL);
+	return 0;
+}
+```
+
+This will turn into the assembly:
+
+```nasm
+main:
+	; MOVing to a register that starts with e
+	; will clear the upper half of the r register
+	; that it corresponds to.
+	mov edi, 1
+	mov esi, 2
+	xor edx, edx ; Or `mov edx, 0'
+	call foo
+
+	; return 0
+	xor eax, eax
+	ret
+```
