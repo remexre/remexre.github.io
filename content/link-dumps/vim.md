@@ -1,0 +1,18 @@
++++
+date = "2017-10-25"
+title = "Vim Resources"
++++
+
+# `vimtutor`
+
+Vim comes with a reasonable intro tutorial, `vimtutor`.
+Simply run this command, and you're in the tutorial.
+
+# OpenVim
+
+[openvim](http://www.openvim.com/) is an online, interactive Vim tutorial in the style of Codecademy.
+
+# The Grammar of Vim
+
+Once you've got the basics down, you might still wondering what the "big deal" is.
+[The grammar of Vim](https://medium.com/@rafeco/the-grammar-of-vim-f86482876f46) is an article that might make it "click."
