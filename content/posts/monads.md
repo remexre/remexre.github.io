@@ -244,7 +244,7 @@ string getString() {
 }
 
 int? foo() {
-    string bar = getString();
+	string bar = getString();
 	return bar?.Length;
 }
 ```
@@ -252,8 +252,8 @@ int? foo() {
 bears a striking resemblance to the Haskell:
 
 ```haskell
-foo :: String -> Int
-foo bar = do
+foo :: Maybe Int
+foo = do
   bar <- getString
   return (length bar)
 ```
