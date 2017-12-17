@@ -98,12 +98,12 @@ After running valgrind, you might get output like:
 ==30038== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
 ==30038== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
 ==30038== Command: ./a.out
-==30038== 
+==30038==
 ==30038== Invalid read of size 1
 ==30038==    at 0x108611: main (main.c:3)
 ==30038==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
-==30038== 
-==30038== 
+==30038==
+==30038==
 ==30038== Process terminating with default action of signal 11 (SIGSEGV): dumping core
 ==30038==  Access not within mapped region at address 0x0
 ==30038==    at 0x108611: main (main.c:3)
@@ -112,13 +112,13 @@ After running valgrind, you might get output like:
 ==30038==  possible), you can try to increase the size of the
 ==30038==  main thread stack using the --main-stacksize= flag.
 ==30038==  The main thread stack size used in this run was 8388608.
-==30038== 
+==30038==
 ==30038== HEAP SUMMARY:
 ==30038==     in use at exit: 0 bytes in 0 blocks
 ==30038==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==30038== 
+==30038==
 ==30038== All heap blocks were freed -- no leaks are possible
-==30038== 
+==30038==
 ==30038== For counts of detected and suppressed errors, rerun with: -v
 ==30038== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
 [1]    30038 segmentation fault (core dumped)  valgrind ./a.out
@@ -180,7 +180,7 @@ int main(void) {
 
 GAS/AT&T Syntax version:
 
-```gas
+```asm
 main:
 	movl $20, %eax               # int n = 20;
 	jmp .test                    # while(n != 1) {
@@ -202,7 +202,7 @@ main:
 
 Intel Syntax version:
 
-```nasm
+```asm
 main:
 	mov eax, 20                ; int n = 20;
 	jmp .test                  ; while(n != 1) {
@@ -225,12 +225,12 @@ main:
 As you can see, the Intel syntax version is more C-like (`n = 20` becomes `mov eax, 20`), and has less visual noise (`20` is obviously a number, you don't need to call it `$20`).
 This is especially noticeable in the `lea` instructions corresponding to `n = 3 * n + 1`:
 
-```nasm
+```asm
 ; Intel
 lea eax, [eax + 2*eax + 1]
 ```
 
-```gas
+```asm
 # AT&T
 leal 1(%rax, %rax, 2), %eax
 ```
@@ -274,7 +274,7 @@ int main(void) {
 
 This will turn into the assembly:
 
-```nasm
+```asm
 main:
 	; MOVing to a register that starts with e
 	; will clear the upper half of the r register

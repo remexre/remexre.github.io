@@ -1,0 +1,45 @@
+{% extends "index.html" %}
+
+{% block title %}
+	<title>{{ page.title }} &mdash; {{ config.title }}</title>
+{% endblock title %}
+
+{% block header %}
+	<nav>
+		<span><a href="{{ config.base_url }}">{{ config.title }}</a></span>
+	</nav>
+	<h1 id="title">
+		<a href="{{ page.permalink }}">{{ page.title }}</a>
+		{% if page.draft %}(Draft){% endif %}
+	</h1>
+	<ul class="post-tags">
+		{% for tag in page.tags %}
+			<li>
+				<a href="{ ($.Site.GetPage "taxonomyTerm" "tags").Permalink }{ urlize . }">
+					{{ tag }}
+				</a>
+			</li>
+		{% endfor %}
+	</ul>
+{% endblock header %}
+
+{% block content %}
+	{{ page.content | safe }}
+{% endblock content %}
+
+<!--
+
+			{ .TableOfContents }
+			<main>
+				{ .Content }
+			</main>
+		</div>
+		<script>
+			var sectionAnchors = new AnchorJS();
+			sectionAnchors.options.class = "section-anchor";
+			sectionAnchors.options.icon = "#";
+			sectionAnchors.add("main h1, main h2, main h3, main h4, main h5, main h6");
+		</script>
+	</body>
+</html>
+-->

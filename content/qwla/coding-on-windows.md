@@ -2,6 +2,7 @@
 date = "2017-09-09"
 draft = true
 title = "Getting Started with Coding on Windows"
+tags = []
 +++
 
 1. Microsoft has their own ecosystem we don't teach here, and not a ton of people use in academia.

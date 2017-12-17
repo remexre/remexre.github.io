@@ -14,7 +14,7 @@ body {
 code, pre {
 	background-color: #ffffff;
 	display: inline-block;
-	font-family: Inconsolata, monospace;
+	font-family: "Fantasque Sans Mono", monospace;
 	tab-size: 4;
 }
 dt { font-weight: bold; }

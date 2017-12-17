@@ -1,11 +1,16 @@
-baseURL = "https://remexre.xyz/"
-canonifyURLs = true
-relativeURLs = true
-preserveTaxonomyNames = true
-PygmentsCodeFences = true
-PygmentsStyle = "colorful"
-pygmentsUseClasses = true
-title = "remexre.xyz"
+base_url = "https://remexre.xyz/"
 
-[taxonomies]
-tag = "tags"
+title = "remexre.xyz"
+description = "remexre.xyz"
+language_code = "en"
+
+highlight_code = true
+highlight_theme = "monokai"
+
+generate_rss = true
+rss_limit = 100
+
+generate_tags_pages = true
+generate_categories_pages = true
+
+compile_sass = false
