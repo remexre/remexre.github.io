@@ -37,7 +37,9 @@
 			<main>
 				{% block content %}
 					{% for page in section.pages %}
-						{{ macros::describe(config=config, page=page) }}
+						{% if not page.draft %}
+							{{ macros::describe(config=config, page=page) }}
+						{% endif %}
 					{% endfor %}
 				{% endblock content %}
 			</main>
