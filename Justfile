@@ -4,5 +4,5 @@ watch TARGET="all":
 
 build:
 	gutenberg build
-serve PORT="8080":
+serve PORT="8000":
 	gutenberg serve --port {{PORT}}

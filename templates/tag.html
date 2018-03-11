@@ -23,26 +23,3 @@
 		{{ macros::describe(config=config, page=page) }}
 	{% endfor %}
 {% endblock content %}
-
-<!--
-<html lang="en">
-	<head>
-	</head>
-	<body>
-		<div id="main-container">
-			<header>
-				<nav>
-					<span><a href="/">{{ config.title }}</a></span>
-					<span><a href="{ (.Site.GetPage "taxonomyTerm" .Data.Plural).Permalink }">{ .Data.Plural | title }</a></span>
-				</nav>
-				<h1><a href="{ .Permalink }">{ .Title }</a></h1>
-			</header>
-			<main>
-				{ range .Data.Pages.ByDate.Reverse }
-					{ partial "describe.html" . }
-				{ end }
-			</main>
-		</div>
-	</body>
-</html>
--->

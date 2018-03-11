@@ -1,9 +1,9 @@
 a { text-decoration: none; }
-a, body { color: #ffffff; }
+a, body { color: #000000; }
 a:hover { text-decoration: underline; }
 article { margin-bottom: 1em; }
 body {
-	background-color: #000000;
+	background-color: #ffffff;
 	display: flex;
 	flex-direction: column;
 	font-family: "Source Sans Pro", sans-serif;

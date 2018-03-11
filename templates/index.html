@@ -26,9 +26,9 @@
 						<h1><a href="/">{{ config.title }}</a></h1>
 				</header>
 				<nav id="navbar">
-					<a href="{{ config.base_url }}tags">Tags</a>
-					<span class="spacer"></span>
 					<a href="https://github.com/remexre">GitHub</a>
+					<span class="spacer"></span>
+					<a href="{{ config.base_url }}tags">Tags</a>
 					{% if config.generate_rss %}
 						<a href="{{ config.base_url }}rss.xml" type="application/rss+xml">RSS</a>
 					{% endif %}
@@ -36,12 +36,8 @@
 			{% endblock header %}
 			<main>
 				{% block content %}
-					{% for s in section.subsections %}
-						{% if s.title == "blog" %}
-							{% for page in s.pages %}
-								{{ macros::describe(config=config, page=page) }}
-							{% endfor %}
-						{% endif %}
+					{% for page in section.pages %}
+						{{ macros::describe(config=config, page=page) }}
 					{% endfor %}
 				{% endblock content %}
 			</main>

@@ -237,7 +237,7 @@ It's essentially a nullable value.
 Syntax similar to do-notation already exists in some languages as the "Elvis" operator.
 For example, the C# code:
 
-```csharp
+```c#
 // As an object type, string is implicitly possibly-null.
 string getString() {
 	// ...
@@ -312,7 +312,7 @@ out = wait 1000 "one second passed"
 
 If C# is more to your liking, note that `async` and `await` are also equivalent to `do`-notation:
 
-```csharp
+```c#
 async int getFoo() {
 	...
 }
