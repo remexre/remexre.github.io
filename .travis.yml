@@ -1,17 +1,28 @@
-sudo: false
-language: go
-# TODO Update after https://github.com/travis-ci/gimme/issues/93 is resolved.
-go: 1.9
+language: rust
+rust: stable
+os: linux
 
 branches:
   only:
   - authoring
   - gutenberg
 
+cache:
+  directories:
+  - $HOME/.cargo
+  - $HOME/gutenberg
+
 install:
- - go get -u -v github.com/gohugoio/hugo
+- test -d $HOME/gutenberg/.git || git clone https://github.com/Keats/gutenberg.git $HOME/gutenberg
+- cd $HOME/gutenberg; git submodule update --init; git submodule update --remote --merge
+- cd $HOME/gutenberg/sublime_syntaxes; test -d Sublime-OftLisp/.git || git clone https://github.com/oftlisp/Sublime-OftLisp.git
+- cd $HOME/gutenberg/sublime_syntaxes/Sublime-OftLisp; git pull
+- cd $HOME/gutenberg/components/rendering; cargo run --example generate_sublime synpack ../../sublime_syntaxes ../../sublime_syntaxes/newlines.packdump ../../sublime_syntaxes/nonewlines.packdump
+- cd $HOME/gutenberg; cargo install --force
+- cd $TRAVIS_BUILD_DIR
+
 script:
- - hugo -v
+- gutenberg build --base-url https://remexre.xyz/
 
 deploy:
   fqdn: remexre.xyz
