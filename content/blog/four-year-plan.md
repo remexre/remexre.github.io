@@ -1,5 +1,5 @@
 +++
-date = "2017-09-11"
+date = 2017-09-11
 draft = true
 tags = ["The Four Year Plan", "OftLisp"]
 title = "My Four Year Plan"

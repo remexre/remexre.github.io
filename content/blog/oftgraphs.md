@@ -1,5 +1,5 @@
 +++
-date = "2017-08-11"
+date = 2017-08-11
 draft = true
 tags = ["Databases", "OftLisp"]
 title = "An OftLisp Graph Database"

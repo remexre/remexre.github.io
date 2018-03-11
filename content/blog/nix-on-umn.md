@@ -1,5 +1,5 @@
 +++
-date = "2017-08-30"
+date = 2017-08-30
 publishDate = "2017-08-30"
 tags = ["CLI", "Guides", "UMN"]
 title = "Installing the Nix Package Manager on UMN Machines"

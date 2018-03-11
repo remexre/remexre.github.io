@@ -5,7 +5,7 @@ description = "remexre.xyz"
 language_code = "en"
 
 highlight_code = true
-highlight_theme = "monokai"
+highlight_theme = "material-dark"
 
 generate_rss = true
 rss_limit = 100

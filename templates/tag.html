@@ -5,20 +5,22 @@
 {% endblock title %}
 
 {% block header %}
-	<nav>
-		<span><a href="/">{{ config.title }}</a></span>
-		<span><a href="/tags/">Tags</a></span>
-	</nav>
-	<h1>
-		<a href="{{ config.base_url }}tags/{{ tag.slug }}">
-			{{ tag.name }}
-		</a>
-	</h1>
+	<header>
+		<nav>
+			<span><a href="{{ config.base_url }}">{{ config.title }}</a></span>
+			<span><a href="{{ config.base_url }}tags">Tags</a></span>
+		</nav>
+		<h1>
+			<a href="{{ config.base_url }}tags/{{ tag.slug }}">
+				{{ tag.name }}
+			</a>
+		</h1>
+	</header>
 {% endblock header %}
 
 {% block content %}
 	{% for page in tag.pages %}
-		{{ macros::describe(page=page) }}
+		{{ macros::describe(config=config, page=page) }}
 	{% endfor %}
 {% endblock content %}
 

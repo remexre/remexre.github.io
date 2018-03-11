@@ -1,5 +1,5 @@
 +++
-date = "2017-08-13"
+date = 2017-08-13
 draft = true
 tags = ["Concurrency", "OftLisp"]
 title = "STM in OftLisp"

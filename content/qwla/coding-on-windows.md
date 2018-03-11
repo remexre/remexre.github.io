@@ -1,5 +1,5 @@
 +++
-date = "2017-09-09"
+date = 2017-09-09
 draft = true
 title = "Getting Started with Coding on Windows"
 tags = []

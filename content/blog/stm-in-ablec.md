@@ -1,5 +1,5 @@
 +++
-date = "2017-08-10"
+date = 2017-08-10
 draft = true
 tags = ["ableC", "Concurrency"]
 title = "STM in ableC"

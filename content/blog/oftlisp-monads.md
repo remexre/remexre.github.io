@@ -1,5 +1,5 @@
 +++
-date = "2017-08-09"
+date = 2017-08-09
 draft = true
 tags = ["Monads", "OftLisp"]
 title = "Monads in OftLisp"

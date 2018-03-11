@@ -1,5 +1,5 @@
 +++
-date = "2017-08-11"
+date = 2017-08-11
 draft = true
 tags = ["OftLisp"]
 title = "Object-Oriented Programming in OftLisp"
@@ -26,7 +26,7 @@ TODO The whole thing
 
 (defn main ()
   (def pupper (dog "Malamute" "Joey"))
-  
+
   ; Prints "The Malamute Joey says Woof!"
   (println
     (name pupper)

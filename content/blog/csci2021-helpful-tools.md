@@ -1,6 +1,6 @@
 +++
-date = "2017-10-10"
-publishDate = "2017-10-10"
+date = 2017-10-10
+publishDate = 2017-10-10
 tags = ["CLI", "Guides", "Tools"]
 title = "Helpful Tools for CSCI2021"
 +++
@@ -259,7 +259,7 @@ From first to last, these are:
  - `r`**`c`**`x`
  - `r`**`8`**
  - `r`**`9`**
- - The **$**tack
+ - The **$** tack
 
 So if we have the code:
 

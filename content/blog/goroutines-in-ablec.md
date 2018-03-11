@@ -1,5 +1,5 @@
 +++
-date = "2017-05-10"
+date = 2017-05-10
 publishDate = "2017-08-10"
 tags = ["ableC", "Concurrency"]
 title = "Why ableC-goConcurrency shouldn't emulate Go"
@@ -40,7 +40,7 @@ The least dysfunctional is probably `epoll`, although care is needed to ensure t
 > I/O completion ports are awesome.
 > There's no better word to describe them.
 > If anything in Windows was done right, it's completion ports.
-> 
+>
 > -- Damon on [StackOverflow](https://stackoverflow.com/a/5284537/1333945)
 
 Windows has I/O Completion Ports, or IOCPs.

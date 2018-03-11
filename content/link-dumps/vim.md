@@ -1,5 +1,5 @@
 +++
-date = "2017-10-25"
+date = 2017-10-25
 title = "Vim Resources"
 tags = []
 +++

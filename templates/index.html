@@ -6,10 +6,10 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=850">
-		<!--{ if .RSSLink }
-			<link href="{ .RSSLink }" rel="alternate" type="application/rss+xml" title="{# config.title #}" />
-			<link href="{ .RSSLink }" rel="feed" type="application/rss+xml" title="{# config.title #}" />
-		{ end }-->
+		{% if config.base_url %}
+			<link href="{{ config.base_url }}rss.xml" rel="alternate" type="application/rss+xml" title="{{ config.title }}" />
+			<link href="{{ config.base_url }}rss.xml" rel="feed" type="application/rss+xml" title="{{ config.title }}" />
+		{% endif %}
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Fantasque+Sans+Mono|Roboto+Condensed|Source+Sans+Pro" rel="stylesheet">
 		<link href="/css/highlight.css" rel="stylesheet">
@@ -21,30 +21,32 @@
 	</head>
 	<body>
 		<div id="main-container">
-			<header>
-				{% block header %}
-					<h1><a href="/">{{ config.title }}</a></h1>
-				{% endblock header %}
-			</header>
-			<nav id="navbar">
-				<a href="{{ config.base_url }}tags">Tags</a>
-				<span class="spacer"></span>
-				<a href="https://github.com/remexre">GitHub</a>
-				{% if config.generate_rss %}
-					<a href="{{ config.base_url }}rss.xml" type="application/rss+xml">RSS</a>
-				{% endif %}
-			</nav>
+			{% block header %}
+				<header>
+						<h1><a href="/">{{ config.title }}</a></h1>
+				</header>
+				<nav id="navbar">
+					<a href="{{ config.base_url }}tags">Tags</a>
+					<span class="spacer"></span>
+					<a href="https://github.com/remexre">GitHub</a>
+					{% if config.generate_rss %}
+						<a href="{{ config.base_url }}rss.xml" type="application/rss+xml">RSS</a>
+					{% endif %}
+				</nav>
+			{% endblock header %}
 			<main>
 				{% block content %}
 					{% for s in section.subsections %}
 						{% if s.title == "blog" %}
-							{% for p in s.pages %}
-								{{ macros::describe(page=p) }}
+							{% for page in s.pages %}
+								{{ macros::describe(config=config, page=page) }}
 							{% endfor %}
 						{% endif %}
 					{% endfor %}
 				{% endblock content %}
 			</main>
+			{% block footer %}
+			{% endblock footer %}
 		</div>
 	</body>
 </html>
