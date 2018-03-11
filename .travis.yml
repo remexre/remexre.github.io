@@ -24,11 +24,14 @@ script:
 - gutenberg build --base-url https://remexre.xyz/
 
 deploy:
+  edge:
+    # https://github.com/travis-ci/travis-ci/issues/9312
+    branch: pages-ivar-set
   fqdn: remexre.xyz
   github_token: $GITHUB_TOKEN
-  local_dir: public
+  local-dir: public
   on:
     branch: authoring
   provider: pages
-  skip_cleanup: true
-  target_branch: master
+  skip-cleanup: true
+  target-branch: master
