@@ -6,6 +6,7 @@ go: 1.9
 branches:
   only:
   - authoring
+  - gutenberg
 
 install:
  - go get -u -v github.com/gohugoio/hugo
