@@ -66,13 +66,17 @@ foo/
 The `package.oftd` file looks like:
 
 ```oftd
-(library
-  (name foo)
-  (version "0.1.0"))
+(authors
+  "Nathan Ringo <remexre@gmail.com>")
+(license "MIT")
+(name foo)
+(version "0.1.0")
 
-(binary
-  (name foo)
-  (path "src/main.oft"))
+(components
+  (library)
+  (binary
+    (name foo)
+    (path "src/main.oft")))
 
 (dependencies
   (combinargs
