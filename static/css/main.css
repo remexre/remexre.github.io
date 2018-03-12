@@ -12,7 +12,7 @@ body {
 }
 code, pre {
 	display: inline-block;
-	font-family: "Source Code Pro", monospace;
+	font-family: "Fira Code", monospace;
 	tab-size: 4;
 }
 dt { font-weight: bold; }
