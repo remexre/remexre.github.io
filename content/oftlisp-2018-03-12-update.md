@@ -103,6 +103,10 @@ The overall pipeline is:
 Flat ANF's structure will be laid out in a later post, but it's still much higher-level than LLVM or Cretonne's IR; rather than having basic blocks and instructions, it retains a tree structure.
 It is low-level enough to eliminate modules (the "flattening" in the name), and uses [de Bruijn indices](https://en.wikipedia.org/wiki/De_Bruijn_index) to improve the efficiency of environment lookups.
 
+Furthermore, oftb won't support macros directly; instead, a macro expander will be built in a macroless subset of the language.
+To make up for this, oftb exposes the `oftb-ext` module, which contains `parse`, `parse-file`, and `eval` functions that make building a macro-expander much easier.
+This macro-expander will be used by the bootstrapping script (which builds the full OftLisp compiler) to run standard OftLisp code.
+
 ---
 
 In conclusion, these design changes should make it easier to get a usable version of oftb out the door (*cough*), while the module system changes should make development easier.
