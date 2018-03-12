@@ -14,9 +14,11 @@
 {% endblock header %}
 
 {% block content %}
-	{% for tag in tags %}
-		<span class="tag">
-			<a href="{{ tag.slug }}">{{ tag.name }}</a> ({{ tag.pages | length }})
-		</span>
-	{% endfor %}
+	<div class="tags">
+		{% for tag in tags %}
+			<span class="tag">
+				<a href="{{ tag.slug }}">{{ tag.name }}</a> ({{ tag.pages | length }})
+			</span>
+		{% endfor %}
+	</div>
 {% endblock content %}

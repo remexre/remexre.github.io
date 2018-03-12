@@ -12,7 +12,7 @@ body {
 }
 code, pre {
 	display: inline-block;
-	font-family: "Fantasque Sans Mono", monospace;
+	font-family: "Source Code Pro", monospace;
 	tab-size: 4;
 }
 dt { font-weight: bold; }
@@ -55,7 +55,7 @@ pre { padding: 0.5em; }
 }
 .tag {
 	font-size: 2em;
-	padding: 1em;
+	padding: 0 1em;
 }
 .tags {
 	display: flex;
