@@ -97,11 +97,7 @@ The overall pipeline is:
 ```
 +------+    +------+    +---+    +---+    +--------+
 |Source|--->|Values|--->|AST|--->|ANF|--->|Flat ANF|
-+------+ ^  +------+ ^  +---+ ^  +---+ ^  +--------+
-         |           |        |        |
- parser--+           +-----+  |        +--flatanf::Program::from
-                           |  |
- ast::Module::from_values--+  +---anf::Module::from
++------+    +------+    +---+    +---+    +--------+
 ```
 
 Flat ANF's structure will be laid out in a later post, but it's still much higher-level than LLVM or Cretonne's IR; rather than having basic blocks and instructions, it retains a tree structure.
