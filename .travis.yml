@@ -24,9 +24,6 @@ script:
 - gutenberg build --base-url https://remexre.xyz/
 
 deploy:
-  edge:
-    # https://github.com/travis-ci/travis-ci/issues/9312
-    branch: pages-ivar-set
   fqdn: remexre.xyz
   github_token: $GITHUB_TOKEN
   local-dir: public
