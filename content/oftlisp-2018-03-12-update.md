@@ -88,7 +88,7 @@ The `package.oftd` file looks like:
 
 ---
 
-Switching topics, I'm also going to outline the design of the new oftb interpreter.
+Switching topics, I'm also going to outline the design of [the new oftb interpreter](https://github.com/oftlisp/oftb).
 For speed (and to explore the design space that the eventual compiler will take), it will perform a quick compile to an internal bytecode, and interpret that.
 The bytecode will be similar to oftlisp-rs's ANFIR bytecode, which is itself based on Matt Might's article, [Writing an interpreter, CESK-style](http://matt.might.net/articles/cesk-machines/).
 
