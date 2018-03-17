@@ -1,6 +1,4 @@
-a { text-decoration: none; }
 a, body { color: #000000; }
-a:hover { text-decoration: underline; }
 article { margin-bottom: 1em; }
 body {
 	background-color: #ffffff;
@@ -25,7 +23,7 @@ header > h1 {
 	font-size: 2.5em;
 	margin: 0;
 }
-header > h1 > a:hover { text-decoration: none; }
+header > h1 > a { text-decoration: none; }
 header > nav { padding-bottom: 0.5em; }
 header > nav > span:after { content: " > "; }
 header > nav > span:last-child:after { content: unset; }

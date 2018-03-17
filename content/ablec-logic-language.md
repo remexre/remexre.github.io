@@ -1,6 +1,5 @@
 +++
-date = 2018-03-12
-draft = true
+date = 2018-03-17
 tags = ["ableC", "Logic Programming", "Project Ideas"]
 title = "An ableC Extension for Logic Programming"
 +++
@@ -69,3 +68,15 @@ Lastly, the popularity of [miniKanren](http://minikanren.org/) dialects takes aw
 For me, the benefit of Prolog over miniKanren, or even trickiness like defining a nondeterminism monad, isn't in its capabilities so much as the terseness of its syntax.
 Prolog syntax is simple enough to pick up in a single lecture, encouraging prototyping, and its uniformity makes transferring knowledge between projects easier.
 
+# Implementation
+
+The concrete syntax should be fairly simple, with the exclusion of custom operators.
+Custom operators aren't used in most Prolog code (that I've seen), so this shouldn't be overly harmful.
+
+Being able to handle both C's case-insensitive variables and Prolog's case-dependent atoms/variables is potentially another good way to showcase the advantage of Copper's context-aware lexing.
+
+Implementing the abstract syntax should be straightforward as well.
+
+For implementing the actual Prolog interpreter, I like the approach in [Implementation of a high-speed Prolog interpreter](https://doi.org/10.1145/29650.29663).
+The approach here is simpler than a typical WAM, and (according to that paper's "Comparison with compilers" section) is faster than many compilers while still supporting `assert` and `retract`.
+At a minimum, `assert` should be supported for the `LogicEngine_load_facts_from_file` function to work efficiently.

@@ -12,11 +12,19 @@ cache:
   - $HOME/gutenberg
 
 install:
+# Download gutenberg.
 - test -d $HOME/gutenberg/.git || git clone https://github.com/Keats/gutenberg.git $HOME/gutenberg
-- cd $HOME/gutenberg; git submodule update --init; git submodule update --remote --merge
+- cd $HOME/gutenberg; git fetch --all --tags
+# Switch to the latest tagged version.
+- cd $HOME/gutenberg; git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
+# Clone submodules.
+- cd $HOME/gutenberg; git submodule update --init
+# Clone and update the OftLisp syntax.
 - cd $HOME/gutenberg/sublime_syntaxes; test -d Sublime-OftLisp/.git || git clone https://github.com/oftlisp/Sublime-OftLisp.git
 - cd $HOME/gutenberg/sublime_syntaxes/Sublime-OftLisp; git pull
+# Create new packdump files.
 - cd $HOME/gutenberg/components/rendering; cargo run --example generate_sublime synpack ../../sublime_syntaxes ../../sublime_syntaxes/newlines.packdump ../../sublime_syntaxes/nonewlines.packdump
+# Install gutenberg.
 - cd $HOME/gutenberg; cargo install --force
 - cd $TRAVIS_BUILD_DIR
 
