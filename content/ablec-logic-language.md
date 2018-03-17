@@ -14,6 +14,7 @@ An example of what I'm envisioning might be:
 #include <stdio.h>
 
 char* append_strings(char*, char*);
+int factorial(int);
 char* pprint_node(int nodeIdx);
 
 ruleset exampleRules {
