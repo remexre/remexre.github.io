@@ -75,7 +75,7 @@ The `package.oftd` file looks like:
 (components
   (library)
   (binary
-    (name foo)
+    (name "foo")
     (path "src/main.oft")))
 
 (dependencies
