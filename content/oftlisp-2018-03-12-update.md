@@ -34,14 +34,14 @@ foo/
 ├── .gitignore
 ├── build/
 │   ├── deps/
-│   │   ├── combinargs/
+│   │   ├── combinargs-0.2.1/
 │   │   │   ├── .git/
 │   │   │   │   └── ...
 │   │   │   ├── .gitignore
 │   │   │   ├── package.oftd
 │   │   │   └── src/
 │   │   │       └── lib.oft
-│   │   └── grid/
+│   │   └── grid-0.1.0/
 │   │       ├── .git/
 │   │       │   └── ...
 │   │       ├── .gitignore
