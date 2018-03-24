@@ -1,13 +1,10 @@
 +++
-date = 2017-08-10
-draft = true
-tags = ["ableC", "Concurrency"]
+date = 2018-03-24
+tags = ["ableC", "Concurrency", "Project Ideas"]
 title = "STM in ableC"
 +++
 
-This serves as a combination notebook and project proposal.
-
-# STM Overview
+# Introduction
 
 Software Transactional Memory (STM) has been described in many places, and is present in many languages, including Clojure and Haskell.
 The best introduction to STM I know of is [Beautiful Concurrency](https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/beautiful.pdf), by Simon Peyton Jones.
@@ -49,8 +46,8 @@ void transfer(int amount, int* from, int* to, mtx_t *fromLock, mtx_t *toLock) {
 	mtx_lock(fromLock);
 	mtx_lock(toLock);
 
-	from -= amount;
-	to += amount;
+	*from -= amount;
+	*to += amount;
 
 	mtx_unlock(toLock);
 	mtx_unlock(fromLock);
@@ -60,10 +57,10 @@ void transfer(int amount, int* from, int* to, mtx_t *fromLock, mtx_t *toLock) {
 ```c
 // With transactions in ableC
 
-stm int alice_balance = 0;
-stm int bob_balance = 0;
+stm<int> alice_balance = 0;
+stm<int> bob_balance = 0;
 
-void transfer(int amount, stm int from, stm int to);
+void transfer(int amount, stm<int> from, stm<int> to);
 
 int main() {
 	// No init needed!
@@ -79,10 +76,10 @@ void thread2() {
 	transfer(45, bob_balance, alice_balance);
 }
 
-void transfer(int amount, stm int from, stm int to) {
+void transfer(int amount, stm<int> from, stm<int> to) {
 	run_transaction(transaction {
-		from -= amount;
-		to += amount;
+		*from -= amount;
+		*to += amount;
 	});
 }
 ```
@@ -99,31 +96,34 @@ Transactions instead work by performing all the operations required, then *commi
 The commit operation is performed by `run_transaction` in the above example.
 If a conflict (e.g. another thread has written to variables we read from/write to) is detected, the transaction is *aborted* (rolled back) and *retried*.
 
-This gives the same speed characteristics as a hand-crafted lock-free data structure, without the complexity of implementing one.
-With the algorithm described in [Transactional Locking II](http://dx.doi.org/10.1007/11864219_14), STM was benchmarked against mutexes, and resulted in an order-of-magnitude reduction in program run time in a benchmark.
+This gives the similar performance characteristics to a hand-crafted lock-free data structure, without the complexity of implementing one.
+With the algorithm described in [Transactional Locking II](http://dx.doi.org/10.1007/11864219_14), STM was benchmarked against mutexes, and resulted in an order-of-magnitude reduction in program run time.
 
-# Implementing in ableC
+# Implementation
 
 ## `stm` Types
 
-TODO
+`stm<T>` types should have operators overloaded on them such that the dereference operator (unary `*`) will keep track of reads and writes as specified in TL2 (cited above).
 
 ## The `transaction` Type
 
-TODO
+Transactions are more complex; I'm not sure of the best way to implement them.
+Compiling transaction blocks to lambda-lifted functions or closures might work; making `transaction_t` a typedef for a function pointer would then work for cheap, copyable transactions.
+The translation for closures would need to be different from the existing [ableC-closure](https://github.com/melt-umn/ableC-closure)'s method, as to enable restartable transactions, it must be possible to roll back the environment to an earlier state.
+This could perhaps be done by copying the closed-over variables from the closure's saved environment to local variables at the start of the function.
 
-## Ensuring Transaction Abortion
+## Side Effects
 
 One tricky thing about this is then ensuring that all the code that runs in a transaction can be safely rolled back.
 To that end, it is usually necessary to prevent side effects to non-`stm` variables.
-In Haskell, this is simply a matter of using the `IO` monad to prevent side-effects other than reading from and writing to STM variables.
+In Haskell, this is simply a matter of not exposing the `IO` monad, to prevent side-effects other than reading from and writing to STM variables.
+
 In ableC, on the other hand, we can add a `pure` type qualifier to function types.
 This type qualifier is inferred for functions that are themselves composed of only `pure` function calls and pure operations (e.g. math operations), but can also be manually added (with the caveat that misannotating an impure function as pure will cause undefined behavior).
 
-Inside a `transaction` block, only `pure` functions can be called.
-
-TODO
+Inside a `transaction` block, only `pure` functions should be able to be called.
 
 ## Runtime Support
 
-TODO
+In theory, a full implementation of TL2 should be included in the runtime.
+Garbage collection (as needed in the ableC-closure extension) will also probably be needed.
