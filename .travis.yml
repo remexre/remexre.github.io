@@ -22,6 +22,8 @@ install:
 # Clone and update the OftLisp syntax.
 - cd $HOME/gutenberg/sublime_syntaxes; test -d Sublime-OftLisp/.git || git clone https://github.com/oftlisp/Sublime-OftLisp.git
 - cd $HOME/gutenberg/sublime_syntaxes/Sublime-OftLisp; git pull
+# Update the lockfile. (Yes, I know this defeats the purpose of the lockfile.)
+- cd $HOME/gutenberg; cargo update
 # Create new packdump files.
 - cd $HOME/gutenberg/components/rendering; cargo run --example generate_sublime synpack ../../sublime_syntaxes ../../sublime_syntaxes/newlines.packdump ../../sublime_syntaxes/nonewlines.packdump
 # Install gutenberg.
