@@ -1,7 +1,7 @@
 +++
 date = 2017-08-04
 draft = true
-tags = ["Monads", "Theory"]
+tags = ["FP", "Theory"]
 title = "Monads: Another Explanation"
 +++
 
