@@ -1,7 +1,6 @@
 +++
+title = "Machine Learning Worker"
 +++
-
-# Machine Learning Worker
 
 ## Overview
 

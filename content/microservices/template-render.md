@@ -1,7 +1,6 @@
 +++
+title = "Template Render Worker"
 +++
-
-# Template Render Worker
 
 ## Overview
 

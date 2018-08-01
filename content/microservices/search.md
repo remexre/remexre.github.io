@@ -1,7 +1,6 @@
 +++
+title = "Search Worker"
 +++
-
-# Search Worker
 
 ## Overview
 

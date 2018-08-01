@@ -1,7 +1,6 @@
 +++
+title = "Load Balancer"
 +++
-
-# Load Balancer
 
 ## Overview
 

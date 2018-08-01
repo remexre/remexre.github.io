@@ -1,7 +1,6 @@
 +++
+title = "External API Worker"
 +++
-
-# External API Worker
 
 ## Overview
 
