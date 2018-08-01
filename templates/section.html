@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+
+{% block content %}
+	{% for page in section.pages %}
+		{% if not page.draft %}
+			{{ macros::describe(config=config, page=page, date=false) }}
+		{% endif %}
+	{% endfor %}
+{% endblock content %}
