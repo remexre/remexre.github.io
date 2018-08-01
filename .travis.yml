@@ -11,7 +11,7 @@ cache:
   - $HOME/.cargo
   - $HOME/gutenberg
 
-install:
+install_broken:
 # Download gutenberg.
 - test -d $HOME/gutenberg/.git || git clone https://github.com/Keats/gutenberg.git $HOME/gutenberg
 - cd $HOME/gutenberg; git fetch --all --tags
@@ -28,6 +28,11 @@ install:
 - cd $HOME/gutenberg/components/rendering; cargo run --example generate_sublime synpack ../../sublime_syntaxes ../../sublime_syntaxes/newlines.packdump ../../sublime_syntaxes/nonewlines.packdump
 # Install gutenberg.
 - cd $HOME/gutenberg; cargo install --force
+- cd $TRAVIS_BUILD_DIR
+
+install:
+- cd ~/.cargo/bin
+- curl -L https://github.com/Keats/gutenberg/releases/download/v0.3.4/gutenberg-v0.3.4-x86_64-unknown-linux-gnu.tar.gz | tar xz
 - cd $TRAVIS_BUILD_DIR
 
 script:
