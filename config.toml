@@ -14,3 +14,6 @@ generate_tags_pages = true
 generate_categories_pages = true
 
 compile_sass = false
+extra_syntaxes = [
+	"syntaxes/Sublime-OftLisp"
+]

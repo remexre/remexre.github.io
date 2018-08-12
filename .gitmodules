@@ -1,0 +1,3 @@
+[submodule "syntaxes/Sublime-Oftlisp"]
+	path = syntaxes/Sublime-OftLisp
+	url = https://github.com/oftlisp/Sublime-OftLisp.git
