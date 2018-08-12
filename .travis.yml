@@ -1,5 +1,6 @@
 language: rust
 rust: stable
+# language: generic
 os: linux
 
 branches:
@@ -11,24 +12,16 @@ cache:
   - $HOME/.cargo
   - $HOME/gutenberg
 
-install:
-# Download gutenberg.
-- test -d $HOME/gutenberg/.git || git clone https://github.com/Keats/gutenberg.git $HOME/gutenberg
-- cd $HOME/gutenberg; git fetch --all --tags
-# Switch to the latest tagged version.
-- cd $HOME/gutenberg; git checkout $(git describe --tags $(git rev-list --tags --max-count=1))
-# Clone submodules.
-- cd $HOME/gutenberg; git submodule update --init
-# Clone and update the OftLisp syntax.
-- cd $HOME/gutenberg/sublime_syntaxes; test -d Sublime-OftLisp/.git || git clone https://github.com/oftlisp/Sublime-OftLisp.git
-- cd $HOME/gutenberg/sublime_syntaxes/Sublime-OftLisp; git pull
-# Update the lockfile. (Yes, I know this defeats the purpose of the lockfile.)
-- cd $HOME/gutenberg; cargo update
-# Create new packdump files.
-# - cd $HOME/gutenberg/components/rendering; cargo run --example generate_sublime synpack ../../sublime_syntaxes ../../sublime_syntaxes/newlines.packdump ../../sublime_syntaxes/nonewlines.packdump
-# Install gutenberg.
-- cd $HOME/gutenberg; cargo install --force
+install_next:
+- mkdir -p ~/.local/bin
+- cd ~/.local/bin
+- curl -L https://github.com/Keats/gutenberg/releases/download/v0.4.2/gutenberg-v0.4.2-x86_64-unknown-linux-gnu.tar.gz | tar xz
+- export PATH=$HOME/.local/bin:$PATH
 - cd $TRAVIS_BUILD_DIR
+
+install:
+  - test -d $HOME/gutenberg/.git || git clone https://github.com/remexre/gutenberg.git $HOME/gutenberg --branch feature/runtime-syntax-loading
+  - cargo install --force --path $HOME/gutenberg
 
 script:
 - gutenberg build --base-url https://remexre.xyz/
