@@ -1,6 +1,4 @@
 +++
-date = 2017-10-10
-publishDate = 2017-10-10
 tags = ["CLI", "Guides", "Tools"]
 title = "Helpful Tools for CSCI2021"
 +++

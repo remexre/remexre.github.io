@@ -1,5 +1,4 @@
 +++
-date = 2018-05-25
 draft = true
 tags = ["FP", "Theory"]
 title = "Monad Transformers"

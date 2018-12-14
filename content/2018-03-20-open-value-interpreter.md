@@ -1,5 +1,4 @@
 +++
-date = 2018-03-20
 tags = ["Code Dump", "OCaml"]
 title = "An open value interpreter"
 +++

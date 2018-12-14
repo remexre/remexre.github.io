@@ -1,5 +1,4 @@
 +++
-date = 2018-12-05
 tags = ["Rust"]
 title = "Passing Ownership Up in Rust"
 +++

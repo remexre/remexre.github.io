@@ -1,5 +1,4 @@
 +++
-date = 2018-03-24
 tags = ["ableC", "Concurrency", "Project Ideas"]
 title = "STM in ableC"
 +++

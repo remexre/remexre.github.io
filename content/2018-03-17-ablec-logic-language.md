@@ -1,5 +1,4 @@
 +++
-date = 2018-03-17
 tags = ["ableC", "Logic Programming", "Project Ideas"]
 title = "An ableC Extension for Logic Programming"
 +++

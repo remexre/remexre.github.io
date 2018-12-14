@@ -1,5 +1,4 @@
 +++
-date = 2018-03-24
 draft = true
 tags = ["Databases", "Logic Programming", "Project Ideas"]
 title = "My Ideal Everyday Database"
