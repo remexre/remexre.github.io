@@ -1,6 +1,4 @@
-language: rust
-rust: stable
-# language: generic
+language: minimal
 os: linux
 
 branches:
@@ -8,24 +6,13 @@ branches:
   - authoring
   - zola
 
-cache:
-  directories:
-  - $HOME/.cargo
-  - $HOME/gutenberg
-
-install_next:
-- mkdir -p ~/.local/bin
-- cd ~/.local/bin
-- curl -L https://github.com/Keats/gutenberg/releases/download/v0.4.2/gutenberg-v0.4.2-x86_64-unknown-linux-gnu.tar.gz | tar xz
-- export PATH=$HOME/.local/bin:$PATH
-- cd $TRAVIS_BUILD_DIR
-
 install:
-  - test -d $HOME/gutenberg/.git || git clone https://github.com/remexre/gutenberg.git $HOME/gutenberg --branch feature/runtime-syntax-loading
-  - cargo install --force --path $HOME/gutenberg
+  - mkdir -p ~/.local/bin
+  - curl -L https://github.com/getzola/zola/releases/download/v0.5.0/zola-v0.5.0-x86_64-unknown-linux-gnu.tar.gz | tar zxC ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
 
 script:
-- gutenberg build --base-url https://remexre.xyz/
+- zola build --base-url https://remexre.xyz/
 
 deploy:
   fqdn: remexre.xyz
