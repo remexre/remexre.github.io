@@ -6,6 +6,7 @@ os: linux
 branches:
   only:
   - authoring
+  - zola
 
 cache:
   directories:
