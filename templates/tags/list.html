@@ -17,7 +17,7 @@
 	<div class="tags">
 		{% for tag in terms %}
 			<span class="tag">
-				<a href="tags/{{ tag.slug }}">{{ tag.name }}</a> ({{ tag.pages | length }})
+				<a href="{{ tag.permalink }}">{{ tag.name }}</a> ({{ tag.pages | length }})
 			</span>
 		{% endfor %}
 	</div>

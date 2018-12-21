@@ -1,5 +1,9 @@
 {% extends "index.html" %}
 
+{% block css %}
+<link href="{{ config.base_url }}css/slides.css" rel="stylesheet">
+{% endblock css %}
+
 {% block title %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/theme/solarized.min.css">
@@ -12,14 +16,17 @@
 
 {% block content %}
 <div class="reveal">
-	{{ page.content | safe }}
+	<div class="slides">
+		<section data-markdown data-separator="^\r?\n---\r?\n$">
+			<textarea data-template>{{ page.raw_content | safe }}</textarea>
+		</section>
+	</div>
 </div>
 {% endblock content %}
 
 {% block footer %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/js/reveal.min.js"></script>
 <script>
-	/*
 	Reveal.initialize({
 		dependencies: [
 			{ src: "https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/plugin/markdown/marked.js" },
@@ -30,6 +37,5 @@
 			smartypants: true,
 		},
 	});
-	*/
 </script>
 {% endblock footer %}

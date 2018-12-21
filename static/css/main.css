@@ -64,7 +64,7 @@ pre { padding: 0.5em; }
 	align-self: center;
 	max-width: 800px;
 }
-#main-container> nav {
+#main-container > nav {
 	float: right;
 	padding: 0 40px;
 }
@@ -72,8 +72,10 @@ pre { padding: 0.5em; }
 	display: flex;
 	flex-direction: column;
 }
-#navbar > a, #navbar > span {
-	margin: 0.5em;
+#navbar > a { margin: 0.25em 0.5em; }
+#navbar > span {
+	margin-bottom: 0.25em;
+	margin-top: 0.75em;
 }
 
 @media only screen and (min-width: 800px) {
