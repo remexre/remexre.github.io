@@ -1,6 +1,8 @@
 +++
-tags = ["ableC", "Logic Programming", "Project Ideas"]
 title = "An ableC Extension for Logic Programming"
+
+[taxonomies]
+tags = ["ableC", "Logic Programming", "Project Ideas"]
 +++
 
 # Introduction

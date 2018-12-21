@@ -1,7 +1,7 @@
 {% extends "index.html" %}
 
 {% block title %}
-	<title>{{ tag.name }} &mdash; {{ config.title }}</title>
+	<title>{{ term.name }} &mdash; {{ config.title }}</title>
 {% endblock title %}
 
 {% block header %}
@@ -11,15 +11,15 @@
 			<span><a href="{{ config.base_url }}tags">Tags</a></span>
 		</nav>
 		<h1>
-			<a href="{{ config.base_url }}tags/{{ tag.slug }}">
-				{{ tag.name }}
+			<a href="{{ config.base_url }}tags/{{ term.slug }}">
+				{{ term.name }}
 			</a>
 		</h1>
 	</header>
 {% endblock header %}
 
 {% block content %}
-	{% for page in tag.pages %}
+	{% for page in term.pages %}
 		{{ macros::describe(config=config, page=page) }}
 	{% endfor %}
 {% endblock content %}

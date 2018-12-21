@@ -1,6 +1,8 @@
 +++
-tags = ["CLI", "Guides", "Tools"]
 title = "Helpful Tools for CSCI2021"
+
+[taxonomies]
+tags = ["CLI", "Guides", "Tools"]
 +++
 
 # radare2

@@ -1,6 +1,8 @@
 +++
-tags = ["ableC", "Concurrency", "Project Ideas"]
 title = "STM in ableC"
+
+[taxonomies]
+tags = ["ableC", "Concurrency", "Project Ideas"]
 +++
 
 # Introduction

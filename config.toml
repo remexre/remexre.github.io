@@ -10,8 +10,9 @@ highlight_theme = "demain"
 generate_rss = true
 rss_limit = 100
 
-generate_tags_pages = true
-generate_categories_pages = true
+taxonomies = [
+	{name = "tags"}
+]
 
 compile_sass = false
 extra_syntaxes = [

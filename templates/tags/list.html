@@ -15,9 +15,9 @@
 
 {% block content %}
 	<div class="tags">
-		{% for tag in tags %}
+		{% for tag in terms %}
 			<span class="tag">
-				<a href="{{ tag.slug }}">{{ tag.name }}</a> ({{ tag.pages | length }})
+				<a href="tags/{{ tag.slug }}">{{ tag.name }}</a> ({{ tag.pages | length }})
 			</span>
 		{% endfor %}
 	</div>

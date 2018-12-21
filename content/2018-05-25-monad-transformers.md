@@ -1,7 +1,9 @@
 +++
 draft = true
-tags = ["FP", "Theory"]
 title = "Monad Transformers"
+
+[taxonomies]
+tags = ["Code Dump", "FP", "Theory"]
 +++
 
 ```haskell

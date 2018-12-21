@@ -1,6 +1,8 @@
 +++
-tags = ["Code Dump", "OCaml"]
 title = "An open value interpreter"
+
+[taxonomies]
+tags = ["Code Dump", "OCaml"]
 +++
 
 ```ocaml

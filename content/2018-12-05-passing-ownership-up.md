@@ -1,6 +1,8 @@
 +++
-tags = ["Rust"]
 title = "Passing Ownership Up in Rust"
+
+[taxonomies]
+tags = ["Rust"]
 +++
 
 # Introduction
