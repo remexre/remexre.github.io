@@ -5,6 +5,8 @@ title = "An ableC Extension for Logic Programming"
 tags = ["ableC", "Logic Programming", "Project Ideas"]
 +++
 
+**EDIT** (2018-12-20): Lucas Kramer ([GitHub](https://github.com/krame505)) did this: [ableC-prolog](https://github.com/melt-umn/ableC-prolog).
+
 # Introduction
 
 I'd like to see an ableC extension that embeds a simple Prolog dialect into C with easy interoperability, such that it's trivial to call C code from Prolog or run Prolog queries from C.
