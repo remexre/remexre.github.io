@@ -1,0 +1,18 @@
+main {
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+	width: 30em;
+}
+
+main > pre { overflow: auto; }
+
+#back {
+	left: 0.5em;
+	position: fixed;
+	opacity: 0.2;
+	top: 0.5em;
+}
+#back:hover {
+	opacity: 1;
+}

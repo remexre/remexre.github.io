@@ -1,58 +1,35 @@
-{% import "macros.html" as macros %}
-
-<!DOCTYPE html>
-
+<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<meta name="description" content="{{ config.description }}">
-		<meta name="viewport" content="width=850">
-		{% if config.base_url %}
-			<link href="{{ config.base_url }}rss.xml" rel="alternate" type="application/rss+xml" title="{{ config.title }}" />
-			<link href="{{ config.base_url }}rss.xml" rel="feed" type="application/rss+xml" title="{{ config.title }}" />
-		{% endif %}
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed|Source+Sans+Pro" rel="stylesheet">
-		<link href="https://cdn.rawgit.com/tonsky/FiraCode/1.205/distr/fira_code.css" rel="stylesheet">
-		{% block css %}
-		<link href="{{ config.base_url }}css/highlight.css" rel="stylesheet">
-		<link href="{{ config.base_url }}css/main.css" rel="stylesheet">
-		{% endblock css %}
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.min.js"></script>
-		{% block title %}
-			<title>{{ config.title }}</title>
-		{% endblock title %}
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{{ config.title }}</title>
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/style.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/section.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/inter/inter.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
 	</head>
 	<body>
-		<div id="main-container">
-			{% block header %}
-				<header>
-					<h1><a href="{{ config.base_url }}">{{ config.title }}</a></h1>
-				</header>
-				<nav id="navbar">
-					<a href="{{ config.base_url }}tags">Tags</a>
-					{% if config.generate_rss %}
-						<a href="{{ config.base_url }}rss.xml" type="application/rss+xml">RSS</a>
-					{% endif %}
-					<span>Contact Me</span>
-					<a href="mailto:remexre@gmail.com">Email</a>
-					<a href="https://github.com/remexre">GitHub</a>
-					<a href="https://keybase.io/remexre">Keybase</a>
-					<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
-					<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
-				</nav>
-			{% endblock header %}
-			<main>
-				{% block content %}
-					{% for page in section.pages %}
-						{% if not page.draft %}
-							{{ macros::describe(config=config, page=page) }}
-						{% endif %}
-					{% endfor %}
-				{% endblock content %}
-			</main>
-			{% block footer %}
-			{% endblock footer %}
+		<div class="spacer"></div>
+		<div id="search-container"></div>
+		<div id="pages">
+			{% for page in section.pages %}
+				{% if not page.draft %}
+					<div class="page">
+						<a href="{{ page.permalink }}">{{ page.title }}</a>
+					</div>
+				{% endif %}
+			{% endfor %}
 		</div>
+		<div class="spacer"></div>
+		<footer>
+			<a href="mailto:remexre@gmail.com">Email</a>
+			<a href="https://github.com/remexre">GitHub</a>
+			<a href="https://keybase.io/remexre">Keybase</a>
+			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
+			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
+		</footer>
+		<script src="{{ config.base_url }}js/search.js"></script>
 	</body>
 </html>

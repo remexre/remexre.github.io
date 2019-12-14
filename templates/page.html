@@ -1,41 +1,40 @@
-{% extends "index.html" %}
-
-{% block title %}
-	<title>{{ page.title }} &mdash; {{ config.title }}</title>
-{% endblock title %}
-
-{% block header %}
-	<header>
-		<nav>
-			<span><a href="{{ config.base_url }}">{{ config.title }}</a></span>
-		</nav>
-		<h1 id="title">
-			<a href="{{ page.permalink }}">{{ page.title }}</a>
-			{% if page.draft %}(Draft){% endif %}
-		</h1>
-		<ul class="post-tags">
-			{% if page.taxonomies.tags %}
-				{% for tag in page.taxonomies.tags %}
-					<li>
-						<a href="{{ config.base_url }}tags/{{ tag | slugify }}">
-							{{ tag }}
-						</a>
-					</li>
-				{% endfor %}
-			{% endif %}
-		</ul>
-	</header>
-{% endblock header %}
-
-{% block content %}
-	{{ page.content | safe }}
-{% endblock content %}
-
-{% block footer %}
-	<script>
-		var sectionAnchors = new AnchorJS();
-		sectionAnchors.options.class = "section-anchor";
-		sectionAnchors.options.icon = "#";
-		sectionAnchors.add("main h1, main h2, main h3, main h4, main h5, main h6");
-	</script>
-{% endblock footer %}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{{ page.title }} &mdash; {{ config.title }}</title>
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/style.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/page.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/inter/inter.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
+	</head>
+	<body>
+		<a id="back" href=".." title="Back">
+			<i class="fas fa-chevron-left"></i>
+		</a>
+		<main>
+			<h1 id="title">
+				<a href="{{ page.permalink }}">{{ page.title }}</a>
+				{% if page.draft %}(Draft){% endif %}
+			</h1>
+			{{ page.content | safe }}
+		</main>
+		<div class="spacer"></div>
+		<footer>
+			<a href="mailto:remexre@gmail.com">Email</a>
+			<a href="https://github.com/remexre">GitHub</a>
+			<a href="https://keybase.io/remexre">Keybase</a>
+			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
+			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
+		</footer>
+		<script src="{{ config.base_url }}js/search.js"></script>
+		<script>
+			var sectionAnchors = new AnchorJS();
+			sectionAnchors.options.class = "section-anchor";
+			sectionAnchors.options.icon = "#";
+			sectionAnchors.add("main h1, main h2, main h3, main h4, main h5, main h6");
+		</script>
+	</body>
+</html>

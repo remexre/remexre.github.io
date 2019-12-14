@@ -9,4 +9,3 @@ generate_rss = true
 hard_link_static = true
 
 compile_sass = false
-build_search_index = true

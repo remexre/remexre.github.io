@@ -1,5 +1,25 @@
-{% extends "index.html" %}
-
-{% block content %}
-	<h1>404 File Not Found</h1>
-{% endblock content %}
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>{{ config.title }}</title>
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/style.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/inter/inter.css">
+		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
+		<style>h1 { margin: auto; }</style>
+	</head>
+	<body>
+		<div class="spacer"></div>
+		<h1>404 File Not Found</h1>
+		<div class="spacer"></div>
+		<footer>
+			<a href="mailto:remexre@gmail.com">Email</a>
+			<a href="https://github.com/remexre">GitHub</a>
+			<a href="https://keybase.io/remexre">Keybase</a>
+			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
+			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
+		</footer>
+	</body>
+</html>
