@@ -1,7 +1,0 @@
-/* Stacked layout */
-@media screen and (min-width: 1000px) {
-}
-
-/* Side-by-side layout */
-@media not screen and (max-width: 1000px) {
-}
