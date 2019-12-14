@@ -1,20 +1,12 @@
-base_url = "https://remexre.xyz/"
+base_url = "https://remexre.xyz"
 
 title = "remexre.xyz"
-description = "remexre.xyz"
-language_code = "en"
 
 highlight_code = true
-highlight_theme = "demain"
+highlight_theme = "monokai"
 
 generate_rss = true
-rss_limit = 100
-
-taxonomies = [
-	{name = "tags"}
-]
+hard_link_static = true
 
 compile_sass = false
-extra_syntaxes = [
-	"syntaxes/Sublime-OftLisp"
-]
+build_search_index = true
