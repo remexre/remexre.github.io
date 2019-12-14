@@ -11,9 +11,9 @@
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
 	</head>
 	<body>
-		<a id="back" href=".." title="Back">&lsaquo;</a>
+		<a class="back" href=".." title="Back">&lsaquo;</a>
 		<main>
-			<h1 id="title">
+			<h1 class="title">
 				<a href="{{ page.permalink }}">{{ page.title }}</a>
 				{% if page.draft %}(Draft){% endif %}
 			</h1>
@@ -28,6 +28,10 @@
 			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
 		</footer>
 		<script src="{{ config.base_url }}ext/anchor.min.js"></script>
-		<script>new AnchorJS().add("main h2, main h3, main h4, main h5, main h6");</script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.placement = "left";
+			anchors.add("main h1:not(.title)");
+		</script>
 	</body>
 </html>

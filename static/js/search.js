@@ -6,7 +6,7 @@
   searchBox.autocomplete = "off";
   searchBox.id = "search";
   searchBox.placeholder = "Search...";
-  document.querySelector("#search-container").appendChild(searchBox);
+  document.querySelector("#pages").prepend(searchBox);
 
   // Add search functionality.
   const normalize = (s) => {

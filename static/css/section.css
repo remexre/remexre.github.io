@@ -1,11 +1,7 @@
 #pages {
 	display: flex;
 	flex-direction: column;
-}
-
-#search-container, #pages {
 	margin: auto;
-	min-width: 20em;
 }
 
 #search {
@@ -14,26 +10,25 @@
 	border-width: 0 0 1px 0;
 	color: var(--foreground-bright);
 	font-family: var(--font-family);
-	font-size: 1em;
-	margin-top: 1em;
-	min-width: 20em;
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
 	text-align: center;
 }
 
 .page {
 	border-bottom: 1px solid #7f7f7f;
+	font-size: 1.5rem;
 	overflow: hidden;
-	padding: 0.5em 0 0.5em 0.5em;
+	padding: 0.75rem;
 	transition-duration: 0.5s;
 	transition-property: all;
-	width: 100%;
 }
 
 .page:last-child { border-bottom: 0; }
 
 .page > a {
 	display: inline-block;
-	width: calc(100% - 0.5em);
+	width: calc(100% - 1.5rem);
 }
 
 .page.hidden {
