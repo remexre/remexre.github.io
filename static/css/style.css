@@ -21,19 +21,19 @@ h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 }
 
-main h1.title {
+article h1.title {
 	font-size: 2.0rem;
 }
 
-main h1:not(.title) {
+article h1:not(.title) {
 	font-size: 1.75rem;
 }
 
-main h2 {
+article h2 {
 	font-size: 1.5rem;
 }
 
-footer {
+header, footer {
 	font-size: 1.0rem;
 	padding: 0.25rem;
 }

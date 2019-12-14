@@ -12,26 +12,26 @@
 	</head>
 	<body>
 		<a class="back" href=".." title="Back">&lsaquo;</a>
-		<main>
-			<h1 class="title">
-				<a href="{{ page.permalink }}">{{ page.title }}</a>
-				{% if page.draft %}(Draft){% endif %}
-			</h1>
-			{{ page.content | safe }}
-		</main>
-		<div class="spacer"></div>
-		<footer>
+		<header>
 			<a href="mailto:remexre@gmail.com">Email</a>
 			<a href="https://github.com/remexre">GitHub</a>
 			<a href="https://keybase.io/remexre">Keybase</a>
 			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
 			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
-		</footer>
+		</header>
+		<article>
+			<h1 class="title">
+				<a href="{{ page.permalink }}">{{ page.title }}</a>
+				{% if page.draft %}(Draft){% endif %}
+			</h1>
+			{{ page.content | safe }}
+		</article>
+		<div class="spacer"></div>
 		<script src="{{ config.base_url }}ext/anchor.min.js"></script>
 		<script>
 			const anchors = new AnchorJS();
 			anchors.options.placement = "left";
-			anchors.add("main h1:not(.title)");
+			anchors.add("article h1:not(.title)");
 		</script>
 	</body>
 </html>

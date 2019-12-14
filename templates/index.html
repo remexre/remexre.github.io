@@ -11,25 +11,23 @@
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
 	</head>
 	<body>
-		<div class="spacer"></div>
-		<div id="pages">
-			{% for page in section.pages | reverse %}
-				{% if not page.draft %}
-					<a class="page" href="{{ page.permalink }}">
-						{{ page.title }}
-						<span class="date">{{ page.date }}</span>
-					</a>
-				{% endif %}
-			{% endfor %}
-		</div>
-		<div class="spacer"></div>
-		<footer>
+		<header>
 			<a href="mailto:remexre@gmail.com">Email</a>
 			<a href="https://github.com/remexre">GitHub</a>
 			<a href="https://keybase.io/remexre">Keybase</a>
 			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
 			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
-		</footer>
+		</header>
+		<div class="spacer"></div>
+		<div id="pages">
+			{% for page in section.pages | reverse %}
+				<a class="page" href="{{ page.permalink }}">
+					{{ page.title }}
+					<span class="date">{{ page.date }}</span>
+				</a>
+			{% endfor %}
+		</div>
+		<div class="spacer"></div>
 		<script src="{{ config.base_url }}js/search.js"></script>
 	</body>
 </html>
