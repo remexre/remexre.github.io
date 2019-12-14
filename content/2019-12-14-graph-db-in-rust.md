@@ -1,0 +1,8 @@
++++
+title = "G1: A simple graph store, written in Rust"
+
+[taxonomies]
+tags = ["g1", "rust"]
++++
+
+TODO: This is only here now to trigger a rebuild...
