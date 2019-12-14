@@ -1,11 +1,11 @@
-main {
+article {
 	margin: auto;
 	max-width: 35.0rem;
 	padding: 0 0.5rem;
 	width: calc(100% - 1.0rem);
 }
 
-main > pre {
+article > pre {
 	overflow: auto;
 	padding: 0.5rem;
 }
