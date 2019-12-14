@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>G1: A simple graph store, written in Rust &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/style.css">
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/page.css">
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/inter/inter.css">
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/fontawesome-free-5.11.2-web/css/all.min.css">
+	</head>
+	<body>
+		<a class="back" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a href="mailto:remexre@gmail.com">Email</a>
+			<a href="https://github.com/remexre">GitHub</a>
+			<a href="https://keybase.io/remexre">Keybase</a>
+			<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-intro&#x2F;">G1: A simple graph store, written in Rust</a>
+				(Draft)
+			</h1>
+			<p><a href="https://github.com/remexre/g1">G1</a></p>
+<h2 id="intro">Intro</h2>
+<ul>
+<li>SQLite good b/c ez to configure</li>
+<li>Wanted a graph db for a project, with Datalog for querying</li>
+<li>Making simple graph database seems like a good project to blog abt, to incentivize myself to learn abt how to do this well</li>
+</ul>
+<h2 id="model">Model</h2>
+<p><strong>Atom</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
+<p><strong>Name</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
+<p><strong>Edge</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
+<p><strong>Tag</strong>: Tags are attached to Atoms. They have a key and a value, both of which are Strings.</p>
+<p><strong>Blob</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.</p>
+<p>Strings are UTF-8 Strings, which should be no longer than 256 bytes.</p>
+<h2 id="query-language">Query Language</h2>
+<p><a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a> variant</p>
+<p>Builtin predicates for reading data in the database (IDB):</p>
+<ul>
+<li><code>atom(Atom)</code></li>
+<li><code>name(Atom, Namespace, Title)</code></li>
+<li><code>edge(From, To, Label)</code></li>
+<li><code>tag(Atom, Key, Value)</code></li>
+<li><code>blob(Atom, Kind, Mime, Hash)</code></li>
+</ul>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">f(X, y).
+</span></pre>
+		</article>
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>
