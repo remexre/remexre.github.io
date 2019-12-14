@@ -7,16 +7,7 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Sat, 14 Dec 2019 00:00:00 +0000</lastBuildDate>
-        
-            <item>
-                <title>G1: A simple graph store, written in Rust</title>
-                <pubDate>Sat, 14 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https://remexre.xyz/graph-db-in-rust/</link>
-                <guid>https://remexre.xyz/graph-db-in-rust/</guid>
-                <description>&lt;p&gt;TODO: This is only here now to trigger a rebuild...&lt;&#x2F;p&gt;
-</description>
-            </item>
+        <lastBuildDate>Fri, 13 Dec 2019 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>Reboot of the Blog, again!</title>
