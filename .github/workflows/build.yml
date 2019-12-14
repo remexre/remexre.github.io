@@ -4,14 +4,6 @@ on:
     branches:
     - authoring
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v1
-      with:
-        lfs: true
-    - name: ft font
-      run: file static/ext/inter/Inter.var.woff2
   build:
     runs-on: ubuntu-latest
     steps:
@@ -28,4 +20,5 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BASE_BRANCH: authoring
         BRANCH: master
+        CLEAN: true
         FOLDER: public
