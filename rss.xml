@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>remexre.xyz</title>
+        <link>https://remexre.xyz/</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 14 Dec 2019 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>G1: A simple graph store, written in Rust</title>
+                <pubDate>Sat, 14 Dec 2019 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/graph-db-in-rust/</link>
+                <guid>https://remexre.xyz/graph-db-in-rust/</guid>
+                <description>&lt;p&gt;TODO: This is only here now to trigger a rebuild...&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+            <item>
+                <title>Reboot of the Blog, again!</title>
+                <pubDate>Fri, 13 Dec 2019 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/reboot/</link>
+                <guid>https://remexre.xyz/reboot/</guid>
+                <description>&lt;p&gt;Only 11 months less a day between posts, this time!&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m restarting the blog, again. All the old content is still on GitHub, on &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;remexre.github.io&#x2F;tree&#x2F;authoring-old-2019-01-14&quot;&gt;the &lt;code&gt;authoring-old-2019-01-14&lt;&#x2F;code&gt; branch&lt;&#x2F;a&gt;. The real reason is that upstream changes to Zola broke a template I wasn&#x27;t really using anyway, and I&#x27;ve been putting off fixing it.&lt;&#x2F;p&gt;
+&lt;p&gt;I actually have a few things to blog about planned out, this time. Expect:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A project to allow more ergonomic FFI between Rust and Lisp&#x2F;Python&lt;&#x2F;li&gt;
+&lt;li&gt;Notes about a simple graph store from scratch in Rust&lt;&#x2F;li&gt;
+&lt;li&gt;Read-throughs of academic papers, usually related to some project&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Hopefully, I&#x27;ll finish at least one post a month this time...&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

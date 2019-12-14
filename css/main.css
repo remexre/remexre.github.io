@@ -1,0 +1,16 @@
+html, body { overflow: auto; }
+
+body {
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	min-height: 100vh;
+}
+
+.spacer { flex-grow: 1; }
+
+footer {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}

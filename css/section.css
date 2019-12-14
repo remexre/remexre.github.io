@@ -1,0 +1,39 @@
+#pages {
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+}
+
+#search {
+	background-color: var(--background);
+	border-color: var(--foreground-dim);
+	border-width: 0 0 1px 0;
+	color: var(--foreground-bright);
+	font-family: var(--font-family);
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+	text-align: center;
+}
+
+.page {
+	border-bottom: 1px solid #7f7f7f;
+	font-size: 1.5rem;
+	overflow: hidden;
+	padding: 0.75rem;
+	transition-duration: 0.5s;
+	transition-property: all;
+}
+
+.page:last-child { border-bottom: 0; }
+
+.page > a {
+	display: inline-block;
+	width: calc(100% - 1.5rem);
+}
+
+.page.hidden {
+	border: 0;
+	line-height: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+}

@@ -1,0 +1,39 @@
+html {
+	--background: #1e1f29;
+	--foreground-dim: #cfcfcf;
+	--foreground-bright: #ffffff;
+	--font-family: Inter, sans-serif;
+
+	background-color: var(--background);
+	color: var(--foreground-dim);
+	font-family: var(--font-family);
+}
+
+a {
+	color: var(--foreground-dim);
+	text-decoration: none;
+	transition-property: color, opacity;
+	transition-duration: 0.5s;
+}
+a:hover { color: var(--foreground-bright); }
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+}
+
+main h1.title {
+	font-size: 2.0rem;
+}
+
+main h1:not(.title) {
+	font-size: 1.75rem;
+}
+
+main h2 {
+	font-size: 1.5rem;
+}
+
+footer {
+	font-size: 0.75rem;
+	padding: 0.25rem;
+}
