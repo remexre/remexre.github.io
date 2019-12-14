@@ -9,10 +9,9 @@ main > pre { overflow: auto; }
 
 #back {
 	left: 0.5em;
+	font-size: 150%;
 	position: fixed;
 	opacity: 0.2;
-	top: 0.5em;
+	top: 0.25em;
 }
-#back:hover {
-	opacity: 1;
-}
+#back:hover { opacity: 1; }

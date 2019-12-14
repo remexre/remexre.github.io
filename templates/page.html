@@ -11,9 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}ext/fontawesome-free-5.11.2-web/css/all.min.css">
 	</head>
 	<body>
-		<a id="back" href=".." title="Back">
-			<i class="fas fa-chevron-left"></i>
-		</a>
+		<a id="back" href=".." title="Back">&lsaquo;</a>
 		<main>
 			<h1 id="title">
 				<a href="{{ page.permalink }}">{{ page.title }}</a>
@@ -29,12 +27,7 @@
 			<a href="{{ config.base_url }}remexre.asc">GPG Key</a>
 			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
 		</footer>
-		<script src="{{ config.base_url }}js/search.js"></script>
-		<script>
-			var sectionAnchors = new AnchorJS();
-			sectionAnchors.options.class = "section-anchor";
-			sectionAnchors.options.icon = "#";
-			sectionAnchors.add("main h1, main h2, main h3, main h4, main h5, main h6");
-		</script>
+		<script src="{{ config.base_url }}ext/anchor.min.js"></script>
+		<script>new AnchorJS().add("main h2, main h3, main h4, main h5, main h6");</script>
 	</body>
 </html>

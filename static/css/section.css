@@ -29,9 +29,7 @@
 	width: 100%;
 }
 
-.page:last-child {
-	border-bottom: 0;
-}
+.page:last-child { border-bottom: 0; }
 
 .page > a {
 	display: inline-block;
