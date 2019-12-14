@@ -13,11 +13,12 @@
 	<body>
 		<div class="spacer"></div>
 		<div id="pages">
-			{% for page in section.pages %}
+			{% for page in section.pages | reverse %}
 				{% if not page.draft %}
-					<div class="page">
-						<a href="{{ page.permalink }}">{{ page.title }}</a>
-					</div>
+					<a class="page" href="{{ page.permalink }}">
+						{{ page.title }}
+						<span class="date">{{ page.date }}</span>
+					</a>
 				{% endif %}
 			{% endfor %}
 		</div>

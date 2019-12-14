@@ -16,8 +16,13 @@
 }
 
 .page {
+	align-items: center;
 	border-bottom: 1px solid #7f7f7f;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
 	font-size: 1.5rem;
+	justify-content: space-between;
 	overflow: hidden;
 	padding: 0.75rem;
 	transition-duration: 0.5s;
@@ -26,9 +31,10 @@
 
 .page:last-child { border-bottom: 0; }
 
-.page > a {
-	display: inline-block;
-	width: calc(100% - 1.5rem);
+.page .date {
+	font-size: 50%;
+	margin: auto 0;
+	padding-left: 0.5rem;
 }
 
 .page.hidden {
