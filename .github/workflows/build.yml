@@ -14,6 +14,8 @@ jobs:
       run: curl -L https://github.com/getzola/zola/releases/download/v0.9.0/zola-v0.9.0-x86_64-unknown-linux-gnu.tar.gz | tar xzv
     - name: Run Zola
       run: ./zola build
+    - name: DEBUG: Show files
+      run: ls -lR public
     - name: GitHub Pages Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
