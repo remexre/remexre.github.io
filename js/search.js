@@ -28,7 +28,7 @@
   searchBox.autocomplete = "off";
   searchBox.classList.add("search");
   searchBox.placeholder = "Search...";
-  document.querySelector(".pages").prepend(searchBox);
+  document.querySelector(".list").prepend(searchBox);
 
   // Add search functionality.
   const normalize = (s) => {
@@ -36,10 +36,10 @@
   };
   const updateSearch = () => {
     const searchTerm = normalize(searchBox.value);
-    const pages = document.querySelectorAll(".page");
-    for(let i = 0; i < pages.length; i++) {
-      const classes = pages[i].classList;
-      const normalized = normalize(pages[i].textContent);
+    const items = document.querySelectorAll(".item");
+    for(let i = 0; i < items.length; i++) {
+      const classes = items[i].classList;
+      const normalized = normalize(items[i].textContent);
       const show = normalized.search(searchTerm) >= 0;
       const hidden = classes.contains("hidden");
       if(show && hidden)

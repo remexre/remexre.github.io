@@ -7,18 +7,18 @@
 		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
 	</head>
 	<body>
-		<a class="back" href=".." title="Back">&lsaquo;</a>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
 		<header>
-			<a href="mailto:remexre@gmail.com">Email</a>
-			<a href="https://github.com/remexre">GitHub</a>
-			<a href="https://keybase.io/remexre">Keybase</a>
-			<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
-			<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
 		</header>
 		<article>
 			<h1 class="title">
-				<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-intro&#x2F;">G1: A simple graph store, written in Rust</a>
-				(Draft)
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-intro&#x2F;">G1: A simple graph store, written in Rust</a>
+				
 			</h1>
 			<h1 id="motivation">Motivation</h1>
 <p>Over the next few weeks/months, I'm planning to implement a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>. I mainly want to do this because <a href="https://github.com/mozilla/mentat">mentat</a> became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.</p>
@@ -51,7 +51,8 @@
 </span></pre>
 <p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>
 <h1 id="roadmap">Roadmap</h1>
-<p>Currently, I'm tracking work on the implementation in <a href="https://github.com/remexre/g1/issues">GitHub Issues</a>. In terms of the blog posts, I'm thinking of roughly the order:</p>
+<p>Currently, I'm tracking work on the implementation in <a href="https://github.com/remexre/g1/issues">GitHub Issues</a>, but note that at the time of writing, these issues are in the context of a laughably unoptimized implementation on top of SQLite.</p>
+<p>In terms of the blog posts, I'm thinking of roughly the order:</p>
 <ul>
 <li>G1's Query Language</li>
 <li>The Magic Sets Transformation</li>
@@ -86,6 +87,7 @@
 		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
 		<script>
 			const anchors = new AnchorJS();
+			anchors.options.class = "subtle";
 			anchors.options.placement = "left";
 			anchors.add("article h1:not(.title)");
 		</script>
