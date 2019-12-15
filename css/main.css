@@ -121,7 +121,7 @@ h1, h2, h3, h4, h5, h6 {
 	padding-top: 0;
 }
 
-.item > .meta {
+.meta {
 	font-size: 50%;
 	margin: auto 0;
 	padding-left: 0.5rem;
@@ -156,6 +156,8 @@ article pre {
 }
 
 article > h1.title {
+	display: flex;
+	flex-direction: row;
 	font-size: 2.0rem;
 }
 
