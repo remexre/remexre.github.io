@@ -9,3 +9,7 @@ generate_rss = true
 hard_link_static = true
 
 compile_sass = false
+
+[[taxonomies]]
+name = "tags"
+rss = true

@@ -3,10 +3,11 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>{{ config.title }}</title>
+		<title>Tags &mdash; {{ config.title }}</title>
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
 	</head>
 	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
 		<header>
 			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
 			<a class="subtle" href="https://github.com/remexre">GitHub</a>
@@ -16,7 +17,7 @@
 		</header>
 		<div class="spacer"></div>
 		<div class="list">
-			{% for page in section.pages | reverse %}
+			{% for page in term.pages | reverse %}
 				{% if not page.draft %}
 					<a class="item subtle" href="{{ page.permalink }}">
 						{{ page.title }}

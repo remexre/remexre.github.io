@@ -23,7 +23,7 @@
 
 /* This should maybe get split up into several CSS files. On the other hand, a
  * single one is better for browser cache, and is honestly not harder to
- * maintain, other than :not selectors being necessary. */
+ * maintain. */
 
 @font-face {
 	font-family: Inter;
@@ -77,24 +77,28 @@ header {
 }
 
 a {
-	color: #cfcfcf;
+	color: #49baff;
 	text-decoration: none;
+}
+
+a.subtle {
+	color: #cfcfcf;
 	transition-property: color, opacity;
 	transition-duration: 0.5s;
 }
-a:hover:not(article > p > a) { color: #ffffff; }
+a.subtle:hover { color: #ffffff; }
 
 h1, h2, h3, h4, h5, h6 {
 	font-weight: normal;
 }
 
-.pages {
+.list {
 	display: flex;
 	flex-direction: column;
 	margin: auto;
 }
 
-.page {
+.item {
 	align-items: center;
 	border-bottom: 1px solid #7f7f7f;
 	display: flex;
@@ -108,19 +112,19 @@ h1, h2, h3, h4, h5, h6 {
 	transition-property: all;
 }
 
-.page:last-child { border-bottom: 0; }
+.item:last-child { border-bottom: 0; }
 
-.page .date {
-	font-size: 50%;
-	margin: auto 0;
-	padding-left: 0.5rem;
-}
-
-.page.hidden {
+.item.hidden {
 	border: 0;
 	line-height: 0;
 	padding-bottom: 0;
 	padding-top: 0;
+}
+
+.item > .meta {
+	font-size: 50%;
+	margin: auto 0;
+	padding-left: 0.5rem;
 }
 
 .back {
@@ -163,10 +167,4 @@ article > h2 {
 	font-size: 1.5rem;
 }
 
-article > p > a {
-	color: #49baff;
-}
-
-.comments {
-	margin: 1em auto;
-}
+.comments { margin: 1em auto; }
