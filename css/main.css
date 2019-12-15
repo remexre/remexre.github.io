@@ -83,7 +83,7 @@ a {
 
 a.subtle {
 	color: #cfcfcf;
-	transition-property: color, opacity;
+	transition-property: all;
 	transition-duration: 0.5s;
 }
 a.subtle:hover { color: #ffffff; }
