@@ -7,40 +7,26 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Sat, 14 Dec 2019 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sun, 15 Dec 2019 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>G1: A simple graph store, written in Rust</title>
-                <pubDate>Sat, 14 Dec 2019 00:00:00 +0000</pubDate>
+                <pubDate>Sun, 15 Dec 2019 00:00:00 +0000</pubDate>
                 <link>https://remexre.xyz/g1-intro/</link>
                 <guid>https://remexre.xyz/g1-intro/</guid>
-                <description>&lt;h1 id=&quot;intro&quot;&gt;Intro&lt;&#x2F;h1&gt;
-&lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m implementing a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
-&lt;ul&gt;
-&lt;li&gt;SQLite good b&#x2F;c ez to configure&lt;&#x2F;li&gt;
-&lt;li&gt;Wanted a graph db for a project, with Datalog for querying&lt;&#x2F;li&gt;
-&lt;li&gt;Making simple graph database seems like a good project to blog abt, to incentivize myself to learn abt how to do this well&lt;&#x2F;li&gt;
-&lt;&#x2F;ul&gt;
-&lt;h1 id=&quot;model&quot;&gt;Model&lt;&#x2F;h1&gt;
-&lt;p&gt;&lt;strong&gt;Atom&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Name&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Edge&lt;&#x2F;strong&gt;: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Attribute&lt;&#x2F;strong&gt;: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Blob&lt;&#x2F;strong&gt;: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.&lt;&#x2F;p&gt;
+                <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
+&lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m planning to implement a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;. I mainly want to do this because &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mozilla&#x2F;mentat&quot;&gt;mentat&lt;&#x2F;a&gt; became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.&lt;&#x2F;p&gt;
+&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be blogged about at a later date.)&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;data-model&quot;&gt;Data Model&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;strong&gt;Atoms&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Names&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Edges&lt;&#x2F;strong&gt;: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Attributes&lt;&#x2F;strong&gt;: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Blobs&lt;&#x2F;strong&gt;: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.&lt;&#x2F;p&gt;
 &lt;p&gt;Strings are UTF-8 Strings, which should be no longer than 256 bytes.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;query-language&quot;&gt;Query Language&lt;&#x2F;h1&gt;
-&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Datalog&quot;&gt;Datalog&lt;&#x2F;a&gt; variant&lt;&#x2F;p&gt;
-&lt;p&gt;Builtin predicates for reading data in the database:&lt;&#x2F;p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;name(Atom, Namespace, Title)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;&lt;code&gt;edge(From, To, Label)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;&lt;code&gt;attr(Atom, Key, Value)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;&lt;code&gt;blob(Atom, Kind, Mime, Hash)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
-&lt;&#x2F;ul&gt;
-&lt;p&gt;Other builtins:&lt;&#x2F;p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;&#x27;=&#x27;(A, B)&lt;&#x2F;code&gt; (usually written &lt;code&gt;A = B&lt;&#x2F;code&gt;)&lt;&#x2F;li&gt;
-&lt;&#x2F;ul&gt;
+&lt;p&gt;The query language is a variant of &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Datalog&quot;&gt;Datalog&lt;&#x2F;a&gt;. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.&lt;&#x2F;p&gt;
+&lt;p&gt;An example of a query:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#272822;&quot;&gt;
 &lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
 	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;friend&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
@@ -56,7 +42,18 @@
 	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 
 ?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;</description>
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This query finds the names of the friends of the friends of the user represented by the atom with a UUID of &lt;code&gt;59760f34-eee0-44e2-9358-f48d46c686ee&lt;&#x2F;code&gt;, excluding that user and their direct friends. I&#x27;ll describe the language more fully in a later post.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;roadmap&quot;&gt;Roadmap&lt;&#x2F;h1&gt;
+&lt;p&gt;Currently, I&#x27;m tracking work on the implementation in &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&#x2F;issues&quot;&gt;GitHub Issues&lt;&#x2F;a&gt;. In terms of the blog posts, I&#x27;m thinking of roughly the order:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;G1&#x27;s Query Language&lt;&#x2F;li&gt;
+&lt;li&gt;The Magic Sets Transformation&lt;&#x2F;li&gt;
+&lt;li&gt;How G1 Stores Data (in-memory and on disk)&lt;&#x2F;li&gt;
+&lt;li&gt;Implementing Transactions in G1&lt;&#x2F;li&gt;
+&lt;li&gt;Ensuring Crash-Safety in G1&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+</description>
             </item>
         
             <item>

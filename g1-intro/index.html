@@ -20,33 +20,19 @@
 				<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-intro&#x2F;">G1: A simple graph store, written in Rust</a>
 				(Draft)
 			</h1>
-			<h1 id="intro">Intro</h1>
-<p>Over the next few weeks/months, I'm implementing a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>.</p>
-<ul>
-<li>SQLite good b/c ez to configure</li>
-<li>Wanted a graph db for a project, with Datalog for querying</li>
-<li>Making simple graph database seems like a good project to blog abt, to incentivize myself to learn abt how to do this well</li>
-</ul>
-<h1 id="model">Model</h1>
-<p><strong>Atom</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
-<p><strong>Name</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
-<p><strong>Edge</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
-<p><strong>Attribute</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>
-<p><strong>Blob</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.</p>
+			<h1 id="motivation">Motivation</h1>
+<p>Over the next few weeks/months, I'm planning to implement a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>. I mainly want to do this because <a href="https://github.com/mozilla/mentat">mentat</a> became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.</p>
+<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be blogged about at a later date.)</p>
+<h1 id="data-model">Data Model</h1>
+<p><strong>Atoms</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
+<p><strong>Names</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
+<p><strong>Edges</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
+<p><strong>Attributes</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>
+<p><strong>Blobs</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.</p>
 <p>Strings are UTF-8 Strings, which should be no longer than 256 bytes.</p>
 <h1 id="query-language">Query Language</h1>
-<p><a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a> variant</p>
-<p>Builtin predicates for reading data in the database:</p>
-<ul>
-<li><code>name(Atom, Namespace, Title)</code></li>
-<li><code>edge(From, To, Label)</code></li>
-<li><code>attr(Atom, Key, Value)</code></li>
-<li><code>blob(Atom, Kind, Mime, Hash)</code></li>
-</ul>
-<p>Other builtins:</p>
-<ul>
-<li><code>'='(A, B)</code> (usually written <code>A = B</code>)</li>
-</ul>
+<p>The query language is a variant of <a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a>. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.</p>
+<p>An example of a query:</p>
 <pre style="background-color:#272822;">
 <span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
 	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
@@ -63,7 +49,39 @@
 
 ?- </span><span style="color:#a6e22e;">frenemy</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
 </span></pre>
+<p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>
+<h1 id="roadmap">Roadmap</h1>
+<p>Currently, I'm tracking work on the implementation in <a href="https://github.com/remexre/g1/issues">GitHub Issues</a>. In terms of the blog posts, I'm thinking of roughly the order:</p>
+<ul>
+<li>G1's Query Language</li>
+<li>The Magic Sets Transformation</li>
+<li>How G1 Stores Data (in-memory and on disk)</li>
+<li>Implementing Transactions in G1</li>
+<li>Ensuring Crash-Safety in G1</li>
+</ul>
+
 		</article>
+		
+			<script src="https://utteranc.es/client.js"
+					repo="remexre/remexre.github.io"
+					issue-number="2"
+					label="comments"
+					theme="github-dark"
+					crossorigin="anonymous"
+					async>
+			</script>
+			<div class="comments">
+				<!-- This needs to be in a div because the NoScript extension
+				transforms noscript elements into spans, while also getting rid
+				of id and class, so applying CSS is no longer possible (without
+				awful, awful hacks). -->
+				<noscript>
+					Comments (powered by
+					<a href="https://utteranc.es">utteranc.es</a>) require
+					JavaScript.
+				</noscript>
+			</div>
+		
 		<div class="spacer"></div>
 		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
 		<script>
