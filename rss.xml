@@ -16,7 +16,7 @@
                 <guid>https://remexre.xyz/g1-intro/</guid>
                 <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
 &lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m planning to implement a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;. I mainly want to do this because &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mozilla&#x2F;mentat&quot;&gt;mentat&lt;&#x2F;a&gt; became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.&lt;&#x2F;p&gt;
-&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be blogged about at a later date.)&lt;&#x2F;p&gt;
+&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;data-model&quot;&gt;Data Model&lt;&#x2F;h1&gt;
 &lt;p&gt;&lt;strong&gt;Atoms&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Names&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
