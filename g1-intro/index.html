@@ -4,11 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>G1: A simple graph store, written in Rust &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/style.css">
 		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/page.css">
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/inter/inter.css">
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/fontawesome-free-5.11.2-web/css/all.min.css">
 	</head>
 	<body>
 		<a class="back" href=".." title="Back">&lsaquo;</a>
@@ -24,32 +20,48 @@
 				<a href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-intro&#x2F;">G1: A simple graph store, written in Rust</a>
 				(Draft)
 			</h1>
-			<p><a href="https://github.com/remexre/g1">G1</a></p>
-<h2 id="intro">Intro</h2>
+			<h1 id="intro">Intro</h1>
+<p>Over the next few weeks/months, I'm implementing a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>.</p>
 <ul>
 <li>SQLite good b/c ez to configure</li>
 <li>Wanted a graph db for a project, with Datalog for querying</li>
 <li>Making simple graph database seems like a good project to blog abt, to incentivize myself to learn abt how to do this well</li>
 </ul>
-<h2 id="model">Model</h2>
+<h1 id="model">Model</h1>
 <p><strong>Atom</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
 <p><strong>Name</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
 <p><strong>Edge</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
-<p><strong>Tag</strong>: Tags are attached to Atoms. They have a key and a value, both of which are Strings.</p>
+<p><strong>Attribute</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>
 <p><strong>Blob</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.</p>
 <p>Strings are UTF-8 Strings, which should be no longer than 256 bytes.</p>
-<h2 id="query-language">Query Language</h2>
+<h1 id="query-language">Query Language</h1>
 <p><a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a> variant</p>
-<p>Builtin predicates for reading data in the database (IDB):</p>
+<p>Builtin predicates for reading data in the database:</p>
 <ul>
-<li><code>atom(Atom)</code></li>
 <li><code>name(Atom, Namespace, Title)</code></li>
 <li><code>edge(From, To, Label)</code></li>
-<li><code>tag(Atom, Key, Value)</code></li>
+<li><code>attr(Atom, Key, Value)</code></li>
 <li><code>blob(Atom, Kind, Mime, Hash)</code></li>
 </ul>
+<p>Other builtins:</p>
+<ul>
+<li><code>'='(A, B)</code> (usually written <code>A = B</code>)</li>
+</ul>
 <pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">f(X, y).
+<span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
+	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+
+</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
+	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Other)</span><span style="color:#f92672;">,
+	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
+
+</span><span style="font-style:italic;color:#fd971f;">frenemyName</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName) </span><span style="color:#f92672;">:-
+	</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
+	! </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
+	!</span><span style="color:#f8f8f2;"> Me </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">,
+	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+
+?- </span><span style="color:#a6e22e;">frenemy</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
 </span></pre>
 		</article>
 		<div class="spacer"></div>

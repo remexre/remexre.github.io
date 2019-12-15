@@ -1,3 +1,59 @@
+/* TODO: Organize me */
+
+@font-face {
+	font-family: Inter;
+	font-weight: 100 900;
+	font-display: block;
+	font-style: normal;
+	src: url("../ext/Inter.var.woff2") format("woff2");
+}
+
+@font-face {
+	font-family: "Roboto Mono";
+	font-display: block;
+	font-style: normal;
+	src: url("../ext/RobotoMono.woff2") format("woff2");
+}
+
+html, #search {
+	background-color: #1e1f29;
+	color: #cfcfcf;
+	font-family: Inter, sans-serif;
+}
+
+a {
+	color: #cfcfcf;
+	text-decoration: none;
+	transition-property: color, opacity;
+	transition-duration: 0.5s;
+}
+a:hover:not(article > p > a) { color: #ffffff; }
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: normal;
+}
+
+article h1.title {
+	font-size: 2.0rem;
+}
+
+article h1:not(.title) {
+	font-size: 1.75rem;
+}
+
+article h2 {
+	font-size: 1.5rem;
+}
+
+article > p > a {
+	color: #49baff;
+}
+
+header {
+	font-size: 1.0rem;
+	padding: 0.25rem;
+}
+
 html, body { overflow: auto; }
 
 body {
@@ -9,8 +65,80 @@ body {
 
 .spacer { flex-grow: 1; }
 
-header, footer {
+header {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
 }
+
+pre, code {
+	font-family: "Roboto Mono", monospace;
+	font-size: 16px;
+}
+
+#pages {
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+}
+
+#search {
+	background-color: #1e1f29;
+	border-color: #cfcfcf;
+	border-width: 0 0 1px 0;
+	color: #ffffff;
+	font-family: var(--font-family);
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+	text-align: center;
+}
+
+.page {
+	align-items: center;
+	border-bottom: 1px solid #7f7f7f;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	font-size: 1.5rem;
+	justify-content: space-between;
+	overflow: hidden;
+	padding: 0.75rem;
+	transition-duration: 0.5s;
+	transition-property: all;
+}
+
+.page:last-child { border-bottom: 0; }
+
+.page .date {
+	font-size: 50%;
+	margin: auto 0;
+	padding-left: 0.5rem;
+}
+
+.page.hidden {
+	border: 0;
+	line-height: 0;
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+article {
+	margin: auto;
+	max-width: 50.0rem;
+	padding: 0 0.5rem;
+	width: calc(100% - 1.0rem);
+}
+
+article > pre {
+	overflow: auto;
+	padding: 0.5rem;
+}
+
+.back {
+	left: 0.5rem;
+	font-size: 150%;
+	position: fixed;
+	opacity: 0.2;
+	top: 0.25rem;
+}
+.back:hover { opacity: 1; }

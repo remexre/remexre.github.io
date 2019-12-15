@@ -14,32 +14,48 @@
                 <pubDate>Sat, 14 Dec 2019 00:00:00 +0000</pubDate>
                 <link>https://remexre.xyz/g1-intro/</link>
                 <guid>https://remexre.xyz/g1-intro/</guid>
-                <description>&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;intro&quot;&gt;Intro&lt;&#x2F;h2&gt;
+                <description>&lt;h1 id=&quot;intro&quot;&gt;Intro&lt;&#x2F;h1&gt;
+&lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m implementing a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
 &lt;ul&gt;
 &lt;li&gt;SQLite good b&#x2F;c ez to configure&lt;&#x2F;li&gt;
 &lt;li&gt;Wanted a graph db for a project, with Datalog for querying&lt;&#x2F;li&gt;
 &lt;li&gt;Making simple graph database seems like a good project to blog abt, to incentivize myself to learn abt how to do this well&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
-&lt;h2 id=&quot;model&quot;&gt;Model&lt;&#x2F;h2&gt;
+&lt;h1 id=&quot;model&quot;&gt;Model&lt;&#x2F;h1&gt;
 &lt;p&gt;&lt;strong&gt;Atom&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Name&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Edge&lt;&#x2F;strong&gt;: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Tag&lt;&#x2F;strong&gt;: Tags are attached to Atoms. They have a key and a value, both of which are Strings.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Attribute&lt;&#x2F;strong&gt;: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Blob&lt;&#x2F;strong&gt;: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.&lt;&#x2F;p&gt;
 &lt;p&gt;Strings are UTF-8 Strings, which should be no longer than 256 bytes.&lt;&#x2F;p&gt;
-&lt;h2 id=&quot;query-language&quot;&gt;Query Language&lt;&#x2F;h2&gt;
+&lt;h1 id=&quot;query-language&quot;&gt;Query Language&lt;&#x2F;h1&gt;
 &lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Datalog&quot;&gt;Datalog&lt;&#x2F;a&gt; variant&lt;&#x2F;p&gt;
-&lt;p&gt;Builtin predicates for reading data in the database (IDB):&lt;&#x2F;p&gt;
+&lt;p&gt;Builtin predicates for reading data in the database:&lt;&#x2F;p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;code&gt;atom(Atom)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;code&gt;name(Atom, Namespace, Title)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;code&gt;edge(From, To, Label)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;&lt;code&gt;tag(Atom, Key, Value)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;attr(Atom, Key, Value)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;code&gt;blob(Atom, Kind, Mime, Hash)&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
+&lt;p&gt;Other builtins:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;&#x27;=&#x27;(A, B)&lt;&#x2F;code&gt; (usually written &lt;code&gt;A = B&lt;&#x2F;code&gt;)&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
 &lt;pre style=&quot;background-color:#272822;&quot;&gt;
-&lt;span style=&quot;color:#f8f8f2;&quot;&gt;f(X, y).
+&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;friend&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Other)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Other&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;frenemyName&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+	! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+	!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Me &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+
+?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;</description>
             </item>
         
