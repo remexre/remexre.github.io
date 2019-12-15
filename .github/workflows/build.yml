@@ -19,3 +19,8 @@ jobs:
         BASE_BRANCH: authoring
         BRANCH: master
         FOLDER: public
+    - name: Purge cache
+      uses: jakejarvis/cloudflare-purge-action@master
+      env:
+        CLOUDFLARE_ZONE: ${{ secrets.CLOUDFLARE_ZONE }}
+        CLOUDFLARE_TOKEN: ${{ secrets.CLOUDFLARE_TOKEN }}
