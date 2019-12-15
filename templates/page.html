@@ -18,7 +18,14 @@
 		<article>
 			<h1 class="title">
 				<a class="subtle" href="{{ page.permalink }}">{{ page.title }}</a>
-				{% if page.draft %}(Draft){% endif %}
+				<div class="spacer"></div>
+				<span class="meta">
+					{% if page.draft %}
+						Draft
+					{% else %}
+						{{ page.date }}
+					{% endif %}
+				</span>
 			</h1>
 			{{ page.content | safe }}
 		</article>
