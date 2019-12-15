@@ -19,10 +19,13 @@
 		<div class="list">
 			{% for page in term.pages | reverse %}
 				{% if not page.draft %}
-					<a class="item subtle" href="{{ page.permalink }}">
-						{{ page.title }}
-						<span class="meta">{{ page.date }}</span>
-					</a>
+					<div class="item">
+						<a class="subtle" href="{{ page.permalink }}">
+							{{ page.title }}
+							<span class="spacer"></span>
+							<span class="meta">{{ page.date }}</span>
+						</a>
+					</div>
 				{% endif %}
 			{% endfor %}
 		</div>

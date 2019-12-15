@@ -18,10 +18,13 @@
 		<div class="spacer"></div>
 		<div class="list">
 			{% for term in terms %}
-				<a class="item subtle" href="{{ term.permalink }}">
-					{{ term.name }}
-					<span class="meta">{{ term.pages | length }}</span>
-				</a>
+				<div class="item">
+					<a class="subtle" href="{{ term.permalink }}">
+						{{ term.name }}
+						<span class="spacer"></span>
+						<span class="meta">{{ term.pages | length }}</span>
+					</a>
+				</div>
 			{% endfor %}
 		</div>
 		<div class="spacer"></div>
