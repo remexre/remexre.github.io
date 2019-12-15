@@ -15,9 +15,9 @@
 			<a href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
 		</header>
 		<div class="spacer"></div>
-		<div id="pages">
+		<div class="pages">
 			{% for page in section.pages | reverse %}
-				{% if not (page.draft) %}
+				{% if not page.draft %}
 					<a class="page" href="{{ page.permalink }}">
 						{{ page.title }}
 						<span class="date">{{ page.date }}</span>
