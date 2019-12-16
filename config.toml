@@ -1,14 +1,16 @@
 base_url = "https://remexre.xyz/"
-
 title = "remexre.xyz"
-
 highlight_code = true
 highlight_theme = "monokai"
 
-generate_rss = true
-hard_link_static = true
+# allow_external = true
 
+generate_rss = true
 compile_sass = false
+
+[[taxonomies]]
+name = "categories"
+rss = true
 
 [[taxonomies]]
 name = "tags"
