@@ -33,8 +33,8 @@
 <p><strong>Names</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
 <p><strong>Edges</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
 <p><strong>Attributes</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>
-<p><strong>Blobs</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.</p>
-<p>Strings are UTF-8 Strings, which should be no longer than 256 bytes.</p>
+<p><strong>Blobs</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary string. Blobs are referred to by a SHA256 hash.</p>
+<p>Strings are UTF-8 strings, which should be no longer than 256 bytes.</p>
 <h1 id="query-language">Query Language</h1>
 <p>The query language is a variant of <a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a>. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.</p>
 <p>An example of a query:</p>

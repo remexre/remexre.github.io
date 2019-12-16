@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Notebook: Vulkan &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+	</head>
+	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;notebook-vulkan&#x2F;">Notebook: Vulkan</a>
+				<div class="spacer"></div>
+				<span class="meta">
+					
+						
+					
+				</span>
+			</h1>
+			<h1 id="nova">nova</h1>
+<ul>
+<li>goal:
+<ul>
+<li>type-safe</li>
+<li>sync-safe</li>
+<li>raii</li>
+</ul>
+</li>
+<li>biggest new abstraction: monad for commands on a command buffer
+<ul>
+<li>have an operator <code>merge : (M a, M b) -&gt; M (a, b)</code> that makes commands ordering-independent</li>
+<li>probably helpers <code>mergeAll : [M a] -&gt; M [a]</code>, <code>mergeAll_ : [M ()] -&gt; M ()</code></li>
+<li>in theory, nothing but <code>&gt;&gt;=</code> should require synchronization</li>
+<li>consequently, discourage <code>&gt;&gt;=</code> -- maybe don't even define a <code>Monad</code> instance?</li>
+<li>this would also allow a custom <code>&gt;&gt;</code> operator for subpasses</li>
+</ul>
+</li>
+<li>issue for command monad: resource synchronization
+<ul>
+<li>rust-style (or use rust) <code>&amp;mut</code>?</li>
+<li>would need to give the resource back... after the <code>&gt;&gt;=</code></li>
+<li>might make sense to make ops often be <code>a -o M a</code> instead of <code>a -&gt; M ()</code></li>
+<li>this would allow typestates too: <code>T S1 -o M (T S2)</code></li>
+</ul>
+</li>
+</ul>
+
+		</article>
+		
+			<div class="comments">
+				Comments are not enabled on this post.
+			</div>
+		
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.class = "subtle";
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>

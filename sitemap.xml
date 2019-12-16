@@ -7,9 +7,29 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/categories/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/categories/notebook/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/categories/post/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/g1-intro/</loc>
             
                 <lastmod>2019-12-15</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/notebook-vulkan/</loc>
             
         </url>
     
@@ -37,6 +57,11 @@
     
         <url>
             <loc>https://remexre.xyz/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/tags/vulkan/</loc>
             
         </url>
     

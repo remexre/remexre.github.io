@@ -22,8 +22,8 @@
 &lt;p&gt;&lt;strong&gt;Names&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Edges&lt;&#x2F;strong&gt;: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Attributes&lt;&#x2F;strong&gt;: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.&lt;&#x2F;p&gt;
-&lt;p&gt;&lt;strong&gt;Blobs&lt;&#x2F;strong&gt;: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary String. Blobs are referred to by a SHA256 hash.&lt;&#x2F;p&gt;
-&lt;p&gt;Strings are UTF-8 Strings, which should be no longer than 256 bytes.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;Blobs&lt;&#x2F;strong&gt;: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary string. Blobs are referred to by a SHA256 hash.&lt;&#x2F;p&gt;
+&lt;p&gt;Strings are UTF-8 strings, which should be no longer than 256 bytes.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;query-language&quot;&gt;Query Language&lt;&#x2F;h1&gt;
 &lt;p&gt;The query language is a variant of &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Datalog&quot;&gt;Datalog&lt;&#x2F;a&gt;. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.&lt;&#x2F;p&gt;
 &lt;p&gt;An example of a query:&lt;&#x2F;p&gt;
