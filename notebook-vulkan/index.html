@@ -53,6 +53,65 @@
 </ul>
 </li>
 </ul>
+<h3 id="api">API</h3>
+<ul>
+<li><code>Device : *</code></li>
+<li><code>Cmd : *</code>
+<ul>
+<li><code>return : a -o Cmd a</code></li>
+<li><code>and_then : (a -o Cmd b) -&gt; Cmd a -o Cmd b</code></li>
+<li><code>run : Device -&gt; Cmd a -o a</code></li>
+</ul>
+</li>
+<li><code>CmdBufUsage : *</code>
+<ul>
+<li><code>OneTimeSubmit : CmdBufUsage</code></li>
+<li><code>Reusable : CmdBufUsage</code></li>
+</ul>
+</li>
+<li><code>CmdBufTypeState : *</code>
+<ul>
+<li><code>Initial : CmdBufTypeState</code></li>
+<li><code>Recording : CmdBufUsage -&gt; CmdBufTypeState</code></li>
+<li><code>Executable : CmdBufUsage -&gt;CmdBufTypeState</code></li>
+<li><code>Pending : CmdBufUsage -&gt; CmdBufTypeState</code></li>
+<li><code>Invalid : CmdBufTypeState</code></li>
+</ul>
+</li>
+<li><code>Invalidatable : CmdBufTypeState -&gt; Constraint</code>
+<ul>
+<li><code>Invalidatable Initial</code></li>
+<li><code>Invalidatable Recording</code></li>
+<li><code>Invalidatable Executable</code></li>
+</ul>
+</li>
+<li><code>Resettable : CmdBufTypeState -&gt; Constraint</code>
+<ul>
+<li><code>Resettable Recording</code></li>
+<li><code>Resettable Executable</code></li>
+<li><code>Resettable Invalid</code></li>
+</ul>
+</li>
+<li><code>CmdBuf : CmdBufTypeState -&gt; *</code>
+<ul>
+<li><code>allocate : Device -&gt; CmdBuf Initial</code></li>
+<li><code>destroy : Resettable t =&gt; CmdBuf t -o Unit</code></li>
+<li><code>begin : (t : CmdBufUsage) -o CmdBuf Initial -o CmdBuf (Recording t)</code></li>
+<li><code>end : CmdBuf (Recording t) -o CmdBuf (Executable t)</code></li>
+<li><code>submit : CmdBuf (Executable t) -o CmdBuf (Pending t)</code></li>
+<li><code>waitComplete : CmdBuf (Pending Reusable) -o CmdBuf (Executable Reusable)</code></li>
+<li><code>waitCompleteOne : CmdBuf (Pending OneTimeSubmit) -o CmdBuf Invalid</code></li>
+<li><code>invalidateInitial : Invalidatable t =&gt; CmdBuf t -o CmdBuf Invalid</code></li>
+<li><code>reset : Resettable t =&gt; CmdBuf t -o CmdBuf Initial</code></li>
+</ul>
+</li>
+<li><code>Image : *</code>
+<ul>
+<li><code>create : Device -&gt; Image</code></li>
+<li><code>destroy : Image -o ()</code></li>
+</ul>
+</li>
+</ul>
 
 		</article>
 		
