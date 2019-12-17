@@ -53,7 +53,7 @@ nova
 -	`CmdBuf : CmdBufTypeState -> *`
 	-	`allocate : Device -> CmdBuf Initial`
 	-	`destroy : Resettable t => CmdBuf t -o Unit`
-	-	`begin : (t : CmdBufUsage) -o CmdBuf Initial -o CmdBuf (Recording t)`
+	-	`begin : (t : CmdBufUsage) -> CmdBuf Initial -o CmdBuf (Recording t)`
 	-	`end : CmdBuf (Recording t) -o CmdBuf (Executable t)`
 	-	`submit : CmdBuf (Executable t) -o CmdBuf (Pending t)`
 	-	`waitComplete : CmdBuf (Pending Reusable) -o CmdBuf (Executable Reusable)`
