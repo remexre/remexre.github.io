@@ -19,6 +19,7 @@ nova
 	-	in theory, nothing but `>>=` should require synchronization
 	-	consequently, discourage `>>=` -- maybe don't even define a `Monad` instance?
 	-	this would also allow a custom `>>` operator for subpasses
+	-	maybe want an explicit operator for secondary command buffers?
 -	issue for command monad: resource synchronization
 	-	rust-style (or use rust) `&mut`?
 	-	would need to give the resource back... after the `>>=`
