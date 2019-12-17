@@ -101,7 +101,7 @@
 <li><code>submit : CmdBuf (Executable t) -o CmdBuf (Pending t)</code></li>
 <li><code>waitComplete : CmdBuf (Pending Reusable) -o CmdBuf (Executable Reusable)</code></li>
 <li><code>waitCompleteOne : CmdBuf (Pending OneTimeSubmit) -o CmdBuf Invalid</code></li>
-<li><code>invalidateInitial : Invalidatable t =&gt; CmdBuf t -o CmdBuf Invalid</code></li>
+<li><code>invalidate : Invalidatable t =&gt; CmdBuf t -o CmdBuf Invalid</code></li>
 <li><code>reset : Resettable t =&gt; CmdBuf t -o CmdBuf Initial</code></li>
 </ul>
 </li>
