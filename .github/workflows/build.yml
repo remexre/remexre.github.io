@@ -10,6 +10,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Install Zola
       run: curl -LO https://github.com/remexre/zola/releases/download/remexre-fork-pr-883/zola
+    - name: chmod Zola
+      run: chmod +x zola
     - name: Run Zola
       run: ./zola build --drafts
     - name: GitHub Pages Deploy
