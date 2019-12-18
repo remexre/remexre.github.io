@@ -7,7 +7,7 @@ generate_rss = true
 compile_sass = false
 
 [external_highlighters]
-dot = "echo -n '<p>'; dot -Tsvg; echo '</p>'"
+dot = "echo -n '<p>'; dot -Tsvg | tail -n +4; echo '</p>'"
 
 [[taxonomies]]
 name = "categories"
