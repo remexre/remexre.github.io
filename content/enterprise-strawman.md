@@ -17,22 +17,80 @@ Also note that despite the authorial "we," this is almost entirely my vision (he
 Introduction
 ============
 
-The model we use for webapps is described by the diagram:
+The model we use for webapps is described by the diagrams:
 
 ```dot
-digraph {
-	HTTP -> Router;
-	Router -> HTTP;
+digraph "dependency graph" {
+	graph[bgcolor="#1e1f29"];
 
-	Database -> DAL;
-	DAL -> Database;
+	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic"];
+	Actions[color="#8be9fe" fontcolor="#8be9fe"];
+	Schema[color="#8be9fe" fontcolor="#8be9fe"];
+	Views[color="#fc4cb4" fontcolor="#fc4cb4"];
+	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters"];
 
-	Router -> Logic;
-	Router -> View;
-	View -> Schema
-	Logic -> DAL;
-	Logic -> Schema;
-	DAL -> Schema;
+	Authentication[color="#f0fb8c" fontcolor="#f0fb8c"];
+	Authorization[color="#fc4cb4" fontcolor="#fc4cb4"];
+
+	Actions -> Schema [color="#fc4346"];
+	Authorization -> Actions [color="#fc4346"];
+	Authorization -> Authentication [color="#fc4346"];
+	Authorization -> Schema [color="#fc4346"];
+	BLogic -> Actions [color="#fc4346"];
+	BLogic -> Authentication [color="#fc4346"];
+	BLogic -> Schema [color="#fc4346"];
+	Views -> Authentication [color="#fc4346"];
+	Views -> Schema [color="#fc4346"];
+	Views -> ViewAdapters [color="#fc4346"];
+}
+```
+
+```dot
+digraph "dataflow graph" {
+	graph[bgcolor="#1e1f29"];
+
+	HTTP[color="#cfcfcf" fontcolor="#cfcfcf" pos="0,0!" shape=plaintext];
+	Databases[color="#cfcfcf" fontcolor="#cfcfcf" shape=plaintext];
+
+	Authorization[color="#fc4cb4" fontcolor="#fc4cb4"];
+	Actions[color="#8be9fe" fontcolor="#8be9fe"];
+	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic"];
+	DAL[color="#f0fb8c" fontcolor="#f0fb8c"];
+	Router[color="#f0fb8c" fontcolor="#f0fb8c" pos="100,0!"];
+	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters"];
+	Views[color="#fc4cb4" fontcolor="#fc4cb4"];
+
+	Authentication[color="#f0fb8c" fontcolor="#f0fb8c"];
+
+	{rank=same; Authentication, ViewAdapters};
+	{rank=same; BLogic, Views};
+	{rank=same; Actions, Authorization};
+
+	HTTP -> Router -> HTTP [color="#cfcfcf"];
+	Databases -> DAL -> Databases [color="#cfcfcf"];
+
+	// When the router gets a request, it passes it to the business logic,
+	// along with the results of authentication.
+	Router -> BLogic [color="#50fb7c"];
+	Router -> Authentication -> BLogic [color="#50fb7c"];
+
+	// The business logic performs actions (and gets data from them).
+	BLogic -> Actions -> BLogic [color="#50fb7c"];
+
+	// Actions are allowed or disallowed based on the results of
+	// authorization, which is also informed by authentication and the
+	// database (via the DAL).
+	Authentication -> Authorization [color="#50fb7c"];
+	Authorization -> Actions [color="#50fb7c"];
+	DAL -> Authorization [color="#50fb7c"];
+
+	// Actions communicate with the database via the DAL.
+	Actions -> DAL -> Actions [color="#50fb7c"];
+
+	// The business logic then communicates the response to views, which
+	// are rendered with view adapters, which then send a rendered response
+	// to the router.
+	BLogic -> Views -> ViewAdapters -> Router [color="#50fb7c"];
 }
 ```
 
@@ -49,7 +107,7 @@ Auth
 
 The generic phrase "auth" confusingly can refer to either "authentication" or "authorization." These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.
 
-### Authentication
+### Authentiation
 
 Authentication is the answer to the question "what user does this request correspond to?" As with other parts of a web application, `enterprise` simplifies authentication by abstracting it heavily.
 
