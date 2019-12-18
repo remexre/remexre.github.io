@@ -187,3 +187,6 @@ article > h2 {
 }
 
 .comments { margin: 1em auto; }
+
+.graphviz { display: flex; }
+.graphviz > svg { margin: auto; }
