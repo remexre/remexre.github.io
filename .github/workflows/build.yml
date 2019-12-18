@@ -9,7 +9,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Install Zola
-      run: curl -L https://github.com/getzola/zola/releases/download/v0.9.0/zola-v0.9.0-x86_64-unknown-linux-gnu.tar.gz | tar xzv
+      run: curl -L https://github.com/remexre/zola/releases/download/remexre-fork-pr-883/zola
     - name: Run Zola
       run: ./zola build --drafts
     - name: GitHub Pages Deploy

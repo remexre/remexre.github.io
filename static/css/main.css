@@ -28,14 +28,14 @@
 @font-face {
 	font-family: Inter;
 	font-weight: 100 900;
-	font-display: block;
+	font-display: swap;
 	font-style: normal;
 	src: url("../ext/Inter.var.woff2") format("woff2");
 }
 
 @font-face {
 	font-family: "Roboto Mono";
-	font-display: block;
+	font-display: swap;
 	font-style: normal;
 	src: url("../ext/RobotoMono.woff2") format("woff2");
 }

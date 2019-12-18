@@ -1,4 +1,4 @@
 build-local:
-	zola build --drafts -u /blog/
+	zola build -u /blog/
 watch-local:
 	watchexec -w content -w static -w templates -- just build-local

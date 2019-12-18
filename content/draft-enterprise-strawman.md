@@ -17,7 +17,26 @@ Also note that despite the authorial "we," this is almost entirely my vision (he
 Introduction
 ============
 
-foo
+The model we use for webapps is described by the diagram:
+
+```dot
+digraph {
+	HTTP -> Router;
+	Router -> HTTP;
+
+	Database -> DAL;
+	DAL -> Database;
+
+	Router -> Logic;
+	Router -> View;
+	View -> Schema
+	Logic -> DAL;
+	Logic -> Schema;
+	DAL -> Schema;
+}
+```
+
+Many names here, and general inspiration, are taken from [Ted Kaminski's "Stateless MVC."](https://www.tedinski.com/2018/09/11/stateless-mvc.html)
 
 Backend
 =======

@@ -3,10 +3,11 @@ title = "remexre.xyz"
 highlight_code = true
 highlight_theme = "monokai"
 
-# allow_external = true
-
 generate_rss = true
 compile_sass = false
+
+[external_highlighters]
+dot = "echo -n '<p>'; dot -Tsvg; echo '</p>'"
 
 [[taxonomies]]
 name = "categories"
