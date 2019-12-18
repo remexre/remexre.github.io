@@ -149,7 +149,12 @@ article {
 	width: calc(100% - 1.0rem);
 }
 
+article a code { /* :( */
+	color: #49baff;
+}
+
 article code {
+	color: #ffffff;
 	font-family: "Roboto Mono", monospace;
 	font-size: 16px;
 }
@@ -169,6 +174,12 @@ article > h1.title {
 
 article > h1:not(.title) {
 	font-size: 1.75rem;
+	transition-property: color;
+	transition-duration: 0.5s;
+}
+
+article > h1:not(.title):hover {
+	color: #ffffff;
 }
 
 article > h2 {
