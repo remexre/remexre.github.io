@@ -28,7 +28,9 @@
 			<p>A friend (<a href="https://iptq.io/">Michael Zhang</a>) and I may be working on a web framework for Rust, <a href="https://crates.io/crates/enterprise"><code>enterprise</code></a>. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.</p>
 <p>Also note that despite the authorial &quot;we,&quot; this is almost entirely my vision (hence the S-expressions, use of Prolog, etc.), so expect this to be a strawman that's lit aflame rather than fortified.</p>
 <h1 id="introduction">Introduction</h1>
-<p>foo</p>
+<p>The model we use for webapps is described by the diagram:</p>
+<p></p>
+<p>Many names here, and general inspiration, are taken from <a href="https://www.tedinski.com/2018/09/11/stateless-mvc.html">Ted Kaminski's &quot;Stateless MVC.&quot;</a></p>
 <h1 id="backend">Backend</h1>
 <h1 id="middleware">Middleware</h1>
 <h2 id="auth">Auth</h2>
@@ -39,13 +41,13 @@
 <p>In <code>app.sexp</code>:</p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">(authentication
-  (multiple true)
-  (providers
-    anonymous-cookie
-    (email-password :reset email)
-    oauth-facebook
-    oauth-google
-    oauth-twitter))
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f8f8f2;">(multiple true)
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f8f8f2;">(providers
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">anonymous-cookie
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">(email-password :reset email)
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-facebook
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-google
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-twitter))
 </span></pre>
 <p>In <strong>views/login.sexp</strong>:</p>
 <pre style="background-color:#272822;">
