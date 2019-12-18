@@ -40,19 +40,19 @@
 <p>An example of a query:</p>
 <pre style="background-color:#272822;">
 <span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
-
-</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Other)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
-
-</span><span style="font-style:italic;color:#fd971f;">frenemyName</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	!</span><span style="color:#f8f8f2;"> Me </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
-
-?- </span><span style="color:#a6e22e;">frenemy</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">    </span><span style="color:#a6e22e;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
+</span><span style="color:#f8f8f2;">    </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Other)</span><span style="color:#f92672;">,
+</span><span style="color:#f8f8f2;">    </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">frenemyName</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName) </span><span style="color:#f92672;">:-
+</span><span style="color:#f8f8f2;">    </span><span style="color:#a6e22e;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f92672;">! </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f92672;">!</span><span style="color:#f8f8f2;"> Me </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">,
+</span><span style="color:#f8f8f2;">    </span><span style="color:#a6e22e;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f92672;">?- </span><span style="color:#a6e22e;">frenemy</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
 </span></pre>
 <p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>
 <h1 id="roadmap">Roadmap</h1>

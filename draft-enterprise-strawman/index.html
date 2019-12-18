@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>enterprise: Strawman Proposal &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+	</head>
+	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;draft-enterprise-strawman&#x2F;">enterprise: Strawman Proposal</a>
+				<div class="spacer"></div>
+				<span class="meta">
+					
+						Draft
+					
+				</span>
+			</h1>
+			<p>A friend (<a href="https://iptq.io/">Michael Zhang</a>) and I may be working on a web framework for Rust, <a href="https://crates.io/crates/enterprise"><code>enterprise</code></a>. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.</p>
+<p>Also note that despite the authorial &quot;we,&quot; this is almost entirely my vision (hence the S-expressions, use of Prolog, etc.), so expect this to be a strawman that's lit aflame rather than fortified.</p>
+<h1 id="introduction">Introduction</h1>
+<p>The model we use for webapps is described by the diagram:</p>
+<p></p>
+<p>Many names here, and general inspiration, are taken from <a href="https://www.tedinski.com/2018/09/11/stateless-mvc.html">Ted Kaminski's &quot;Stateless MVC.&quot;</a></p>
+<h1 id="backend">Backend</h1>
+<h1 id="middleware">Middleware</h1>
+<h2 id="auth">Auth</h2>
+<p>The generic phrase &quot;auth&quot; confusingly can refer to either &quot;authentication&quot; or &quot;authorization.&quot; These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.</p>
+<h3 id="authentication">Authentication</h3>
+<p>Authentication is the answer to the question &quot;what user does this request correspond to?&quot; As with other parts of a web application, <code>enterprise</code> simplifies authentication by abstracting it heavily.</p>
+<p>For our app, we want to allow a plethora of authentication methods, while also allowing a user to have multiple authentication methods. (This is useful since a user might forget whether they registered with their Google account or email, and it allows an anonymous user to add an email and stop being anonymous!)</p>
+<p>In <code>app.sexp</code>:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">(authentication
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f8f8f2;">(multiple true)
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f8f8f2;">(providers
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">anonymous-cookie
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">(email-password :reset email)
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-facebook
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-google
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth-twitter))
+</span></pre>
+<p>In <strong>views/login.sexp</strong>:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">TODO
+</span></pre><h3 id="authorization">Authorization</h3>
+<p>Authorization is the answer to the question &quot;can this user perform this action?&quot; This is almost entirely application-specific, so we leave the logic here to the app author.</p>
+<p>But wait, we're using logic on a question with a boolean answer? Well, I know the best way to do this! <code>enterprise</code> apps specify authorization information with a Prolog dialect.</p>
+<p>For our app, TODO.</p>
+<p>In <code>src/authorization.pro</code>:</p>
+<pre style="background-color:#272822;">
+<span style="color:#a6e22e;">authorized</span><span style="color:#f8f8f2;">(UserID</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Action)</span><span style="color:#f92672;">. </span><span style="color:#75715e;"># TODO
+</span></pre><h1 id="frontend">Frontend</h1>
+
+		</article>
+		
+			<div class="comments">
+				Comments are not enabled on this post.
+			</div>
+		
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.class = "icon subtle";
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>

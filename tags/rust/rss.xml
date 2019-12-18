@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
         <title>remexre.xyz</title>
@@ -7,48 +6,7 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/tags/rust/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Wed, 18 Dec 2019 00:00:00 +0000</lastBuildDate>
-        
-            <item>
-                <title>enterprise: Strawman Proposal</title>
-                <pubDate>Wed, 18 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https://remexre.xyz/enterprise-strawman/</link>
-                <guid>https://remexre.xyz/enterprise-strawman/</guid>
-                <description>&lt;p&gt;A friend (&lt;a href=&quot;https:&#x2F;&#x2F;iptq.io&#x2F;&quot;&gt;Michael Zhang&lt;&#x2F;a&gt;) and I may be working on a web framework for Rust, &lt;a href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;enterprise&quot;&gt;&lt;code&gt;enterprise&lt;&#x2F;code&gt;&lt;&#x2F;a&gt;. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.&lt;&#x2F;p&gt;
-&lt;p&gt;Also note that despite the authorial &amp;quot;we,&amp;quot; this is almost entirely my vision (hence the S-expressions, use of Prolog, etc.), so expect this to be a strawman that&#x27;s lit aflame rather than fortified.&lt;&#x2F;p&gt;
-&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;&#x2F;h1&gt;
-&lt;p&gt;foo&lt;&#x2F;p&gt;
-&lt;h1 id=&quot;backend&quot;&gt;Backend&lt;&#x2F;h1&gt;
-&lt;h1 id=&quot;middleware&quot;&gt;Middleware&lt;&#x2F;h1&gt;
-&lt;h2 id=&quot;auth&quot;&gt;Auth&lt;&#x2F;h2&gt;
-&lt;p&gt;The generic phrase &amp;quot;auth&amp;quot; confusingly can refer to either &amp;quot;authentication&amp;quot; or &amp;quot;authorization.&amp;quot; These are conflated both by the term and in many people&#x27;s heads, so we avoid it, and make a strong split between the two.&lt;&#x2F;p&gt;
-&lt;h3 id=&quot;authentication&quot;&gt;Authentication&lt;&#x2F;h3&gt;
-&lt;p&gt;Authentication is the answer to the question &amp;quot;what user does this request correspond to?&amp;quot; As with other parts of a web application, &lt;code&gt;enterprise&lt;&#x2F;code&gt; simplifies authentication by abstracting it heavily.&lt;&#x2F;p&gt;
-&lt;p&gt;For our app, we want to allow a plethora of authentication methods, while also allowing a user to have multiple authentication methods. (This is useful since a user might forget whether they registered with their Google account or email, and it allows an anonymous user to add an email and stop being anonymous!)&lt;&#x2F;p&gt;
-&lt;p&gt;In &lt;code&gt;app.sexp&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#272822;&quot;&gt;
-&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(authentication
-  (multiple true)
-  (providers
-    anonymous-cookie
-    (email-password :reset email)
-    oauth-facebook
-    oauth-google
-    oauth-twitter))
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
-&lt;p&gt;In &lt;strong&gt;views&#x2F;login.sexp&lt;&#x2F;strong&gt;:&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#272822;&quot;&gt;
-&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TODO
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h3 id=&quot;authorization&quot;&gt;Authorization&lt;&#x2F;h3&gt;
-&lt;p&gt;Authorization is the answer to the question &amp;quot;can this user perform this action?&amp;quot; This is almost entirely application-specific, so we leave the logic here to the app author.&lt;&#x2F;p&gt;
-&lt;p&gt;But wait, we&#x27;re using logic on a question with a boolean answer? Well, I know the best way to do this! &lt;code&gt;enterprise&lt;&#x2F;code&gt; apps specify authorization information with a Prolog dialect.&lt;&#x2F;p&gt;
-&lt;p&gt;For our app, TODO.&lt;&#x2F;p&gt;
-&lt;p&gt;In &lt;code&gt;src&#x2F;authorization.pro&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
-&lt;pre style=&quot;background-color:#272822;&quot;&gt;
-&lt;span style=&quot;color:#a6e22e;&quot;&gt;authorized&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(UserID&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Action)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;. &lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;# TODO
-&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h1 id=&quot;frontend&quot;&gt;Frontend&lt;&#x2F;h1&gt;
-</description>
-            </item>
+        <lastBuildDate>Sun, 15 Dec 2019 00:00:00 +0000</lastBuildDate>
         
             <item>
                 <title>G1: A simple graph store, written in Rust</title>
@@ -70,19 +28,19 @@
 &lt;p&gt;An example of a query:&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#272822;&quot;&gt;
 &lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
-	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;friend&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
-	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Other)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
-	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Other&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
-
-&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;frenemyName&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
-	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
-	! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
-	!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Me &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
-	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
-
-?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;edge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;friend&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Other)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Other&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemyName&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:-
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friendOfFriend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;friend&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;!&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; Me &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This query finds the names of the friends of the friends of the user represented by the atom with a UUID of &lt;code&gt;59760f34-eee0-44e2-9358-f48d46c686ee&lt;&#x2F;code&gt;, excluding that user and their direct friends. I&#x27;ll describe the language more fully in a later post.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;roadmap&quot;&gt;Roadmap&lt;&#x2F;h1&gt;

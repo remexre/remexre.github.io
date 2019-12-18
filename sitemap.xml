@@ -1,32 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    
-        <url>
-            <loc>https://remexre.xyz/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://remexre.xyz/categories/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://remexre.xyz/categories/notebook/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://remexre.xyz/categories/post/</loc>
-            
-        </url>
-    
-        <url>
-            <loc>https://remexre.xyz/enterprise-strawman/</loc>
-            
-                <lastmod>2019-12-18</lastmod>
-            
-        </url>
     
         <url>
             <loc>https://remexre.xyz/g1-intro/</loc>
@@ -47,34 +19,46 @@
             
         </url>
     
+    
+        <url>
+            <loc>https://remexre.xyz/</loc>
+        </url>
+    
+    
+        
         <url>
             <loc>https://remexre.xyz/tags/</loc>
-            
         </url>
-    
-        <url>
-            <loc>https://remexre.xyz/tags/enterprise/</loc>
-            
-        </url>
-    
+        
         <url>
             <loc>https://remexre.xyz/tags/g1/</loc>
-            
         </url>
-    
+        
         <url>
             <loc>https://remexre.xyz/tags/meta/</loc>
-            
         </url>
-    
+        
         <url>
             <loc>https://remexre.xyz/tags/rust/</loc>
-            
         </url>
-    
+        
         <url>
             <loc>https://remexre.xyz/tags/vulkan/</loc>
-            
         </url>
+        
+    
+        
+        <url>
+            <loc>https://remexre.xyz/categories/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/notebook/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/post/</loc>
+        </url>
+        
     
 </urlset>
