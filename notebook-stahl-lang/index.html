@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Notebook: Stahl (Language) &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+	</head>
+	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;notebook-stahl-lang&#x2F;">Notebook: Stahl (Language)</a>
+				<span class="spacer"></span>
+				<span class="meta">
+					
+						
+					
+				</span>
+			</h1>
+			<h1 id="main-function">main function</h1>
+<p>with Haskell syntax:</p>
+<pre style="background-color:#272822;">
+<span style="color:#75715e;">-- defined by main module
+</span><span style="color:#f92672;">data </span><span style="color:#ae81ff;">State
+</span><span style="color:#a6e22e;">initState </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">State
+</span><span style="color:#f8f8f2;">initState </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#a6e22e;">main </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> [</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">] </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">()
+</span><span style="color:#f8f8f2;">main </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">entrypoint </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> [</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">] </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">State </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">], </span><span style="font-style:italic;color:#66d9ef;">Maybe State</span><span style="color:#f8f8f2;">)
+</span><span style="color:#f8f8f2;">entrypoint </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">runIO </span><span style="color:#f92672;">.</span><span style="color:#f8f8f2;"> main
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#75715e;">-- Approximately ContT () (WriterT [Message] (StateT s Maybe)) a
+</span><span style="color:#f92672;">data </span><span style="color:#ae81ff;">IO</span><span style="color:#f8f8f2;"> s a
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f92672;">= </span><span style="color:#ae81ff;">MkIO</span><span style="color:#f8f8f2;"> ((a </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s)) </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s))
+</span><span style="color:#f8f8f2;">  </span><span style="color:#f92672;">deriving</span><span style="color:#f8f8f2;"> (</span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Functor</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Applicative</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Monad</span><span style="color:#f8f8f2;">)
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">runIO </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">() </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">State </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">], </span><span style="font-style:italic;color:#66d9ef;">Maybe State</span><span style="color:#f8f8f2;">)
+</span><span style="color:#f8f8f2;">runIO (MkIO k) </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span></pre>
+		</article>
+		
+			<div class="comments">
+				Comments are not enabled on this post.
+			</div>
+		
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.class = "icon subtle";
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>
