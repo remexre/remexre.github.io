@@ -96,56 +96,9 @@ digraph "dataflow graph" {
 }
 ```
 
-And a dataflow diagram for client-side rendering:
+In the above diagrams, <span style="color: #f0fb8c">yellow</span> components are provided by `enterprise`, <span style="color: #8be9fe">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.
 
-```dot
-digraph "dataflow graph" {
-	graph[bgcolor="#1e1f29"];
-
-	DOM[color="#cfcfcf" fontcolor="#cfcfcf" shape=plaintext];
-	Authorization[color="#fc4cb4" fontcolor="#fc4cb4"];
-	Actions[color="#8be9fe" fontcolor="#8be9fe"];
-	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic"];
-	DAL[color="#f0fb8c" fontcolor="#f0fb8c"];
-	Router[color="#f0fb8c" fontcolor="#f0fb8c"];
-	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters"];
-	Views[color="#fc4cb4" fontcolor="#fc4cb4"];
-	Authentication[color="#f0fb8c" fontcolor="#f0fb8c"];
-	Databases[color="#cfcfcf" fontcolor="#cfcfcf" label="Databases and\nExternal Services" shape=plaintext];
-
-	{rank=same; DOM, ViewAdapters};
-
-	Databases -> DAL -> Databases [color="#cfcfcf"];
-
-	// When the router gets a request, it passes it to the business logic,
-	// along with the results of authentication.
-	DOM -> BLogic [color="#49baff"];
-	Router -> Authentication [color="#50fb7c"];
-
-	// The business logic performs actions (and gets data from them).
-	BLogic -> Router -> BLogic [color="#49baff"];
-	Actions -> Router -> Actions [color="#50fb7c"];
-
-	// Actions are allowed or disallowed based on the results of
-	// authorization, which is also informed by authentication and the
-	// database (via the DAL).
-	Authentication -> Authorization [color="#50fb7c"];
-	Authorization -> Actions [color="#50fb7c"];
-	DAL -> Authorization [color="#50fb7c"];
-
-	// Actions communicate with the database via the DAL.
-	Actions -> DAL -> Actions [color="#50fb7c"];
-
-	// The business logic then communicates the response to views, which
-	// are rendered with view adapters, which then send a rendered response
-	// to the router.
-	BLogic -> Views -> ViewAdapters -> DOM [color="#49baff"];
-}
-```
-
-In the above diagrams, <span style="color: #fc4cb4">yellow</span> components are provided by `enterprise`, <span style="color: #fc4cb4">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.
-
-The name DAL is taken from [Ted Kaminski's "Stateless MVC."](https://www.tedinski.com/2018/09/11/stateless-mvc.html)
+The name DAL is taken from [Ted Kaminski's "Stateless MVC,"](https://www.tedinski.com/2018/09/11/stateless-mvc.html) which describes it in detail.
 
 Backend
 =======
