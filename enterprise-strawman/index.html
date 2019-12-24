@@ -365,12 +365,18 @@
 </svg>
 </p>
 <p>In the above diagrams, <span style="color: #f0fb8c">yellow</span> components are provided by <code>enterprise</code>, <span style="color: #8be9fe">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.</p>
-<p>The name <a href="https://en.wikipedia.org/wiki/Data_access_layer">DAL</a> is taken from <a href="https://www.tedinski.com/2018/09/11/stateless-mvc.html">Ted Kaminski's &quot;Stateless MVC,&quot;</a> which describes it in detail.</p>
+<p>The Schema and DAL components are taken from <a href="https://www.tedinski.com/2018/09/11/stateless-mvc.html">Ted Kaminski's &quot;Stateless MVC,&quot;</a> which describes them in detail.</p>
 <h1 id="schema">Schema</h1>
+<p>The Schema component contains type declarations for each of the &quot;domain objects.&quot; If a type ends up being sent over the network, it should probably be declared here. <a href="https://iptq.io/magic-forms-with-proc-macros/">Derive macros</a> are provided to allow the Router to validate these values.</p>
+<p>The only exports of the Schema should be types -- if you find yourself exporting functions, they probably belong in the business logic.</p>
 <h1 id="actions">Actions</h1>
+<p>Actions are the atomic primitive functions that are used to define the business logic. Macros are available to define CRUD actions for types in the Schema (relative to some data store supported by the DAL).</p>
 <h1 id="business-logic">Business Logic</h1>
+<p>The Business Logic module transforms requests into data that can be handled directly by a View.</p>
 <h1 id="views">Views</h1>
+<p>Views are written in a React-like DSL.</p>
 <h1 id="view-adapters">View Adapters</h1>
+<p>View Adapters are backends for Views -- one exists to translate to HTML, another to translate to JSON, and another that performs tree-diffing to efficiently update HTML.</p>
 <h1 id="auth">Auth</h1>
 <p>The generic phrase &quot;auth&quot; confusingly can refer to either &quot;authentication&quot; or &quot;authorization.&quot; These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.</p>
 <h2 id="authentication">Authentication</h2>
@@ -387,7 +393,7 @@
 </span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">google
 </span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">oauth</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">twitter))
 </span></pre>
-<p>In <strong>views/login.sexp</strong>:</p>
+<p>In <code>views/login.sexp</code>:</p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">TODO
 </span></pre><h2 id="authorization">Authorization</h2>
