@@ -28,5 +28,19 @@ data IO s a
   deriving (Functor, Applicative, Monad)
 
 runIO :: IO State () -> State -> ([Message], Maybe State)
-runIO (MkIO k) = undefined
+runIO (MkIO k) st = k (\(), st => ([], Just st)) st
+
+send :: Message -> IO s ()
+send = undefined
+
+modifyIO :: (s -> (s, a)) -> IO s a
+modifyIO = undefined
+
+callCCIO :: ((a -> IO s b) -> IO s a) -> IO s a
+callCCIO = undefined
+
+exit :: IO a
+exit = undefined
 ```
+
+**TODO:** state and prove some laws -- notably to ensure callCC works

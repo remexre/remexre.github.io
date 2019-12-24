@@ -23,14 +23,13 @@ The model we use for webapps is described by a dependency diagram:
 digraph "dependency graph" {
 	graph[bgcolor="#1e1f29"];
 
-	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic"];
-	Actions[color="#8be9fe" fontcolor="#8be9fe"];
-	Schema[color="#8be9fe" fontcolor="#8be9fe"];
-	Views[color="#fc4cb4" fontcolor="#fc4cb4"];
-	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters"];
-
-	Authentication[color="#f0fb8c" fontcolor="#f0fb8c"];
-	Authorization[color="#fc4cb4" fontcolor="#fc4cb4"];
+	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic" URL="#business-logic"];
+	Actions[color="#8be9fe" fontcolor="#8be9fe" URL="#actions"];
+	Schema[color="#8be9fe" fontcolor="#8be9fe" URL="#schema"];
+	Views[color="#fc4cb4" fontcolor="#fc4cb4" URL="#views"];
+	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters" URL="#view-adapters"];
+	Authentication[color="#f0fb8c" fontcolor="#f0fb8c" URL="#authentication"];
+	Authorization[color="#fc4cb4" fontcolor="#fc4cb4" URL="#authorization"];
 
 	Actions -> Schema [color="#fc4346"];
 	Authorization -> Actions [color="#fc4346"];
@@ -54,30 +53,33 @@ digraph "dataflow graph" {
 	HTTP[color="#cfcfcf" fontcolor="#cfcfcf" shape=plaintext];
 	Databases[color="#cfcfcf" fontcolor="#cfcfcf" label="Databases and\nExternal Services" shape=plaintext];
 
-	Authorization[color="#fc4cb4" fontcolor="#fc4cb4"];
-	Actions[color="#8be9fe" fontcolor="#8be9fe"];
-	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic"];
-	DAL[color="#f0fb8c" fontcolor="#f0fb8c"];
-	Router[color="#f0fb8c" fontcolor="#f0fb8c"];
-	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters"];
-	Views[color="#fc4cb4" fontcolor="#fc4cb4"];
-
-	Authentication[color="#f0fb8c" fontcolor="#f0fb8c"];
+	Authorization[color="#fc4cb4" fontcolor="#fc4cb4" URL="#authorization"];
+	Actions[color="#8be9fe" fontcolor="#8be9fe" URL="#actions"];
+	BLogic[color="#8be9fe" fontcolor="#8be9fe" label="Business\nLogic" URL="#business-logic"];
+	DAL[color="#f0fb8c" fontcolor="#f0fb8c" URL="#data-access-layer"];
+	Router[color="#f0fb8c" fontcolor="#f0fb8c" URL="#router"];
+	ViewAdapters[color="#f0fb8c" fontcolor="#f0fb8c" label="View\nAdapters" URL="#view-adapters"];
+	Views[color="#fc4cb4" fontcolor="#fc4cb4" URL="#views"];
+	Authentication[color="#f0fb8c" fontcolor="#f0fb8c" URL="#authentication"];
 
 	{rank=same; Authentication, ViewAdapters};
 	{rank=same; BLogic, Views};
 	{rank=same; Actions, Authorization};
 
-	HTTP -> Router -> HTTP [color="#cfcfcf"];
-	Databases -> DAL -> Databases [color="#cfcfcf"];
+	HTTP -> Router [color="#cfcfcf"];
+	Router -> HTTP [color="#cfcfcf"];
+	Databases -> DAL [color="#cfcfcf"];
+	DAL -> Databases [color="#cfcfcf"];
 
 	// When the router gets a request, it passes it to the business logic,
 	// along with the results of authentication.
 	Router -> BLogic [color="#50fb7c"];
-	Router -> Authentication -> BLogic [color="#50fb7c"];
+	Router -> Authentication [color="#50fb7c"];
+	Authentication -> BLogic [color="#50fb7c"];
 
 	// The business logic performs actions (and gets data from them).
-	BLogic -> Actions -> BLogic [color="#50fb7c"];
+	BLogic -> Actions [color="#50fb7c"];
+	Actions -> BLogic [color="#50fb7c"];
 
 	// Actions are allowed or disallowed based on the results of
 	// authorization, which is also informed by authentication and the
@@ -87,31 +89,44 @@ digraph "dataflow graph" {
 	DAL -> Authorization [color="#50fb7c"];
 
 	// Actions communicate with the database via the DAL.
-	Actions -> DAL -> Actions [color="#50fb7c"];
+	Actions -> DAL [color="#50fb7c"];
+	DAL -> Actions [color="#50fb7c"];
 
 	// The business logic then communicates the response to views, which
 	// are rendered with view adapters, which then send a rendered response
 	// to the router.
-	BLogic -> Views -> ViewAdapters -> Router [color="#50fb7c"];
+	BLogic -> Views [color="#50fb7c"];
+	Views -> ViewAdapters [color="#50fb7c"];
+	ViewAdapters -> Router [color="#50fb7c"];
 }
 ```
 
 In the above diagrams, <span style="color: #f0fb8c">yellow</span> components are provided by `enterprise`, <span style="color: #8be9fe">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.
 
-The name DAL is taken from [Ted Kaminski's "Stateless MVC,"](https://www.tedinski.com/2018/09/11/stateless-mvc.html) which describes it in detail.
+The name [DAL](https://en.wikipedia.org/wiki/Data_access_layer) is taken from [Ted Kaminski's "Stateless MVC,"](https://www.tedinski.com/2018/09/11/stateless-mvc.html) which describes it in detail.
 
-Backend
+Schema
+======
+
+Actions
 =======
 
-Middleware
-==========
+Business Logic
+==============
+
+Views
+=====
+
+View Adapters
+=============
 
 Auth
-----
+====
 
 The generic phrase "auth" confusingly can refer to either "authentication" or "authorization." These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.
 
-### Authentiation
+Authentication
+--------------
 
 Authentication is the answer to the question "what user does this request correspond to?" As with other parts of a web application, `enterprise` simplifies authentication by abstracting it heavily.
 
@@ -119,7 +134,7 @@ For our app, we want to allow a plethora of authentication methods, while also a
 
 In `app.sexp`:
 
-```
+```lisp
 (authentication
   (multiple true)
   (providers
@@ -132,11 +147,12 @@ In `app.sexp`:
 
 In **views/login.sexp**:
 
-```
+```lisp
 TODO
 ```
 
-### Authorization
+Authorization
+-------------
 
 Authorization is the answer to the question "can this user perform this action?" This is almost entirely application-specific, so we leave the logic here to the app author.
 
@@ -149,6 +165,3 @@ In `src/authorization.pro`:
 ```pro
 authorized(UserID, Action). # TODO
 ```
-
-Frontend
-========

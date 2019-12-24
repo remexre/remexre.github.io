@@ -33,7 +33,13 @@ issue for command monad: resource synchronization
 
 ### API
 
+`Instance : *`
+
+-	`make_instance : () -> Instance`
+
 `Device : *`
+
+-	`make_device : Target t => Instance -> t -o Device`
 
 `Cmd : *`
 
