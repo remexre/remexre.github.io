@@ -44,8 +44,22 @@
 </span><span style="color:#f8f8f2;">  </span><span style="color:#f92672;">deriving</span><span style="color:#f8f8f2;"> (</span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Functor</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Applicative</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Monad</span><span style="color:#f8f8f2;">)
 </span><span style="color:#f8f8f2;">
 </span><span style="color:#a6e22e;">runIO </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">() </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">State </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">], </span><span style="font-style:italic;color:#66d9ef;">Maybe State</span><span style="color:#f8f8f2;">)
-</span><span style="color:#f8f8f2;">runIO (MkIO k) </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#f8f8f2;">runIO (MkIO k) st </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">k (</span><span style="color:#f92672;">\</span><span style="color:#ae81ff;">()</span><span style="color:#f8f8f2;">, st </span><span style="color:#f92672;">=&gt;</span><span style="color:#f8f8f2;"> (</span><span style="color:#ae81ff;">[]</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">Just</span><span style="color:#f8f8f2;"> st)) st
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">send </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">Message </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s </span><span style="color:#66d9ef;">()
+</span><span style="color:#f8f8f2;">send </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">modifyIO </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> (s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> (s, a)) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a
+</span><span style="color:#f8f8f2;">modifyIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">callCCIO </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> ((a </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s b) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a
+</span><span style="color:#f8f8f2;">callCCIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">exit </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">a
+</span><span style="color:#f8f8f2;">exit </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
 </span></pre>
+<p><strong>TODO:</strong> state and prove some laws -- notably to ensure callCC works</p>
+
 		</article>
 		
 			<div class="comments">

@@ -49,7 +49,14 @@
 <li>this would allow typestates too: <code>T S1 -o M (T S2)</code></li>
 </ul>
 <h3 id="api">API</h3>
+<p><code>Instance : *</code></p>
+<ul>
+<li><code>make_instance : () -&gt; Instance</code></li>
+</ul>
 <p><code>Device : *</code></p>
+<ul>
+<li><code>make_device : Target t =&gt; Instance -&gt; t -o Device</code></li>
+</ul>
 <p><code>Cmd : *</code></p>
 <ul>
 <li><code>return : a -o Cmd a</code></li>
