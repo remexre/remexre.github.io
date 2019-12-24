@@ -103,22 +103,34 @@ digraph "dataflow graph" {
 
 In the above diagrams, <span style="color: #f0fb8c">yellow</span> components are provided by `enterprise`, <span style="color: #8be9fe">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.
 
-The name [DAL](https://en.wikipedia.org/wiki/Data_access_layer) is taken from [Ted Kaminski's "Stateless MVC,"](https://www.tedinski.com/2018/09/11/stateless-mvc.html) which describes it in detail.
+The Schema and DAL components are taken from [Ted Kaminski's "Stateless MVC,"](https://www.tedinski.com/2018/09/11/stateless-mvc.html) which describes them in detail.
 
 Schema
 ======
 
+The Schema component contains type declarations for each of the "domain objects." If a type ends up being sent over the network, it should probably be declared here. [Derive macros](https://iptq.io/magic-forms-with-proc-macros/) are provided to allow the Router to validate these values.
+
+The only exports of the Schema should be types -- if you find yourself exporting functions, they probably belong in the business logic.
+
 Actions
 =======
+
+Actions are the atomic primitive functions that are used to define the business logic. Macros are available to define CRUD actions for types in the Schema (relative to some data store supported by the DAL).
 
 Business Logic
 ==============
 
+The Business Logic module transforms requests into data that can be handled directly by a View.
+
 Views
 =====
 
+Views are written in a React-like DSL.
+
 View Adapters
 =============
+
+View Adapters are backends for Views -- one exists to translate to HTML, another to translate to JSON, and another that performs tree-diffing to efficiently update HTML.
 
 Auth
 ====
@@ -145,7 +157,7 @@ In `app.sexp`:
     oauth-twitter))
 ```
 
-In **views/login.sexp**:
+In `views/login.sexp`:
 
 ```lisp
 TODO
