@@ -33,18 +33,18 @@ issue for command monad: resource synchronization
 
 ### API
 
-`Instance : *`
-
--	`make_instance : () -> Instance`
-
 `Device : *`
 
--	`make_device : Target t => Instance -> t -o Device`
+Device also contains instance.
 
-`Cmd : *`
+-	`make_device : Target t => t -o Device`
 
--	`return : a -o Cmd a`
+`Cmd : * -> *`
+
+-	`pure : a -o Cmd a`
 -	`and_then : (a -o Cmd b) -> Cmd a -o Cmd b`
+-	`par : Cmd a -o Cmd b -o Cmd (a, b)`
+-	`par_ : Cmd () -o Cmd () -o Cmd ()`
 -	`run : Device -> Cmd a -o a`
 
 `CmdBufUsage : *`
