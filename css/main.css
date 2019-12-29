@@ -186,6 +186,10 @@ article > h2 {
 	font-size: 1.5rem;
 }
 
+article > h3 {
+	font-size: 1.25rem;
+}
+
 .comments { margin: 1em auto; }
 
 .graphviz { display: flex; }

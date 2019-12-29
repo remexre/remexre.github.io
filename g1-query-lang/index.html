@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>G1&#x27;s Query Language &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+	</head>
+	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-query-lang&#x2F;">G1&#x27;s Query Language</a>
+				<span class="spacer"></span>
+				<span class="meta">
+					
+						Draft
+					
+				</span>
+			</h1>
+			<p>The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.</p>
+<p>G1's implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.</p>
+<h1 id="syntax">Syntax</h1>
+<p>The G1 grammar is (somewhat informally) as follows:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">&lt;query&gt; ::= &lt;clause&gt;* &quot;?-&quot; &lt;predicate&gt; &quot;.&quot;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;clause&gt; ::= &lt;predicate&gt; &quot;.&quot;
+</span><span style="color:#f8f8f2;">&lt;clause&gt; ::= &lt;predicate&gt; &quot;:-&quot; commaSeparated1(&lt;possiblyNegatedPredicate&gt;) &quot;.&quot;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;possiblyNegatedPredicate&gt; ::= &lt;predicate&gt;
+</span><span style="color:#f8f8f2;">&lt;possiblyNegatedPredicate&gt; ::= &quot;!&quot; &lt;predicate&gt;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;predicate&gt; ::= &lt;var&gt; &quot;(&quot; commaSeparated(&lt;value&gt;) &quot;)&quot;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &quot;_&quot;
+</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &lt;string&gt;
+</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &lt;var&gt;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;string&gt; ::= &#39;&quot;&#39; &lt;stringChar&gt;* &#39;&quot;&#39;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;var&gt; ::= &quot;&#39;&quot; &lt;stringChar&gt;* &quot;&#39;&quot;
+</span><span style="color:#f8f8f2;">&lt;var&gt; ::= /[A-Za-z][0-9A-Za-z_]*/
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;stringChar&gt; ::= any printable character other than &quot;&#39;&quot;, &#39;&quot;&#39;, or &quot;\&quot;
+</span><span style="color:#f8f8f2;">&lt;stringChar&gt; ::= &quot;\&quot; &lt;escChar&gt;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;\&quot;
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;&#39;&quot;
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &#39;&quot;&#39;
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;n&quot;
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;r&quot;
+</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;t&quot;
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">commaSeparated(NT) ::=
+</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= commaSeparated1(NT)
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= NT
+</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT
+</span></pre>
+<p>Note that unlike Prolog, Datalog doesn't allow functors as values (i.e. <code>foo(1, bar(2))</code> is not a predicate). Also of note is the G1 query language's choices regarding strings -- double quotes are <strong>always</strong> used for strings, and unquoted and single-quoted symbols are <strong>always</strong> variables. This differs significantly from Prolog, which uses case to disambiguate between variables and atoms.</p>
+<h2 id="string-parser">String Parser</h2>
+<p>The parser for strings is able to be a fairly traditional LALR parser, using <a href="https://github.com/lalrpop/lalrpop">LALRPOP</a> as a parser generator and <a href="https://github.com/maciejhirsz/logos">Logos</a> as a lexer generator. This parser is rather straightforward, so there's not much more to say about it here.</p>
+<h2 id="proc-macro-parser">Proc Macro Parser</h2>
+<p>The parser for the <code>query!()</code> macro is more complex, because it needs to operate on Rust tokens. So that macros don't need to break compatibility with future Rust syntax changes, procedural macros receive a <code>TokenStream</code> type, which is an iterator of <code>TokenTree</code>s.</p>
+<p>A <code>TokenTree</code> is either a token (an identifier, literal, or piece of punctuation) or a bracket-delimited <code>TokenStream</code>. This is reasonably easy to parse with a hand-written recursive-descent parser, but it doesn't fit well with LALRPOP. The <code>g1_macros</code> crate therefore defines a <code>Token</code> type that represents a single token, with delimiters explicitly present.</p>
+<p>For example, the Rust tokens</p>
+<pre style="background-color:#272822;">
+<span style="color:#66d9ef;">foo</span><span style="color:#f8f8f2;">(bar, baz, </span><span style="color:#f92672;">_</span><span style="color:#f8f8f2;">).
+</span></pre>
+<p>become the <code>TokenStream</code></p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">TokenStream::from(vec![
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Group(Group::new(Delimiter::Parenthesis, TokenStream::from(vec![
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;_&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">]))),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">])
+</span></pre>
+<p>which in turn becomes the <code>Vec&lt;Token&gt;</code></p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">vec![
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::ParenOpen(Span::call_site()),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Hole(Span::call_site()),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::ParenClose(Span::call_site()),
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+</span><span style="color:#f8f8f2;">]
+</span></pre>
+<p>Note that since we use Rust's lexer, the <code>query!()</code> proc macro will inherit e.g. Rust's string escapes (which are a superset of the ones the string parser's lexer supports). Additionally, quoted symbols are not supported, since they conflict with Rust's character literals.</p>
+<h1 id="semantic-analysis">Semantic Analysis</h1>
+<h2 id="restrictions">Restrictions</h2>
+<p>In order to maintain Datalog's properties, a few restrictions hold for G1 queries. All of the restrictions are based around ensuring the following statement is true:</p>
+<blockquote>
+<p>A Datalog program can be evaluated bottom-up and incrementally, in finite time.</p>
+</blockquote>
+<h3 id="positivity">Positivity</h3>
+<p>The positivity restriction ensures a clause always computes a finite number of tuples of strings (i.e. without them containing variables).</p>
+<p>Examples of violating clauses include:</p>
+<pre style="background-color:#272822;">
+<span style="color:#75715e;">// Disallowed, since this computes the set of all strings, which is infinite.
+</span><span style="color:#a6e22e;">f</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#75715e;">// Disallowed, since the complement of a finite set is infinite.
+</span><span style="color:#a6e22e;">g</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">h</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span></pre>
+<p>It turns out there's a simple rule we can use to check this:</p>
+<blockquote>
+<p>Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.</p>
+</blockquote>
+<h3 id="stratification">Stratification</h3>
+<p>The stratification restriction ensures a clause can be evaluated in finite time, and gives an order for evaluating bottom-up, by disallowing some forms of recursion. We want to disallow clauses like:</p>
+<pre style="background-color:#272822;">
+<span style="color:#75715e;">// Inherently paradoxical.
+</span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#75715e;">// Could require infinite deductions.
+</span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">bar</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">bar</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span></pre>
+<p>However, we want to be able to preserve recursion like:</p>
+<pre style="background-color:#272822;">
+<span style="color:#75715e;">// A bit useless, but still well-defined.
+</span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#75715e;">// This is well-defined, and even useful.
+</span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">edge</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">_</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">, </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span></pre>
+<p>It turns out the procedure for ensuring recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:</p>
+<ul>
+<li>If any clause with the name <code>i</code> calls the name <code>j</code> (including recursively), <code>i &lt;= j</code>.</li>
+<li>If any clause with the name <code>i</code> calls the negation of the name <code>j</code> (including recursively), <code>i &lt; j</code>.</li>
+</ul>
+<p>(As an implementation note: we define the names as signed integers, assigning only non-negative ones to user-defined predicates, and negative ones to built-in predicates.)</p>
+<h2 id="implementation">Implementation</h2>
+<p>Since we have multiple &quot;first-level ASTs,&quot; we use the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">visitor pattern</a> to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).</p>
+<p>These visitors directly assign stratification indices using <a href="https://crates.io/crates/topological-sort">the <code>topological-sort</code> crate</a>. It only supports <code>&lt;</code> bounds (rather than <code>&lt;=</code>), so a simple test for self-recursion is needed, which fails for negated self-recursion.</p>
+<p>The positivity test is then easy to define on the resulting <code>VerifiedQuery</code> AST.</p>
+
+		</article>
+		
+			<div class="comments">
+				Comments are not enabled on this post.
+			</div>
+		
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.class = "icon subtle";
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>
