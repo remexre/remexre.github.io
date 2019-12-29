@@ -49,18 +49,17 @@
 <li>this would allow typestates too: <code>T S1 -o M (T S2)</code></li>
 </ul>
 <h3 id="api">API</h3>
-<p><code>Instance : *</code></p>
-<ul>
-<li><code>make_instance : () -&gt; Instance</code></li>
-</ul>
 <p><code>Device : *</code></p>
+<p>Device also contains instance.</p>
 <ul>
-<li><code>make_device : Target t =&gt; Instance -&gt; t -o Device</code></li>
+<li><code>make_device : Target t =&gt; t -o Device</code></li>
 </ul>
-<p><code>Cmd : *</code></p>
+<p><code>Cmd : * -&gt; *</code></p>
 <ul>
-<li><code>return : a -o Cmd a</code></li>
+<li><code>pure : a -o Cmd a</code></li>
 <li><code>and_then : (a -o Cmd b) -&gt; Cmd a -o Cmd b</code></li>
+<li><code>par : Cmd a -o Cmd b -o Cmd (a, b)</code></li>
+<li><code>par_ : Cmd () -o Cmd () -o Cmd ()</code></li>
 <li><code>run : Device -&gt; Cmd a -o a</code></li>
 </ul>
 <p><code>CmdBufUsage : *</code></p>
