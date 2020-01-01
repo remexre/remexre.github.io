@@ -1,0 +1,42 @@
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>remexre.xyz</title>
+        <link>https://remexre.xyz/</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://remexre.xyz/tags/stahl/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Stahl in 2020</title>
+                <pubDate>Wed, 01 Jan 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/stahl-2020/</link>
+                <guid>https://remexre.xyz/stahl-2020/</guid>
+                <description>&lt;p&gt;This is a quick roadmap for the Stahl project(s) in (at least the beginning of) 2020. I&#x27;ve been slowly reading &lt;a href=&quot;https:&#x2F;&#x2F;homotopytypetheory.org&#x2F;book&#x2F;&quot;&gt;Homotopy Type Theory&lt;&#x2F;a&gt; over the last week, and I&#x27;m getting a &lt;a href=&quot;https:&#x2F;&#x2F;www.pine64.org&#x2F;pinebook-pro&#x2F;&quot;&gt;Pinebook Pro&lt;&#x2F;a&gt; as a hackable dev platform.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;overview&quot;&gt;Overview&lt;&#x2F;h1&gt;
+&lt;p&gt;Stahl (Language):&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Stahl Core interpreter&lt;&#x2F;li&gt;
+&lt;li&gt;Stahl Core compiler&lt;&#x2F;li&gt;
+&lt;li&gt;Properly grok higher-order pattern unification&lt;&#x2F;li&gt;
+&lt;li&gt;Write Stahl to Stahl Core conversion&lt;&#x2F;li&gt;
+&lt;li&gt;Proper Stahl frontend&lt;&#x2F;li&gt;
+&lt;li&gt;Linux Runtime&lt;&#x2F;li&gt;
+&lt;li&gt;GRIN backend&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;StahlOS:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Rewrite&#x2F;port StahlOS for Pinebook Pro&lt;&#x2F;li&gt;
+&lt;li&gt;Spawn driver and process for serial console on UART&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;stahl-core&quot;&gt;Stahl Core&lt;&#x2F;h1&gt;
+&lt;p&gt;The Stahl surface syntax is translated down to a simpler intermediate language, Stahl Core. Stahl Core uses an intensional constructive type theory. Currently, I don&#x27;t think I can make it completely HoTT-friendly, since I&#x27;m not sure how to compute with the univalence axiom, but if that changes it probably will be. Lastly, &amp;quot;normal universes&amp;quot; are explicitly indexed with ordinals, which inhabit their own universe, &lt;code&gt;Ordinal&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;d like to also introduce the tricks from &lt;a href=&quot;http:&#x2F;&#x2F;jmchapman.github.io&#x2F;papers&#x2F;levitation.pdf&quot;&gt;The Gentle Art of Levitation&lt;&#x2F;a&gt;, so its &lt;code&gt;Tag&lt;&#x2F;code&gt; and &lt;code&gt;Desc&lt;&#x2F;code&gt; will likely make an appearance in some form. (&lt;code&gt;Tag&lt;&#x2F;code&gt;, in particular, I&#x27;m likely to rename to &lt;code&gt;Atom&lt;&#x2F;code&gt;.)&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;stahlos&quot;&gt;StahlOS&lt;&#x2F;h1&gt;
+&lt;p&gt;Since the Pinebook Pro is such a well-documented machine, I want to switch to porting StahlOS to it, rather than continuing to not work on it for amd64. The current codebase is basically blocked on my not wanted to grok ACPI; &lt;a href=&quot;https:&#x2F;&#x2F;www.devicetree.org&#x2F;&quot;&gt;DeviceTrees&lt;&#x2F;a&gt; seem much saner, and the RK3399 (the SoC the Pinebook Pro uses) looks like it has static addresses for its peripherals (e.g. the serial port is at a fixed physical address of &lt;code&gt;0xff1a0000&lt;&#x2F;code&gt;).&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>
