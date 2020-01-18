@@ -106,7 +106,7 @@
 <p>Note that since we use Rust's lexer, the <code>query!()</code> proc macro will inherit e.g. Rust's string escapes (which are a superset of the ones the string parser's lexer supports). Additionally, quoted symbols are not supported, since they conflict with Rust's character literals.</p>
 <h1 id="semantic-analysis">Semantic Analysis</h1>
 <h2 id="restrictions">Restrictions</h2>
-<p>In order to maintain Datalog's properties, a few restrictions hold for G1 queries. All of the restrictions are based around ensuring the following statement is true:</p>
+<p>In order to maintain Datalog's properties, two restrictions hold for G1 queries. Both of the restrictions are based around ensuring the following statement is true:</p>
 <blockquote>
 <p>A Datalog program can be evaluated bottom-up and incrementally, in finite time.</p>
 </blockquote>
@@ -115,15 +115,19 @@
 <p>Examples of violating clauses include:</p>
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">// Disallowed, since this computes the set of all strings, which is infinite.
-</span><span style="color:#a6e22e;">f</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">alwaysSucceeds</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span><span style="color:#f8f8f2;">
 </span><span style="color:#75715e;">// Disallowed, since the complement of a finite set is infinite.
-</span><span style="color:#a6e22e;">g</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">h</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;red&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;green&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;blue&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+</span><span style="color:#a6e22e;">notColor</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span></pre>
 <p>It turns out there's a simple rule we can use to check this:</p>
 <blockquote>
 <p>Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.</p>
 </blockquote>
+<p>Currently, a negative call is negated and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.</p>
 <h3 id="stratification">Stratification</h3>
 <p>The stratification restriction ensures a clause can be evaluated in finite time, and gives an order for evaluating bottom-up, by disallowing some forms of recursion. We want to disallow clauses like:</p>
 <pre style="background-color:#272822;">
