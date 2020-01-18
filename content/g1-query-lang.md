@@ -116,7 +116,7 @@ Semantic Analysis
 Restrictions
 ------------
 
-In order to maintain Datalog's properties, a few restrictions hold for G1 queries. All of the restrictions are based around ensuring the following statement is true:
+In order to maintain Datalog's properties, two restrictions hold for G1 queries. Both of the restrictions are based around ensuring the following statement is true:
 
 > A Datalog program can be evaluated bottom-up and incrementally, in finite time.
 
@@ -128,15 +128,20 @@ Examples of violating clauses include:
 
 ```pro
 // Disallowed, since this computes the set of all strings, which is infinite.
-f(X).
+alwaysSucceeds(X).
 
 // Disallowed, since the complement of a finite set is infinite.
-g(X) :- !h(X).
+color("red").
+color("green").
+color("blue").
+notColor(X) :- !color(X).
 ```
 
 It turns out there's a simple rule we can use to check this:
 
 > Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.
+
+Currently, a negative call is negated and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.
 
 ### Stratification
 
