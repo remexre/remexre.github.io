@@ -127,9 +127,9 @@
 <blockquote>
 <p>Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.</p>
 </blockquote>
-<p>Currently, a negative call is negated and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.</p>
+<p>Currently, a negative call is negated (i.e., uses the <code>!</code> operator), and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.</p>
 <h3 id="stratification">Stratification</h3>
-<p>The stratification restriction ensures a clause can be evaluated in finite time, and gives an order for evaluating bottom-up, by disallowing some forms of recursion. We want to disallow clauses like:</p>
+<p>The stratification restriction gives an order for evaluating bottom-up and ensures a clause can be evaluated in finite time, by disallowing some forms of recursion. We want to disallow clauses like:</p>
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">// Inherently paradoxical.
 </span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
@@ -147,7 +147,7 @@
 </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">edge</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">_</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">, </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span></pre>
-<p>It turns out the procedure for ensuring recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:</p>
+<p>It turns out the procedure for ensuring that recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:</p>
 <ul>
 <li>If any clause with the name <code>i</code> calls the name <code>j</code> (including recursively), <code>i &lt;= j</code>.</li>
 <li>If any clause with the name <code>i</code> calls the negation of the name <code>j</code> (including recursively), <code>i &lt; j</code>.</li>
