@@ -141,11 +141,11 @@ It turns out there's a simple rule we can use to check this:
 
 > Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.
 
-Currently, a negative call is negated and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.
+Currently, a negative call is negated (i.e., uses the `!` operator), and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.
 
 ### Stratification
 
-The stratification restriction ensures a clause can be evaluated in finite time, and gives an order for evaluating bottom-up, by disallowing some forms of recursion. We want to disallow clauses like:
+The stratification restriction gives an order for evaluating bottom-up and ensures a clause can be evaluated in finite time, by disallowing some forms of recursion. We want to disallow clauses like:
 
 ```pro
 // Inherently paradoxical.
@@ -167,7 +167,7 @@ path(X, X) :- atom(X).
 path(X, Z) :- edge(X, Y, _), path(Y, Z).
 ```
 
-It turns out the procedure for ensuring recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:
+It turns out the procedure for ensuring that recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:
 
 -	If any clause with the name `i` calls the name `j` (including recursively), `i <= j`.
 -	If any clause with the name `i` calls the negation of the name `j` (including recursively), `i < j`.
