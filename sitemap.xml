@@ -8,6 +8,11 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/notebook-pbp-osdev/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/notebook-stahl-lang/</loc>
             
         </url>
@@ -39,6 +44,20 @@
     
         
         <url>
+            <loc>https://remexre.xyz/categories/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/notebook/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/post/</loc>
+        </url>
+        
+    
+        
+        <url>
             <loc>https://remexre.xyz/tags/</loc>
         </url>
         
@@ -64,20 +83,6 @@
         
         <url>
             <loc>https://remexre.xyz/tags/vulkan/</loc>
-        </url>
-        
-    
-        
-        <url>
-            <loc>https://remexre.xyz/categories/</loc>
-        </url>
-        
-        <url>
-            <loc>https://remexre.xyz/categories/notebook/</loc>
-        </url>
-        
-        <url>
-            <loc>https://remexre.xyz/categories/post/</loc>
         </url>
         
     
