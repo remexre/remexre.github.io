@@ -160,8 +160,24 @@
 
 		</article>
 		
+			<script src="https://utteranc.es/client.js"
+					repo="remexre/remexre.github.io"
+					issue-number="4"
+					label="comments"
+					theme="github-dark"
+					crossorigin="anonymous"
+					async>
+			</script>
 			<div class="comments">
-				Comments are not enabled on this post.
+				<!-- This needs to be in a div because the NoScript extension
+				transforms noscript elements into spans, while also getting rid
+				of id and class, so applying CSS is no longer possible (without
+				awful, awful hacks). -->
+				<noscript>
+					Comments (powered by
+					<a href="https://utteranc.es">utteranc.es</a>) require
+					JavaScript.
+				</noscript>
 			</div>
 		
 		<div class="spacer"></div>
