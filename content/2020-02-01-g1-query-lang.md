@@ -1,6 +1,5 @@
 +++
 title = "G1's Query Language"
-draft = true
 
 [taxonomies]
 categories = ["post"]
