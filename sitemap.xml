@@ -8,6 +8,13 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/g1-query-lang/</loc>
+            
+                <lastmod>2020-02-01</lastmod>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/notebook-pbp-osdev/</loc>
             
         </url>
@@ -44,20 +51,6 @@
     
         
         <url>
-            <loc>https://remexre.xyz/categories/</loc>
-        </url>
-        
-        <url>
-            <loc>https://remexre.xyz/categories/notebook/</loc>
-        </url>
-        
-        <url>
-            <loc>https://remexre.xyz/categories/post/</loc>
-        </url>
-        
-    
-        
-        <url>
             <loc>https://remexre.xyz/tags/</loc>
         </url>
         
@@ -83,6 +76,20 @@
         
         <url>
             <loc>https://remexre.xyz/tags/vulkan/</loc>
+        </url>
+        
+    
+        
+        <url>
+            <loc>https://remexre.xyz/categories/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/notebook/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/categories/post/</loc>
         </url>
         
     

@@ -6,7 +6,147 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 01 Feb 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>G1&#x27;s Query Language</title>
+                <pubDate>Sat, 01 Feb 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/g1-query-lang/</link>
+                <guid>https://remexre.xyz/g1-query-lang/</guid>
+                <description>&lt;p&gt;The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.&lt;&#x2F;p&gt;
+&lt;p&gt;G1&#x27;s implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;syntax&quot;&gt;Syntax&lt;&#x2F;h1&gt;
+&lt;p&gt;The G1 grammar is (somewhat informally) as follows:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;query&amp;gt; ::= &amp;lt;clause&amp;gt;* &amp;quot;?-&amp;quot; &amp;lt;predicate&amp;gt; &amp;quot;.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;clause&amp;gt; ::= &amp;lt;predicate&amp;gt; &amp;quot;.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;clause&amp;gt; ::= &amp;lt;predicate&amp;gt; &amp;quot;:-&amp;quot; commaSeparated1(&amp;lt;possiblyNegatedPredicate&amp;gt;) &amp;quot;.&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;possiblyNegatedPredicate&amp;gt; ::= &amp;lt;predicate&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;possiblyNegatedPredicate&amp;gt; ::= &amp;quot;!&amp;quot; &amp;lt;predicate&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;predicate&amp;gt; ::= &amp;lt;var&amp;gt; &amp;quot;(&amp;quot; commaSeparated(&amp;lt;value&amp;gt;) &amp;quot;)&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;value&amp;gt; ::= &amp;quot;_&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;value&amp;gt; ::= &amp;lt;string&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;value&amp;gt; ::= &amp;lt;var&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;string&amp;gt; ::= &amp;#39;&amp;quot;&amp;#39; &amp;lt;stringChar&amp;gt;* &amp;#39;&amp;quot;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;var&amp;gt; ::= &amp;quot;&amp;#39;&amp;quot; &amp;lt;stringChar&amp;gt;* &amp;quot;&amp;#39;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;var&amp;gt; ::= &#x2F;[A-Za-z][0-9A-Za-z_]*&#x2F;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;stringChar&amp;gt; ::= any printable character other than &amp;quot;&amp;#39;&amp;quot;, &amp;#39;&amp;quot;&amp;#39;, or &amp;quot;\&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;stringChar&amp;gt; ::= &amp;quot;\&amp;quot; &amp;lt;escChar&amp;gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;quot;\&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;quot;&amp;#39;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;#39;&amp;quot;&amp;#39;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;quot;n&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;quot;r&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;&amp;lt;escChar&amp;gt; ::= &amp;quot;t&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;commaSeparated(NT) ::=
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;commaSeparated1(NT) ::= commaSeparated1(NT)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;commaSeparated1(NT) ::= NT
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Note that unlike Prolog, Datalog doesn&#x27;t allow functors as values (i.e. &lt;code&gt;foo(1, bar(2))&lt;&#x2F;code&gt; is not a predicate). Also of note is the G1 query language&#x27;s choices regarding strings -- double quotes are &lt;strong&gt;always&lt;&#x2F;strong&gt; used for strings, and unquoted and single-quoted symbols are &lt;strong&gt;always&lt;&#x2F;strong&gt; variables. This differs significantly from Prolog, which uses case to disambiguate between variables and atoms.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;string-parser&quot;&gt;String Parser&lt;&#x2F;h2&gt;
+&lt;p&gt;The parser for strings is able to be a fairly traditional LALR parser, using &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;lalrpop&#x2F;lalrpop&quot;&gt;LALRPOP&lt;&#x2F;a&gt; as a parser generator and &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;maciejhirsz&#x2F;logos&quot;&gt;Logos&lt;&#x2F;a&gt; as a lexer generator. This parser is rather straightforward, so there&#x27;s not much more to say about it here.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;proc-macro-parser&quot;&gt;Proc Macro Parser&lt;&#x2F;h2&gt;
+&lt;p&gt;The parser for the &lt;code&gt;query!()&lt;&#x2F;code&gt; macro is more complex, because it needs to operate on Rust tokens. So that macros don&#x27;t need to break compatibility with future Rust syntax changes, procedural macros receive a &lt;code&gt;TokenStream&lt;&#x2F;code&gt; type, which is an iterator of &lt;code&gt;TokenTree&lt;&#x2F;code&gt;s.&lt;&#x2F;p&gt;
+&lt;p&gt;A &lt;code&gt;TokenTree&lt;&#x2F;code&gt; is either a token (an identifier, literal, or piece of punctuation) or a bracket-delimited &lt;code&gt;TokenStream&lt;&#x2F;code&gt;. This is reasonably easy to parse with a hand-written recursive-descent parser, but it doesn&#x27;t fit well with LALRPOP. The &lt;code&gt;g1_macros&lt;&#x2F;code&gt; crate therefore defines a &lt;code&gt;Token&lt;&#x2F;code&gt; type that represents a single token, with delimiters explicitly present.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, the Rust tokens&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#66d9ef;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(bar, baz, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;_&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;).
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;become the &lt;code&gt;TokenStream&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenStream::from(vec![
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;foo&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Group(Group::new(Delimiter::Parenthesis, TokenStream::from(vec![
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;bar&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;,&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;baz&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;,&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;        &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;_&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;]))),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;TokenTree::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;.&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;])
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;which in turn becomes the &lt;code&gt;Vec&amp;lt;Token&amp;gt;&lt;&#x2F;code&gt;&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;vec![
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;foo&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::ParenOpen(Span::call_site()),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;bar&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;,&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Ident(Ident::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;baz&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Span::call_site())),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;,&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Hole(Span::call_site()),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::ParenClose(Span::call_site()),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Token::Punct(Punct::new(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;#39;.&amp;#39;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, Spacing::Alone)),
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Note that since we use Rust&#x27;s lexer, the &lt;code&gt;query!()&lt;&#x2F;code&gt; proc macro will inherit e.g. Rust&#x27;s string escapes (which are a superset of the ones the string parser&#x27;s lexer supports). Additionally, quoted symbols are not supported, since they conflict with Rust&#x27;s character literals.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;semantic-analysis&quot;&gt;Semantic Analysis&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;restrictions&quot;&gt;Restrictions&lt;&#x2F;h2&gt;
+&lt;p&gt;In order to maintain Datalog&#x27;s properties, two restrictions hold for G1 queries. Both of the restrictions are based around ensuring the following statement is true:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A Datalog program can be evaluated bottom-up and incrementally, in finite time.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;h3 id=&quot;positivity&quot;&gt;Positivity&lt;&#x2F;h3&gt;
+&lt;p&gt;The positivity restriction ensures a clause always computes a finite number of tuples of strings (i.e. without them containing variables).&lt;&#x2F;p&gt;
+&lt;p&gt;Examples of violating clauses include:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Disallowed, since this computes the set of all strings, which is infinite.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;alwaysSucceeds&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Disallowed, since the complement of a finite set is infinite.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;red&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;green&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;blue&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;notColor&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- !&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;color&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;It turns out there&#x27;s a simple rule we can use to check this:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;p&gt;Currently, a negative call is negated (i.e., uses the &lt;code&gt;!&lt;&#x2F;code&gt; operator), and a positive call is non-negated. This isn&#x27;t true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;stratification&quot;&gt;Stratification&lt;&#x2F;h3&gt;
+&lt;p&gt;The stratification restriction gives an order for evaluating bottom-up and ensures a clause can be evaluated in finite time, by disallowing some forms of recursion. We want to disallow clauses like:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Inherently paradoxical.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;paradox&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- !&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;paradox&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; Could require infinite deductions.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;bar&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;bar&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;However, we want to be able to preserve recursion like:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; A bit useless, but still well-defined.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;&#x2F;&#x2F; This is well-defined, and even useful.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;atom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;Z&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;:- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;edge&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;X&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;Y&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;_&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;Y&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;Z&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;It turns out the procedure for ensuring that recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;If any clause with the name &lt;code&gt;i&lt;&#x2F;code&gt; calls the name &lt;code&gt;j&lt;&#x2F;code&gt; (including recursively), &lt;code&gt;i &amp;lt;= j&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;If any clause with the name &lt;code&gt;i&lt;&#x2F;code&gt; calls the negation of the name &lt;code&gt;j&lt;&#x2F;code&gt; (including recursively), &lt;code&gt;i &amp;lt; j&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;(As an implementation note: we define the names as signed integers, assigning only non-negative ones to user-defined predicates, and negative ones to built-in predicates.)&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;implementation&quot;&gt;Implementation&lt;&#x2F;h2&gt;
+&lt;p&gt;Since we have multiple &amp;quot;first-level ASTs,&amp;quot; we use the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Visitor_pattern&quot;&gt;visitor pattern&lt;&#x2F;a&gt; to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).&lt;&#x2F;p&gt;
+&lt;p&gt;These visitors directly assign stratification indices using &lt;a href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;topological-sort&quot;&gt;the &lt;code&gt;topological-sort&lt;&#x2F;code&gt; crate&lt;&#x2F;a&gt;. It only supports &lt;code&gt;&amp;lt;&lt;&#x2F;code&gt; bounds (rather than &lt;code&gt;&amp;lt;=&lt;&#x2F;code&gt;), so a simple test for self-recursion is needed, which fails for negated self-recursion.&lt;&#x2F;p&gt;
+&lt;p&gt;The positivity test is then easy to define on the resulting &lt;code&gt;VerifiedQuery&lt;&#x2F;code&gt; AST.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Stahl in 2020</title>
