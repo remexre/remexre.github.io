@@ -7,7 +7,7 @@ categories = ["post"]
 tags = ["g1", "rust"]
 
 [extra]
-# comment_issue = 2
+comment_issue = 4
 +++
 
 The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.
