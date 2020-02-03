@@ -15,7 +15,7 @@
 			<a class="subtle" href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
 		</header>
 		<div class="spacer"></div>
-		<div class="list">
+		<main>
 			{% set_global all_pages = section.pages -%}
 			{% for subsection_name in section.subsections -%}
 				{% set subsection = get_section(path=subsection_name) -%}
@@ -32,7 +32,7 @@
 					</div>
 				{% endif -%}
 			{% endfor -%}
-		</div>
+		</main>
 		<div class="spacer"></div>
 		<script src="{{ config.base_url }}js/search.js"></script>
 	</body>

@@ -28,7 +28,7 @@
   searchBox.autocomplete = "off";
   searchBox.classList.add("search");
   searchBox.placeholder = "Search...";
-  document.querySelector(".list").prepend(searchBox);
+  document.querySelector("main").prepend(searchBox);
 
   // Add search functionality.
   const normalize = (s) => {
