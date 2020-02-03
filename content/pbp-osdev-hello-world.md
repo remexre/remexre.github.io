@@ -10,10 +10,12 @@ tags = ["osdev", "pbp"]
 # comment_issue = 5
 +++
 
+I recently got a Pinebook Pro, and I want to port StahlOS to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a Hello, world program running on it.
+
 The Hardware
 ============
 
-This is written about and on the ANSI model of the [Pinebook Pro](https://www.pine64.org/pinebook-pro/). Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.
+This is written about (and largely on) the ANSI model of the [Pinebook Pro](https://www.pine64.org/pinebook-pro/). Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.
 
 Initially, I tried [Adafruit's USB to TTL Serial Cable](https://www.adafruit.com/product/954), since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399, however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.
 

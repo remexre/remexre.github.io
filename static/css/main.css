@@ -157,6 +157,7 @@ article code {
 	color: #ffffff;
 	font-family: "Roboto Mono", monospace;
 	font-size: 16px;
+	white-space: nowrap;
 }
 
 article pre {
