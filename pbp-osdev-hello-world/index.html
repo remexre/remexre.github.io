@@ -25,8 +25,9 @@
 					
 				</span>
 			</h1>
-			<h1 id="the-hardware">The Hardware</h1>
-<p>This is written about and on the ANSI model of the <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a>. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.</p>
+			<p>I recently got a Pinebook Pro, and I want to port StahlOS to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a Hello, world program running on it.</p>
+<h1 id="the-hardware">The Hardware</h1>
+<p>This is written about (and largely on) the ANSI model of the <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a>. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.</p>
 <p>Initially, I tried <a href="https://www.adafruit.com/product/954">Adafruit's USB to TTL Serial Cable</a>, since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399, however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.</p>
 <h1 id="out-of-the-box">Out of the Box</h1>
 <p>The Pinebook Pro ships with an ancient (oldstable?) version of Debian. I ditched it for Manjaro running off an SD card. From the default install, I <code>systemctl disable</code>d lightdm and installed i3 instead. I'm doing most of my usage (including typing this!) from the kernel console in tmux, though.</p>
