@@ -16,8 +16,13 @@
 		</header>
 		<div class="spacer"></div>
 		<div class="list">
-			{% for page in section.pages | reverse %}
-				{% if page.taxonomies.categories is containing("post") and not page.draft %}
+			{% set_global all_pages = section.pages -%}
+			{% for subsection_name in section.subsections -%}
+				{% set subsection = get_section(path=subsection_name) -%}
+				{% set_global all_pages = all_pages | concat(with=subsection.pages) -%}
+			{% endfor -%}
+			{% for page in all_pages | filter(attribute="draft", value=false) | sort(attribute="date") | reverse -%}
+				{% if page.taxonomies.categories is containing("post") and not page.draft -%}
 					<div class="item">
 						<a class="subtle" href="{{ page.permalink }}">
 							{{ page.title }}
@@ -25,8 +30,8 @@
 							<span class="meta">{{ page.date }}</span>
 						</a>
 					</div>
-				{% endif %}
-			{% endfor %}
+				{% endif -%}
+			{% endfor -%}
 		</div>
 		<div class="spacer"></div>
 		<script src="{{ config.base_url }}js/search.js"></script>

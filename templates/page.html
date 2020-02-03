@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
 	</head>
 	<body>
-		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<a class="back subtle" href="{{ config.base_url }}" title="Back">&lsaquo;</a>
 		<header>
 			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
 			<a class="subtle" href="https://github.com/remexre">GitHub</a>
@@ -20,16 +20,16 @@
 				<a class="subtle" href="{{ page.permalink }}">{{ page.title }}</a>
 				<span class="spacer"></span>
 				<span class="meta">
-					{% if page.draft %}
+					{% if page.draft -%}
 						Draft
-					{% else %}
+					{% else -%}
 						{{ page.date }}
-					{% endif %}
+					{% endif -%}
 				</span>
 			</h1>
 			{{ page.content | safe }}
 		</article>
-		{% if page.extra.comment_issue %}
+		{% if page.extra.comment_issue -%}
 			<script src="https://utteranc.es/client.js"
 					repo="remexre/remexre.github.io"
 					issue-number="{{ page.extra.comment_issue }}"
@@ -49,11 +49,11 @@
 					JavaScript.
 				</noscript>
 			</div>
-		{% else %}
+		{% else -%}
 			<div class="comments">
 				Comments are not enabled on this post.
 			</div>
-		{% endif %}
+		{% endif -%}
 		<div class="spacer"></div>
 		<script src="{{ config.base_url }}ext/anchor.min.js"></script>
 		<script>

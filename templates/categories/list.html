@@ -7,7 +7,7 @@
 		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
 	</head>
 	<body>
-		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<a class="back subtle" href="{{ config.base_url }}" title="Back">&lsaquo;</a>
 		<header>
 			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
 			<a class="subtle" href="https://github.com/remexre">GitHub</a>
@@ -17,7 +17,7 @@
 		</header>
 		<div class="spacer"></div>
 		<div class="list">
-			{% for term in terms %}
+			{% for term in terms -%}
 				<div class="item">
 					<a class="subtle" href="{{ term.permalink }}">
 						{{ term.name }}
@@ -25,7 +25,7 @@
 						<span class="meta">{{ term.pages | length }}</span>
 					</a>
 				</div>
-			{% endfor %}
+			{% endfor -%}
 		</div>
 		<div class="spacer"></div>
 		<script src="{{ config.base_url }}js/search.js"></script>
