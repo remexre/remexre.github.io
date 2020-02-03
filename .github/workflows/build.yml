@@ -22,6 +22,7 @@ jobs:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BASE_BRANCH: authoring
         BRANCH: master
+        CLEAN: true
         FOLDER: public
     - name: Purge cache
       uses: jakejarvis/cloudflare-purge-action@master
