@@ -27,6 +27,11 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/g1/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/g1/intro/</loc>
             
                 <lastmod>2019-12-15</lastmod>
@@ -41,12 +46,17 @@
         </url>
     
         <url>
-            <loc>https://remexre.xyz/notebook-stahl-lang/</loc>
+            <loc>https://remexre.xyz/notebooks/stahl-lang/</loc>
             
         </url>
     
         <url>
-            <loc>https://remexre.xyz/notebook-vulkan/</loc>
+            <loc>https://remexre.xyz/notebooks/vulkan/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/pbp-osdev/</loc>
             
         </url>
     
@@ -64,6 +74,11 @@
             <loc>https://remexre.xyz/reboot/</loc>
             
                 <lastmod>2019-12-13</lastmod>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/stahl/</loc>
             
         </url>
     
