@@ -30,33 +30,33 @@
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">-- defined by main module
 </span><span style="color:#f92672;">data </span><span style="color:#ae81ff;">State
-</span><span style="color:#a6e22e;">initState </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">State
-</span><span style="color:#f8f8f2;">initState </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
-</span><span style="color:#a6e22e;">main </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> [</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">] </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">()
-</span><span style="color:#f8f8f2;">main </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
-</span><span style="color:#f8f8f2;">
+</span><span style="color:#a6e22e;">initState </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">State</span><span style="color:#f8f8f2;">
+initState </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+</span><span style="color:#a6e22e;">main </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> [</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">] </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">()</span><span style="color:#f8f8f2;">
+main </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+
 </span><span style="color:#a6e22e;">entrypoint </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> [</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">] </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">State </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">], </span><span style="font-style:italic;color:#66d9ef;">Maybe State</span><span style="color:#f8f8f2;">)
-</span><span style="color:#f8f8f2;">entrypoint </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">runIO </span><span style="color:#f92672;">.</span><span style="color:#f8f8f2;"> main
-</span><span style="color:#f8f8f2;">
+entrypoint </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">runIO </span><span style="color:#f92672;">.</span><span style="color:#f8f8f2;"> main
+
 </span><span style="color:#75715e;">-- Approximately ContT () (WriterT [Message] (StateT s Maybe)) a
 </span><span style="color:#f92672;">data </span><span style="color:#ae81ff;">IO</span><span style="color:#f8f8f2;"> s a
-</span><span style="color:#f8f8f2;">  </span><span style="color:#f92672;">= </span><span style="color:#ae81ff;">MkIO</span><span style="color:#f8f8f2;"> ((a </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s)) </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s))
-</span><span style="color:#f8f8f2;">  </span><span style="color:#f92672;">deriving</span><span style="color:#f8f8f2;"> (</span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Functor</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Applicative</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Monad</span><span style="color:#f8f8f2;">)
-</span><span style="color:#f8f8f2;">
+  </span><span style="color:#f92672;">= </span><span style="color:#ae81ff;">MkIO</span><span style="color:#f8f8f2;"> ((a </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s)) </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="color:#ae81ff;">Message</span><span style="color:#f8f8f2;">], </span><span style="color:#ae81ff;">Maybe</span><span style="color:#f8f8f2;"> s))
+  </span><span style="color:#f92672;">deriving</span><span style="color:#f8f8f2;"> (</span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Functor</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Applicative</span><span style="color:#f8f8f2;">, </span><span style="text-decoration:underline;font-style:italic;color:#a6e22e;">Monad</span><span style="color:#f8f8f2;">)
+
 </span><span style="color:#a6e22e;">runIO </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">IO State </span><span style="color:#66d9ef;">() </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">State </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> ([</span><span style="font-style:italic;color:#66d9ef;">Message</span><span style="color:#f8f8f2;">], </span><span style="font-style:italic;color:#66d9ef;">Maybe State</span><span style="color:#f8f8f2;">)
-</span><span style="color:#f8f8f2;">runIO (MkIO k) st </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">k (</span><span style="color:#f92672;">\</span><span style="color:#ae81ff;">()</span><span style="color:#f8f8f2;">, st </span><span style="color:#f92672;">=&gt;</span><span style="color:#f8f8f2;"> (</span><span style="color:#ae81ff;">[]</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">Just</span><span style="color:#f8f8f2;"> st)) st
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#a6e22e;">send </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">Message </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s </span><span style="color:#66d9ef;">()
-</span><span style="color:#f8f8f2;">send </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
-</span><span style="color:#f8f8f2;">
+runIO (MkIO k) st </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">k (</span><span style="color:#f92672;">\</span><span style="color:#ae81ff;">()</span><span style="color:#f8f8f2;">, st </span><span style="color:#f92672;">=&gt;</span><span style="color:#f8f8f2;"> (</span><span style="color:#ae81ff;">[]</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">Just</span><span style="color:#f8f8f2;"> st)) st
+
+</span><span style="color:#a6e22e;">send </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">Message </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s </span><span style="color:#66d9ef;">()</span><span style="color:#f8f8f2;">
+send </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+
 </span><span style="color:#a6e22e;">modifyIO </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> (s </span><span style="color:#f92672;">-&gt;</span><span style="color:#f8f8f2;"> (s, a)) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a
-</span><span style="color:#f8f8f2;">modifyIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
-</span><span style="color:#f8f8f2;">
+modifyIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+
 </span><span style="color:#a6e22e;">callCCIO </span><span style="color:#f92672;">::</span><span style="color:#f8f8f2;"> ((a </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s b) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a) </span><span style="color:#f92672;">-&gt; </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">s a
-</span><span style="color:#f8f8f2;">callCCIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
-</span><span style="color:#f8f8f2;">
+callCCIO </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+
 </span><span style="color:#a6e22e;">exit </span><span style="color:#f92672;">:: </span><span style="font-style:italic;color:#66d9ef;">IO </span><span style="color:#f8f8f2;">a
-</span><span style="color:#f8f8f2;">exit </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
+exit </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">undefined
 </span></pre>
 <p><strong>TODO:</strong> state and prove some laws -- notably to ensure callCC works</p>
 

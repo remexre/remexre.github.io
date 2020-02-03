@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>G1&#x27;s Query Language &mdash; remexre.xyz</title>
+		<title>G1: The Query Language &mdash; remexre.xyz</title>
 		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
 	</head>
 	<body>
@@ -17,7 +17,7 @@
 		</header>
 		<article>
 			<h1 class="title">
-				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-query-lang&#x2F;">G1&#x27;s Query Language</a>
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1-query-lang&#x2F;">G1: The Query Language</a>
 				<span class="spacer"></span>
 				<span class="meta">
 					
@@ -31,39 +31,39 @@
 <p>The G1 grammar is (somewhat informally) as follows:</p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">&lt;query&gt; ::= &lt;clause&gt;* &quot;?-&quot; &lt;predicate&gt; &quot;.&quot;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;clause&gt; ::= &lt;predicate&gt; &quot;.&quot;
-</span><span style="color:#f8f8f2;">&lt;clause&gt; ::= &lt;predicate&gt; &quot;:-&quot; commaSeparated1(&lt;possiblyNegatedPredicate&gt;) &quot;.&quot;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;possiblyNegatedPredicate&gt; ::= &lt;predicate&gt;
-</span><span style="color:#f8f8f2;">&lt;possiblyNegatedPredicate&gt; ::= &quot;!&quot; &lt;predicate&gt;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;predicate&gt; ::= &lt;var&gt; &quot;(&quot; commaSeparated(&lt;value&gt;) &quot;)&quot;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &quot;_&quot;
-</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &lt;string&gt;
-</span><span style="color:#f8f8f2;">&lt;value&gt; ::= &lt;var&gt;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;string&gt; ::= &#39;&quot;&#39; &lt;stringChar&gt;* &#39;&quot;&#39;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;var&gt; ::= &quot;&#39;&quot; &lt;stringChar&gt;* &quot;&#39;&quot;
-</span><span style="color:#f8f8f2;">&lt;var&gt; ::= /[A-Za-z][0-9A-Za-z_]*/
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;stringChar&gt; ::= any printable character other than &quot;&#39;&quot;, &#39;&quot;&#39;, or &quot;\&quot;
-</span><span style="color:#f8f8f2;">&lt;stringChar&gt; ::= &quot;\&quot; &lt;escChar&gt;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;\&quot;
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;&#39;&quot;
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &#39;&quot;&#39;
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;n&quot;
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;r&quot;
-</span><span style="color:#f8f8f2;">&lt;escChar&gt; ::= &quot;t&quot;
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">commaSeparated(NT) ::=
-</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= commaSeparated1(NT)
-</span><span style="color:#f8f8f2;">
-</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= NT
-</span><span style="color:#f8f8f2;">commaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT
+
+&lt;clause&gt; ::= &lt;predicate&gt; &quot;.&quot;
+&lt;clause&gt; ::= &lt;predicate&gt; &quot;:-&quot; commaSeparated1(&lt;possiblyNegatedPredicate&gt;) &quot;.&quot;
+
+&lt;possiblyNegatedPredicate&gt; ::= &lt;predicate&gt;
+&lt;possiblyNegatedPredicate&gt; ::= &quot;!&quot; &lt;predicate&gt;
+
+&lt;predicate&gt; ::= &lt;var&gt; &quot;(&quot; commaSeparated(&lt;value&gt;) &quot;)&quot;
+
+&lt;value&gt; ::= &quot;_&quot;
+&lt;value&gt; ::= &lt;string&gt;
+&lt;value&gt; ::= &lt;var&gt;
+
+&lt;string&gt; ::= &#39;&quot;&#39; &lt;stringChar&gt;* &#39;&quot;&#39;
+
+&lt;var&gt; ::= &quot;&#39;&quot; &lt;stringChar&gt;* &quot;&#39;&quot;
+&lt;var&gt; ::= /[A-Za-z][0-9A-Za-z_]*/
+
+&lt;stringChar&gt; ::= any printable character other than &quot;&#39;&quot;, &#39;&quot;&#39;, or &quot;\&quot;
+&lt;stringChar&gt; ::= &quot;\&quot; &lt;escChar&gt;
+
+&lt;escChar&gt; ::= &quot;\&quot;
+&lt;escChar&gt; ::= &quot;&#39;&quot;
+&lt;escChar&gt; ::= &#39;&quot;&#39;
+&lt;escChar&gt; ::= &quot;n&quot;
+&lt;escChar&gt; ::= &quot;r&quot;
+&lt;escChar&gt; ::= &quot;t&quot;
+
+commaSeparated(NT) ::=
+commaSeparated1(NT) ::= commaSeparated1(NT)
+
+commaSeparated1(NT) ::= NT
+commaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT
 </span></pre>
 <p>Note that unlike Prolog, Datalog doesn't allow functors as values (i.e. <code>foo(1, bar(2))</code> is not a predicate). Also of note is the G1 query language's choices regarding strings -- double quotes are <strong>always</strong> used for strings, and unquoted and single-quoted symbols are <strong>always</strong> variables. This differs significantly from Prolog, which uses case to disambiguate between variables and atoms.</p>
 <h2 id="string-parser">String Parser</h2>
@@ -78,30 +78,30 @@
 <p>become the <code>TokenStream</code></p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">TokenStream::from(vec![
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Group(Group::new(Delimiter::Parenthesis, TokenStream::from(vec![
-</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;_&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">]))),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">])
+	TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+	TokenTree::Group(Group::new(Delimiter::Parenthesis, TokenStream::from(vec![
+		TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+		TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+		TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+		TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+		TokenTree::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;_&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+	]))),
+	TokenTree::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+])
 </span></pre>
 <p>which in turn becomes the <code>Vec&lt;Token&gt;</code></p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">vec![
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::ParenOpen(Span::call_site()),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Hole(Span::call_site()),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::ParenClose(Span::call_site()),
-</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
-</span><span style="color:#f8f8f2;">]
+	Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;foo&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+	Token::ParenOpen(Span::call_site()),
+	Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;bar&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+	Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+	Token::Ident(Ident::new(</span><span style="color:#e6db74;">&quot;baz&quot;</span><span style="color:#f8f8f2;">, Span::call_site())),
+	Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;,&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+	Token::Hole(Span::call_site()),
+	Token::ParenClose(Span::call_site()),
+	Token::Punct(Punct::new(</span><span style="color:#e6db74;">&#39;.&#39;</span><span style="color:#f8f8f2;">, Spacing::Alone)),
+]
 </span></pre>
 <p>Note that since we use Rust's lexer, the <code>query!()</code> proc macro will inherit e.g. Rust's string escapes (which are a superset of the ones the string parser's lexer supports). Additionally, quoted symbols are not supported, since they conflict with Rust's character literals.</p>
 <h1 id="semantic-analysis">Semantic Analysis</h1>
@@ -116,7 +116,7 @@
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">// Disallowed, since this computes the set of all strings, which is infinite.
 </span><span style="color:#a6e22e;">alwaysSucceeds</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
-</span><span style="color:#f8f8f2;">
+
 </span><span style="color:#75715e;">// Disallowed, since the complement of a finite set is infinite.
 </span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;red&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span><span style="color:#a6e22e;">color</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;green&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
@@ -133,7 +133,7 @@
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">// Inherently paradoxical.
 </span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- !</span><span style="color:#a6e22e;">paradox</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
-</span><span style="color:#f8f8f2;">
+
 </span><span style="color:#75715e;">// Could require infinite deductions.
 </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">bar</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span><span style="color:#a6e22e;">bar</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
@@ -142,7 +142,7 @@
 <pre style="background-color:#272822;">
 <span style="color:#75715e;">// A bit useless, but still well-defined.
 </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
-</span><span style="color:#f8f8f2;">
+
 </span><span style="color:#75715e;">// This is well-defined, and even useful.
 </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
 </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">edge</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">_</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">, </span><span style="color:#a6e22e;">path</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">Y</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">Z</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
