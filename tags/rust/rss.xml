@@ -12,8 +12,8 @@
             <item>
                 <title>G1: The Query Language</title>
                 <pubDate>Sat, 01 Feb 2020 00:00:00 +0000</pubDate>
-                <link>https://remexre.xyz/g1-query-lang/</link>
-                <guid>https://remexre.xyz/g1-query-lang/</guid>
+                <link>https://remexre.xyz/g1/query-lang/</link>
+                <guid>https://remexre.xyz/g1/query-lang/</guid>
                 <description>&lt;p&gt;The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.&lt;&#x2F;p&gt;
 &lt;p&gt;G1&#x27;s implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;syntax&quot;&gt;Syntax&lt;&#x2F;h1&gt;
@@ -152,8 +152,8 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
             <item>
                 <title>G1: A simple graph store, written in Rust</title>
                 <pubDate>Sun, 15 Dec 2019 00:00:00 +0000</pubDate>
-                <link>https://remexre.xyz/g1-intro/</link>
-                <guid>https://remexre.xyz/g1-intro/</guid>
+                <link>https://remexre.xyz/g1/intro/</link>
+                <guid>https://remexre.xyz/g1/intro/</guid>
                 <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
 &lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m planning to implement a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;. I mainly want to do this because &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mozilla&#x2F;mentat&quot;&gt;mentat&lt;&#x2F;a&gt; became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.&lt;&#x2F;p&gt;
 &lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)&lt;&#x2F;p&gt;

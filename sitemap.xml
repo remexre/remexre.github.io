@@ -22,14 +22,19 @@
         </url>
     
         <url>
-            <loc>https://remexre.xyz/g1-intro/</loc>
+            <loc>https://remexre.xyz/enterprise-strawman/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/g1/intro/</loc>
             
                 <lastmod>2019-12-15</lastmod>
             
         </url>
     
         <url>
-            <loc>https://remexre.xyz/g1-query-lang/</loc>
+            <loc>https://remexre.xyz/g1/query-lang/</loc>
             
                 <lastmod>2020-02-01</lastmod>
             
@@ -46,6 +51,16 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/pbp-osdev/forth/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/pbp-osdev/hello-world/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/reboot/</loc>
             
                 <lastmod>2019-12-13</lastmod>
@@ -53,7 +68,7 @@
         </url>
     
         <url>
-            <loc>https://remexre.xyz/stahl-2020/</loc>
+            <loc>https://remexre.xyz/stahl/2020/</loc>
             
                 <lastmod>2020-01-01</lastmod>
             
@@ -65,12 +80,32 @@
         </url>
     
         <url>
+            <loc>https://remexre.xyz/tags/enterprise/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/tags/forth/</loc>
+            
+        </url>
+    
+        <url>
             <loc>https://remexre.xyz/tags/g1/</loc>
             
         </url>
     
         <url>
             <loc>https://remexre.xyz/tags/meta/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/tags/osdev/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/tags/pbp/</loc>
             
         </url>
     
