@@ -1,5 +1,5 @@
 +++
-title = "G1's Query Language"
+title = "G1: The Query Language"
 
 [taxonomies]
 categories = ["post"]
