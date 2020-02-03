@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Pinebook Pro OSDev: Hello World &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+	</head>
+	<body>
+		<a class="back subtle" href=".." title="Back">&lsaquo;</a>
+		<header>
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+		</header>
+		<article>
+			<h1 class="title">
+				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;pbp-osdev-hello-world&#x2F;">Pinebook Pro OSDev: Hello World</a>
+				<span class="spacer"></span>
+				<span class="meta">
+					
+						
+					
+				</span>
+			</h1>
+			<h1 id="the-hardware">The Hardware</h1>
+<p>This is written about and on the ANSI model of the <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a>. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.</p>
+<p>Initially, I tried <a href="https://www.adafruit.com/product/954">Adafruit's USB to TTL Serial Cable</a>, since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399, however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.</p>
+<h1 id="out-of-the-box">Out of the Box</h1>
+<p>The Pinebook Pro ships with an ancient (oldstable?) version of Debian. I ditched it for Manjaro running off an SD card. From the default install, I <code>systemctl disable</code>d lightdm and installed i3 instead. I'm doing most of my usage (including typing this!) from the kernel console in tmux, though.</p>
+<p>A hardware switch needs to be flipped inside the device to enable UART2, which provides a serial port over the headphone jack. The Pine wiki documents the location of the switch fairly well; check it for pictures.</p>
+<h1 id="u-boot">U-Boot</h1>
+<p>Once the serial port is connected, rebooting the machine shows the boot logs. Mashing Ctrl-C (or any key on the Manjaro U-Boot, it appears) gets a shell, with vaguely sh-like semantics.</p>
+<p>I recommend updating to Manjaro's U-Boot; the U-Boot the Pinebook Pro ships with (as of the January 2020 batch) can't boot from 64-bit ELF files. If your machine boots with an amber power LED instead of a green one, that's a strong indicator you're on the newer Manjaro U-Boot.</p>
+<p>The commands in the shell I find most useful are:</p>
+<ul>
+<li><code>bootelf</code>: Loads the ELF file at the given address, and jumps to its entrypoint.</li>
+<li><code>go</code>: Jumps to the given address. Useful when loading raw binaries (not ELFs).</li>
+<li><code>load</code>: Loads a file from a filesystem to an arbitrary address.</li>
+<li><code>loady</code>: Loads a file over the <a href="https://en.wikipedia.org/wiki/YMODEM">ymodem protocol</a> to an arbitrary address.</li>
+<li><code>md</code>: Gives a hexdump of an arbitrary address. Note that it displays in little endian. Also callable as <code>md.b</code>, <code>md.w</code>, <code>md.l</code>, <code>md.q</code> to display with different widths for atoms of data.</li>
+</ul>
+<h1 id="toolchain">Toolchain</h1>
+<p>You'll need at least binutils for the <code>aarch64-none-elf</code> target. On Gentoo, this is fairly easy with <a href="https://wiki.gentoo.org/wiki/Crossdev">crossdev</a>. It'll also probably be useful to have your system binutils be built multitarget; this doesn't apply to <code>gas</code>, though, so the <code>aarch64-none-elf</code> versions are still necessary.</p>
+<h1 id="writing-to-the-uart">Writing to the UART</h1>
+<p>The RK3399's <a href="http://opensource.rock-chips.com/images/e/ee/Rockchip_RK3399TRM_V1.4_Part1-20170408.pdf">Technical Reference Manual</a> is your friend for all of this; it notes that UART2 is mapped to <code>0xff1a0000</code>. There's also some information on how to interface with the chip; if you're familar with programming the <a href="https://en.wikipedia.org/wiki/8250_UART">8250</a> or <a href="https://en.wikipedia.org/wiki/16550_UART">16550</a> UARTs, I believe it's effectively the latter. (Note that unlike how x86 serial ports are typically connected, the UARTs in the Pinebook Pro are all memory-mapped.)</p>
+<p>We can write to the UART with an assembly sequence like:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">ldr x0, =0xff1a0000 /* Load the x0 register with 0xff1a0000 */
+</span><span style="color:#f8f8f2;">mov x1, &#39;!&#39;         /* Load the x1 register with &#39;!&#39; (zero-extended) */
+</span><span style="color:#f8f8f2;">strb w1, [x0]       /* Store the value in x1 to the address given by x0 */
+</span></pre>
+<p>This stores the <code>!</code> character in the Transmit Holding Register of the UART. Technically, we need to wait for the Transmit Holding Register Empty Bit of the Line Status Register to be 1. We do this with:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldr x0, =0xff1a0000
+</span><span style="color:#f8f8f2;">wait_for_tx_ok:
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldrb w1, [x0, #0x14]      /* Offset the address in x0 by 0x14 */
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">tbz w1, 5, wait_for_tx_ok /* Loop if bit 5 of x1 is zero */
+</span></pre>
+<p>Of course, a real OS should use the FIFOs, be interrupt-triggered, and maybe even use DMA. That's outside the scope of this article, but I'll probably touch on it in a future post.</p>
+<h1 id="putting-it-all-together">Putting it All Together</h1>
+<p>A full program:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">.section .text
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">.global _start
+</span><span style="color:#f8f8f2;">_start:
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldr x0, =0xff1a0000
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldr x3, =msg
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">mov x4, len
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">bl write_string     /* Call the write_string procedure */
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">b .                 /* Infinite loop */
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">/** write_string: Writes a string to a UART
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">* Input:
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*   x0: UART base address
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*   x3: Address of first character of string
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*   x4: Length of string
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">* Side Effects:
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">* - Trashes x1, x2, x5
+</span><span style="color:#f8f8f2;"> </span><span style="color:#f8f8f2;">*/
+</span><span style="color:#f8f8f2;">write_string:
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">cbz x4, write_string.end /* If x4 is zero, go to write_string.end */
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">write_string.wait_for_tx_ok:
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldrb w1, [x0, #0x14]
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">tbz w1, 5, write_string.wait_for_tx_ok
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ldrb w2, [x3], #1 /* After fetching a byte to w2, increment x3 */
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">sub x4, x4, 1     /* Decrement x4 */
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">strb w2, [x0]
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">b write_string
+</span><span style="color:#f8f8f2;">write_string.end:
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">ret
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">.section .rodata
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f8f8f2;">msg: .string &quot;Hello, world!\r\n&quot;
+</span><span style="color:#f8f8f2;">.equ len, . - msg
+</span></pre>
+<p>We also need a linker script for this:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f92672;">OUTPUT_FORMAT</span><span style="color:#f8f8f2;">(elf64-littleaarch64)
+</span><span style="color:#f92672;">ENTRY</span><span style="color:#f8f8f2;">(_start)
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f92672;">MEMORY</span><span style="color:#f8f8f2;"> {
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">kernel : ORIGIN = </span><span style="color:#ae81ff;">0x00280000</span><span style="color:#f8f8f2;">, LENGTH = </span><span style="color:#ae81ff;">0x00080000
+</span><span style="color:#f8f8f2;">}
+</span><span style="color:#f8f8f2;">
+</span><span style="color:#f92672;">SECTIONS</span><span style="color:#f8f8f2;"> {
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">.text : {
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">. += </span><span style="color:#f92672;">SIZEOF_HEADERS</span><span style="color:#f8f8f2;">;
+</span><span style="color:#f8f8f2;">        </span><span style="color:#f8f8f2;">*(.text)
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">} &gt; kernel
+</span><span style="color:#f8f8f2;">    </span><span style="color:#f8f8f2;">.rodata : { *(.rodata) } &gt; kernel
+</span><span style="color:#f8f8f2;">}
+</span></pre>
+<p>We compile and link with:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">aarch64-none-elf-as -o main.o main.s
+</span><span style="color:#f8f8f2;">aarch64-none-elf-ld -o main.elf -T linker.ld main.o -N -z max-page-size=4096
+</span></pre><h2 id="aside-tricks-for-a-smaller-executable">Aside: Tricks for a Smaller Executable</h2>
+<p>Thanks to <code>clever</code> and <code>doug16k</code> in the <code>#osdev</code> channel on Freenode for showing me a couple of tricks to reduce the size of the ELF file:</p>
+<ul>
+<li>Adding <code>. += SIZEOF_HEADERS;</code> to the first section, and passing <code>-N</code> to <code>ld</code> lets LD overlap the <code>.text</code> section with the ELF header itself.</li>
+<li>Passing <code>-z max-page-size=4096</code> to <code>ld</code> lets it only align the sections to 4k instead of 64k.</li>
+</ul>
+<p>This brings the binary size down from 66k to 1.3k.</p>
+<h1 id="hello-world">Hello, world!</h1>
+<p>Finally, we're ready to run our program. Connect the Pinebook Pro to your serial port, connect Minicom to the serial port, and boot it. Hit a key to drop to the U-Boot shell, then run <code>loady 0x00880000</code> to start the upload. Hit Ctrl-A, S to open Minicom's &quot;Send files&quot; menu. Once the file is uploaded, run <code>bootelf 0x00880000</code>. If all's gone well, you should see <code>Hello, world!</code> printed, followed by the machine hanging.</p>
+<script id="asciicast-297430" src="https://asciinema.org/a/297430.js" async></script>
+<noscript>Click <a href="https://asciinema.org/a/297430">here</a> to view screen recording (powered by asciinema).</noscript>
+
+		</article>
+		
+			<div class="comments">
+				Comments are not enabled on this post.
+			</div>
+		
+		<div class="spacer"></div>
+		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+		<script>
+			const anchors = new AnchorJS();
+			anchors.options.class = "icon subtle";
+			anchors.options.placement = "left";
+			anchors.add("article h1:not(.title)");
+		</script>
+	</body>
+</html>

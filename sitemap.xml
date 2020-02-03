@@ -15,17 +15,17 @@
         </url>
     
         <url>
-            <loc>https://remexre.xyz/notebook-pbp-osdev/</loc>
-            
-        </url>
-    
-        <url>
             <loc>https://remexre.xyz/notebook-stahl-lang/</loc>
             
         </url>
     
         <url>
             <loc>https://remexre.xyz/notebook-vulkan/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/pbp-osdev-hello-world/</loc>
             
         </url>
     
@@ -60,6 +60,14 @@
         
         <url>
             <loc>https://remexre.xyz/tags/meta/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/tags/osdev/</loc>
+        </url>
+        
+        <url>
+            <loc>https://remexre.xyz/tags/pbp/</loc>
         </url>
         
         <url>

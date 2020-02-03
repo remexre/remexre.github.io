@@ -190,6 +190,9 @@ article > h3 {
 	font-size: 1.25rem;
 }
 
+article .asciicast { display: flex !important; }
+article .asciicast > iframe { margin: auto !important; }
+
 .comments { margin: 1em auto; }
 
 .graphviz { display: flex; }
