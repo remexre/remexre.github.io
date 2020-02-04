@@ -23,7 +23,8 @@
 					2020-02-01
 					</span>
 			</h1>
-			<p>The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.</p>
+			<p><em>This post assumes you've read the <a href="https://remexre.xyz/g1/intro/">previous one in the series</a>.</em></p>
+<p>The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.</p>
 <p>G1's implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.</p>
 <h1 id="syntax">Syntax</h1>
 <p>The G1 grammar is (somewhat informally) as follows:</p>

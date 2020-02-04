@@ -14,7 +14,8 @@
                 <pubDate>Sat, 01 Feb 2020 00:00:00 +0000</pubDate>
                 <link>https://remexre.xyz/g1/query-lang/</link>
                 <guid>https://remexre.xyz/g1/query-lang/</guid>
-                <description>&lt;p&gt;The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.&lt;&#x2F;p&gt;
+                <description>&lt;p&gt;&lt;em&gt;This post assumes you&#x27;ve read the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;intro&#x2F;&quot;&gt;previous one in the series&lt;&#x2F;a&gt;.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.&lt;&#x2F;p&gt;
 &lt;p&gt;G1&#x27;s implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;syntax&quot;&gt;Syntax&lt;&#x2F;h1&gt;
 &lt;p&gt;The G1 grammar is (somewhat informally) as follows:&lt;&#x2F;p&gt;
@@ -190,7 +191,7 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 &lt;p&gt;Currently, I&#x27;m tracking work on the implementation in &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&#x2F;issues&quot;&gt;GitHub Issues&lt;&#x2F;a&gt;, but note that at the time of writing, these issues are in the context of a laughably unoptimized implementation on top of SQLite.&lt;&#x2F;p&gt;
 &lt;p&gt;In terms of the blog posts, I&#x27;m thinking of roughly the order:&lt;&#x2F;p&gt;
 &lt;ul&gt;
-&lt;li&gt;G1&#x27;s Query Language&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;&quot;&gt;G1&#x27;s Query Language&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
 &lt;li&gt;The Magic Sets Transformation&lt;&#x2F;li&gt;
 &lt;li&gt;How G1 Stores Data (in-memory and on disk)&lt;&#x2F;li&gt;
 &lt;li&gt;Implementing Transactions in G1&lt;&#x2F;li&gt;
