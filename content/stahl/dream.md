@@ -50,7 +50,7 @@ Databases
 Tuple Space
 -----------
 
-[Tuple spaces](TODO) are a sufficiently old, and sufficiently nice-seeming database abstraction that I'm honestly surprised there isn't a high-quality implementation some programming subculture is smugly using (in same way similar subcultures exist for e.g. Smalltalk, Erlang, Common Lisp).
+[Tuple spaces](https://en.wikipedia.org/wiki/Tuple_space) are a sufficiently old, and sufficiently nice-seeming database abstraction that I'm honestly surprised there isn't a high-quality implementation some programming subculture is smugly using (in same way similar subcultures exist for e.g. Smalltalk, Erlang, Common Lisp).
 
 Essentially, a tuple space is a distributed multiset with five primitive operations:
 
@@ -67,7 +67,7 @@ I need more design work to determine many of the details of this tuple space (as
 G1
 --
 
-I'm already writing about G1 [elsewhere](@/g1/2019-12-15-intro) on this blog, but I'll summarize how it fits into the larger StahlDream.
+I'm already writing about G1 [elsewhere](@/g1/2019-12-15-intro.md) on this blog, but I'll summarize how it fits into the larger StahlDream.
 
 The tuple space doesn't seem particularly good as a database for bulk storage &mdash; I'm planning to implement it with the expectation that it will contain at most a few megabytes of data at once. I therefore want a flexible database for storing and querying larger data.
 
