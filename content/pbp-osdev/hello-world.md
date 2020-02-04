@@ -10,7 +10,7 @@ tags = ["osdev", "pbp"]
 # comment_issue = 5
 +++
 
-I recently got a Pinebook Pro, and I want to port StahlOS to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a "Hello, world" program running on it.
+I recently got a Pinebook Pro, and I want to port [StahlOS](@/stahl/dream.md#stahlos) to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a "Hello, world" program running on it.
 
 The Hardware
 ============
@@ -73,7 +73,7 @@ Of course, a real OS should use the FIFOs, be interrupt-triggered, and maybe eve
 Putting it All Together
 =======================
 
-A full program:
+We can use the above with a bit of glue code to make our "Hello, world" program:
 
 ```arm64asm
 .section .text
