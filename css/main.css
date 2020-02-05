@@ -62,7 +62,10 @@ header {
 	flex-direction: row;
 	font-size: 1.0rem;
 	justify-content: space-around;
+	max-width: 50.0rem;
+	margin: auto;
 	padding: 0.25rem;
+	width: calc(100% - 1.0rem);
 }
 
 .search {
