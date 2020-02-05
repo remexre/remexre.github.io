@@ -10,7 +10,7 @@ tags = ["stahl"]
 # comment_issue = 5
 +++
 
-The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases, and everything one needs to support all of the above. (And that's before I get to any actual applications.)
+The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases. (And that's before I get to any actual applications.)
 
 I realized I don't actually have all this written down in one place anywhere, so this serves as a snapshot into the current vision.
 
