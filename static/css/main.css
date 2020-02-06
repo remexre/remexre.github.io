@@ -152,20 +152,18 @@ article {
 	width: calc(100% - 1.0rem);
 }
 
-article a code { /* :( */
+article a code {
 	color: #49baff;
 }
 
 article code {
 	color: #ffffff;
 	font-family: "Roboto Mono", monospace;
-	font-size: 16px;
 	white-space: nowrap;
 }
 
 article pre {
 	font-family: "Roboto Mono", monospace;
-	font-size: 16px;
 	overflow: auto;
 	padding: 0.5rem;
 }
