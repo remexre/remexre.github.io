@@ -1,6 +1,5 @@
 +++
 title = "Pinebook Pro OSDev: Hello World"
-draft = true
 
 [taxonomies]
 categories = ["post"]
