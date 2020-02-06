@@ -7,7 +7,47 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/tags/stahl/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Wed, 01 Jan 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Thu, 06 Feb 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>The StahlDream</title>
+                <pubDate>Thu, 06 Feb 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/stahl/dream/</link>
+                <guid>https://remexre.xyz/stahl/dream/</guid>
+                <description>&lt;p&gt;The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases. (And that&#x27;s before I get to any actual applications.)&lt;&#x2F;p&gt;
+&lt;p&gt;I realized I don&#x27;t actually have all this written down in one place anywhere, so this serves as a snapshot into the current vision.&lt;&#x2F;p&gt;
+&lt;p&gt;This is certainly inspired by &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Oberon_(operating_system)&quot;&gt;Oberon&lt;&#x2F;a&gt;, which showed one could create a single-machine system in a few thousand lines of code (12,227 by &lt;a href=&quot;http:&#x2F;&#x2F;www.edm2.com&#x2F;0608&#x2F;oberon.html&quot;&gt;one count&lt;&#x2F;a&gt;). I don&#x27;t think I can fit a system in so few lines of code, but I also want to have a much more complicated language in use for most of the system.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;stahlos&quot;&gt;StahlOS&lt;&#x2F;h1&gt;
+&lt;p&gt;The part I&#x27;m currently working on is an operating system on which the rest of the system runs. The system is quite minimal — there&#x27;s neither MMU-based process isolation, nor pre-emptive multitasking (though the latter may change).&lt;&#x2F;p&gt;
+&lt;p&gt;The StahlOS model fundamentally relies on all actual machine code executed by the CPU to be trustworthy, and disallows loading binaries other than the kernel itself. Instead, system drivers and essential processes are written in &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;#stahlos-forth&quot;&gt;StahlOS Forth&lt;&#x2F;a&gt;, which user programs are compiled to at runtime. Even the Forth programs themselves are only loadable from a read-only filesystem (excepting those that are compiled into the kernel), since Forth is low-level enough that it might as be machine code, security-wise.&lt;&#x2F;p&gt;
+&lt;p&gt;Each of the compiler processes only memory-safe code; assuming this property and the correctness of the above TCB, all code the system can run is memory-safe. This allows wholly ignoring the MMU as a security mechanism. Instead, memory ownership is implicit, and controlled at the page level. Each process (with exceptions such as a low-level debugging REPL) is shared-nothing, with message-passing as a fundamental operation, implemented as the transfer of page ownership. (I haven&#x27;t ruled out eventually allowing shared pages with STM or similar for concurrent modification, but I&#x27;m leery of shared pointers.)&lt;&#x2F;p&gt;
+&lt;p&gt;StahlOS will also provide Erlang-like mechanisms for orchestrating processes (i.e. monitors and links). However, cross-machine message-passing will not be directly supported (and for this reason, message-passing should only really be considered a intra-app mechanism, despite being inter-process). Instead, applications should generally use the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;#tuple-space&quot;&gt;tuple space&lt;&#x2F;a&gt; as a synchronization point: it&#x27;s not significantly more expensive than message passing for local communications, but allows remove communications.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;languages&quot;&gt;Languages&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;stahl&quot;&gt;Stahl&lt;&#x2F;h2&gt;
+&lt;p&gt;The primary language being designed currently, and the most complicated one by far, is Stahl. Stahl is a dependently typed lambda calculus with a Lisp-like syntax.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m probably basing the core type theory on the type theory presented in &lt;a href=&quot;https:&#x2F;&#x2F;homotopytypetheory.org&#x2F;book&#x2F;&quot;&gt;Homotopy Type Theory&lt;&#x2F;a&gt;, but without the univalence axiom (at least, until I can figure out how to make it computable).&lt;&#x2F;p&gt;
+&lt;p&gt;I also want to make the language the testbed for experimenting with automated theorem proving and making manual theorem proving convenient in a &amp;quot;casual&amp;quot; setting (e.g. from a smartphone while on a bus).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;stahlos-forth&quot;&gt;StahlOS Forth&lt;&#x2F;h2&gt;
+&lt;p&gt;StahlOS uses a Forth dialect as the low-level programming language. &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Forth_(programming_language)&quot;&gt;Forth&lt;&#x2F;a&gt; is the best language I&#x27;ve found for bare-metal development. A Forth system can be constructed with amazingly little machine code; the resulting language is capable of Common Lisp-tier metaprogramming, while also being able to peek and poke at memory, without needing dynamic memory allocation.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;databases&quot;&gt;Databases&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;tuple-space&quot;&gt;Tuple Space&lt;&#x2F;h2&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Tuple_space&quot;&gt;Tuple spaces&lt;&#x2F;a&gt; are a sufficiently old, and sufficiently nice-seeming database abstraction that I&#x27;m honestly surprised there isn&#x27;t a high-quality implementation some programming subculture is smugly using (in same way similar subcultures exist for e.g. Smalltalk, Erlang, Common Lisp).&lt;&#x2F;p&gt;
+&lt;p&gt;Essentially, a tuple space is a distributed multiset with five primitive operations:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;put TUPLE&lt;&#x2F;code&gt; adds a tuple to the multiset&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;try-take PATTERN&lt;&#x2F;code&gt; returns a tuple matching &lt;code&gt;PATTERN&lt;&#x2F;code&gt; if one exists in the multiset, removing it from the multiset&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;try-peek PATTERN&lt;&#x2F;code&gt; returns a tuple matching &lt;code&gt;PATTERN&lt;&#x2F;code&gt; if one exists in the multiset, without removing it from the multiset&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;take PATTERN, TIMEOUT&lt;&#x2F;code&gt; returns a tuple matching &lt;code&gt;PATTERN&lt;&#x2F;code&gt; if one can be found within &lt;code&gt;TIMEOUT&lt;&#x2F;code&gt;, removing it from the multiset&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;peek PATTERN, TIMEOUT&lt;&#x2F;code&gt; returns a tuple matching &lt;code&gt;PATTERN&lt;&#x2F;code&gt; if one can be found within &lt;code&gt;TIMEOUT&lt;&#x2F;code&gt;, without removing it from the multiset&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;With a sufficiently expressive pattern language, it becomes easy to have applications sharing a database with loose coupling between them.&lt;&#x2F;p&gt;
+&lt;p&gt;I need more design work to determine many of the details of this tuple space (as well as a name for it!) — particularly, I&#x27;m unsure of how precisely I want to make the database distributed. Given that I&#x27;m using it as a coordination mechanism as well as a (short-term) database, it&#x27;s not clear what semantics I actually want on netsplit. Furthermore, it seems like there ought to be a large class of optimizations I could apply to make common patterns of use more efficient, though these might require real-world usage data to evaluate.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;g1&quot;&gt;G1&lt;&#x2F;h2&gt;
+&lt;p&gt;I&#x27;m already writing about G1 &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;intro&#x2F;&quot;&gt;elsewhere&lt;&#x2F;a&gt; on this blog, but I&#x27;ll summarize how it fits into the larger StahlDream.&lt;&#x2F;p&gt;
+&lt;p&gt;The tuple space doesn&#x27;t seem particularly good as a database for bulk storage — I&#x27;m planning to implement it with the expectation that it will contain at most a few megabytes of data at once. I therefore want a flexible database for storing and querying larger data.&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m planning to implement the tuple space on top of both StahlOS and some Linux system, likely with the Linux implementation being in Rust. The thinking here is somewhat similar to Erlang&#x27;s port drivers, which allow interfacing with a native-code process as if it were an Erlang process. G1 can then be easily bridged to StahlOS, by acting on the tuple space directly.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Stahl in 2020</title>
