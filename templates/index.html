@@ -5,13 +5,24 @@
 
 {% block body %}
 <main>
-	{% set_global all_pages = section.pages -%}
+	{% set_global all_pages = [] -%}
+	{% for page in section.pages -%}
+		{% set date = page.date | default(value="none") -%}
+		{% if date != "none" -%}
+			{% set_global all_pages = all_pages | concat(with=page) -%}
+		{% endif -%}
+	{% endfor -%}
 	{% for subsection_name in section.subsections -%}
 		{% set subsection = get_section(path=subsection_name) -%}
-		{% set_global all_pages = all_pages | concat(with=subsection.pages) -%}
+		{% for page in subsection.pages -%}
+			{% set date = page.date | default(value="none") -%}
+			{% if date != "none" -%}
+				{% set_global all_pages = all_pages | concat(with=page) -%}
+			{% endif -%}
+		{% endfor -%}
 	{% endfor -%}
 	{% set_global flat_pages = [] -%}
-	{% for page in all_pages | filter(attribute="draft", value=false) | sort(attribute="date") | reverse -%}
+	{% for page in all_pages | filter(attribute="draft", value=false) | reverse -%}
 		{% set_global flat_pages = flat_pages | concat(with=[page.title ~ "|" ~ page.permalink ~ "|" ~ page.date]) -%}
 	{% endfor -%}
 	{{ macros::list(items=flat_pages) }}
