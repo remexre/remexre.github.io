@@ -6,7 +6,7 @@ categories = ["post"]
 tags = ["osdev", "pbp"]
 
 [extra]
-# comment_issue = 5
+comment_issue = 7
 +++
 
 I recently got a Pinebook Pro, and I want to port [StahlOS](@/stahl/2020-02-06-dream.md#stahlos) to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a "Hello, world" program running on it.
