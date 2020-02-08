@@ -5,25 +5,31 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<title>G1: The Query Language &mdash; remexre.xyz</title>
 		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		
 	</head>
 	<body>
-		<a class="back subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;" title="Back">&lsaquo;</a>
 		<header>
-			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;/tags">Tags</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;/contact">Contact</a>
 			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+			<!--
+			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
 			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
 			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;remexre.asc">GPG Key</a>
 			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;id_rsa.pub">SSH Key</a>
+			-->
 		</header>
-		<article>
-			<h1 class="title">
-				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;">G1: The Query Language</a>
-				<span class="spacer"></span>
-				<span class="meta">
-					2020-02-01
-					</span>
-			</h1>
-			<p><em>This post assumes you've read the <a href="https://remexre.xyz/g1/intro/">previous one in the series</a>.</em></p>
+		<div class="spacer"></div>
+		
+<article>
+	<h1 class="title">
+		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;">G1: The Query Language</a>
+		<span class="spacer"></span>
+		<span class="meta">
+			2020-02-01</span>
+	</h1>
+	<p><em>This post assumes you've read the <a href="https://remexre.xyz/g1/intro/">previous one in the series</a>.</em></p>
 <p>The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.</p>
 <p>G1's implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.</p>
 <h1 id="syntax">Syntax</h1>
@@ -157,33 +163,31 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT
 <p>These visitors directly assign stratification indices using <a href="https://crates.io/crates/topological-sort">the <code>topological-sort</code> crate</a>. It only supports <code>&lt;</code> bounds (rather than <code>&lt;=</code>), so a simple test for self-recursion is needed, which fails for negated self-recursion.</p>
 <p>The positivity test is then easy to define on the resulting <code>VerifiedQuery</code> AST.</p>
 
-		</article>
-		<script src="https://utteranc.es/client.js"
-					repo="remexre/remexre.github.io"
-					issue-number="4"
-					label="comments"
-					theme="github-dark"
-					crossorigin="anonymous"
-					async>
-			</script>
-			<div class="comments">
-				<!-- This needs to be in a div because the NoScript extension
-				transforms noscript elements into spans, while also getting rid
-				of id and class, so applying CSS is no longer possible (without
-				awful, awful hacks). -->
-				<noscript>
-					Comments (powered by
-					<a href="https://utteranc.es">utteranc.es</a>) require
-					JavaScript.
-				</noscript>
-			</div>
+</article>
+<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
+		issue-number="4" label="comments" theme="github-dark"
+		crossorigin="anonymous" async>
+	</script>
+	<div class="comments">
+		<!-- This needs to be in a div because the NoScript extension transforms noscript
+		elements into spans, while also getting rid of id and class, so applying CSS is no
+		longer possible (without awful, awful hacks). -->
+		<noscript>
+			Comments (powered by
+			<a href="https://utteranc.es">utteranc.es</a>) require
+			JavaScript.
+		</noscript>
+	</div>
+
 		<div class="spacer"></div>
-		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-		<script>
-			const anchors = new AnchorJS();
-			anchors.options.class = "icon subtle";
-			anchors.options.placement = "left";
-			anchors.add("article h1:not(.title)");
-		</script>
+		
+<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+<script>
+	const anchors = new AnchorJS();
+	anchors.options.class = "icon subtle";
+	anchors.options.placement = "left";
+	anchors.add("article h1:not(.title)");
+</script>
+
 	</body>
 </html>
