@@ -22,7 +22,7 @@
 		{% endfor -%}
 	{% endfor -%}
 	{% set_global flat_pages = [] -%}
-	{% for page in all_pages | filter(attribute="draft", value=false) | reverse -%}
+	{% for page in all_pages | filter(attribute="draft", value=false) | sort(attribute="date") | reverse -%}
 		{% set_global flat_pages = flat_pages | concat(with=[page.title ~ "|" ~ page.permalink ~ "|" ~ page.date]) -%}
 	{% endfor -%}
 	{{ macros::list(items=flat_pages) }}
