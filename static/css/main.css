@@ -136,15 +136,6 @@ main {
 	padding-left: 0.5rem;
 }
 
-.back {
-	left: 0.5rem;
-	font-size: 150%;
-	position: fixed;
-	opacity: 0.2;
-	top: 0.25rem;
-}
-.back:hover { opacity: 1; }
-
 article {
 	margin: auto;
 	max-width: 50.0rem;
@@ -195,7 +186,12 @@ article > h3 {
 article .asciicast { display: flex !important; }
 article .asciicast > iframe { margin: auto !important; }
 
-.comments { margin: 1em auto; }
+article .graphviz { display: flex; }
+article .graphviz > svg { margin: auto; }
 
-.graphviz { display: flex; }
-.graphviz > svg { margin: auto; }
+.comments {
+	margin: auto;
+	max-width: 50.0rem;
+	padding: 0 0.5rem;
+	width: calc(100% - 1.0rem);
+}

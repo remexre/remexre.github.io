@@ -6,7 +6,7 @@ highlight_theme = "monokai"
 generate_rss = true
 compile_sass = false
 
-[external_highlighters]
+[external_renderers]
 dot = "set -e; echo -n '<p class=\"graphviz\">'; dot -Tsvg | tail -n +4; echo '</p>'"
 
 [[taxonomies]]
