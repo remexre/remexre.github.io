@@ -10,7 +10,7 @@ tags = ["forth", "osdev", "pbp"]
 # comment_issue = 5
 +++
 
-*This post assumes you've read the [previous one in the series](@/pbp-osdev/hello-world.md).*
+*This post assumes you've read the [previous one in the series](@/pbp-osdev/2020-02-08-hello-world.md).*
 
 TODO
 
