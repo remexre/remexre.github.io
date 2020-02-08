@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>remexre.xyz</title>
+        <link>https://remexre.xyz/</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://remexre.xyz/tags/pbp/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Sat, 08 Feb 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Pinebook Pro OSDev: Hello World</title>
+                <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/pbp-osdev/hello-world/</link>
+                <guid>https://remexre.xyz/pbp-osdev/hello-world/</guid>
+                <description>&lt;p&gt;I recently got a Pinebook Pro, and I want to port &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;#stahlos&quot;&gt;StahlOS&lt;&#x2F;a&gt; to it. The journey of a thousand miles begins with a single step, so here&#x27;s a journal entry on getting a &amp;quot;Hello, world&amp;quot; program running on it.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;the-hardware&quot;&gt;The Hardware&lt;&#x2F;h1&gt;
+&lt;p&gt;This is written about (and largely on) the ANSI model of the &lt;a href=&quot;https:&#x2F;&#x2F;www.pine64.org&#x2F;pinebook-pro&#x2F;&quot;&gt;Pinebook Pro&lt;&#x2F;a&gt;. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I&#x27;ve verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I&#x27;m using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.&lt;&#x2F;p&gt;
+&lt;p&gt;Initially, I tried &lt;a href=&quot;https:&#x2F;&#x2F;www.adafruit.com&#x2F;product&#x2F;954&quot;&gt;Adafruit&#x27;s USB to TTL Serial Cable&lt;&#x2F;a&gt;, since I already had it sitting around. However, it turns out it&#x27;s based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399 (the board inside the Pinebook Pro), however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;out-of-the-box&quot;&gt;Out of the Box&lt;&#x2F;h1&gt;
+&lt;p&gt;The Pinebook Pro ships with an ancient (oldstable?) version of Debian. I ditched it for Manjaro running off an SD card. From the default install, I &lt;code&gt;systemctl disable&lt;&#x2F;code&gt;d lightdm and installed i3 instead. I&#x27;m doing most of my usage (including typing this!) from the kernel console in tmux, though.&lt;&#x2F;p&gt;
+&lt;p&gt;A hardware switch needs to be flipped inside the device to enable UART2, which provides a serial port over the headphone jack. The &lt;a href=&quot;https:&#x2F;&#x2F;wiki.pine64.org&#x2F;index.php&#x2F;Pinebook_Pro_Main_Page&quot;&gt;Pine wiki&lt;&#x2F;a&gt; documents the location of the switch fairly well; check it for &lt;a href=&quot;https:&#x2F;&#x2F;wiki.pine64.org&#x2F;index.php&#x2F;Pinebook_Pro_Main_Page#Pinebook_Pro_Internal_Layout&quot;&gt;pictures&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;u-boot&quot;&gt;U-Boot&lt;&#x2F;h1&gt;
+&lt;p&gt;Once the serial port is connected, rebooting the machine shows the boot logs. Mashing Ctrl-C (or any key on the Manjaro U-Boot, it appears) gets a shell, with vaguely sh-like semantics.&lt;&#x2F;p&gt;
+&lt;p&gt;I recommend updating to Manjaro&#x27;s U-Boot; the U-Boot the Pinebook Pro ships with (as of the January 2020 batch) can&#x27;t boot from 64-bit ELF files. If your machine boots with an amber power LED instead of a green one, that&#x27;s a strong indicator you&#x27;re on the newer Manjaro U-Boot.&lt;&#x2F;p&gt;
+&lt;p&gt;The commands in the shell I find most useful are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;bootelf&lt;&#x2F;code&gt;: Loads the ELF file at the given address, and jumps to its entrypoint.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;go&lt;&#x2F;code&gt;: Jumps to the given address. Useful when loading raw binaries (not ELFs).&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;load&lt;&#x2F;code&gt;: Loads a file from a filesystem to an arbitrary address.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;loady&lt;&#x2F;code&gt;: Loads a file over the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;YMODEM&quot;&gt;ymodem protocol&lt;&#x2F;a&gt; to an arbitrary address.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;md&lt;&#x2F;code&gt;: Gives a hexdump of an arbitrary address. Note that it displays in little endian. Also callable as &lt;code&gt;md.b&lt;&#x2F;code&gt;, &lt;code&gt;md.w&lt;&#x2F;code&gt;, &lt;code&gt;md.l&lt;&#x2F;code&gt;, &lt;code&gt;md.q&lt;&#x2F;code&gt; to display with different widths for atoms of data.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;toolchain&quot;&gt;Toolchain&lt;&#x2F;h1&gt;
+&lt;p&gt;You&#x27;ll need at least binutils for the &lt;code&gt;aarch64-none-elf&lt;&#x2F;code&gt; target. On Gentoo, this is fairly easy with &lt;a href=&quot;https:&#x2F;&#x2F;wiki.gentoo.org&#x2F;wiki&#x2F;Crossdev&quot;&gt;crossdev&lt;&#x2F;a&gt;. It&#x27;ll also probably be useful to have your system binutils be built multitarget; this doesn&#x27;t apply to &lt;code&gt;gas&lt;&#x2F;code&gt;, though, so the &lt;code&gt;aarch64-none-elf&lt;&#x2F;code&gt; versions are still necessary.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;writing-to-the-uart&quot;&gt;Writing to the UART&lt;&#x2F;h1&gt;
+&lt;p&gt;The RK3399&#x27;s &lt;a href=&quot;http:&#x2F;&#x2F;opensource.rock-chips.com&#x2F;images&#x2F;e&#x2F;ee&#x2F;Rockchip_RK3399TRM_V1.4_Part1-20170408.pdf&quot;&gt;Technical Reference Manual&lt;&#x2F;a&gt; is your friend for all of this; it notes that UART2 is mapped to &lt;code&gt;0xff1a0000&lt;&#x2F;code&gt;. There&#x27;s also some information on how to interface with the chip; if you&#x27;re familar with programming the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;8250_UART&quot;&gt;8250&lt;&#x2F;a&gt; or &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;16550_UART&quot;&gt;16550&lt;&#x2F;a&gt; UARTs, I believe it&#x27;s effectively the latter. (Note that unlike how x86 serial ports are typically connected, the UARTs in the Pinebook Pro are all memory-mapped.)&lt;&#x2F;p&gt;
+&lt;p&gt;We can write to the UART with an assembly sequence like:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;ldr x0, =0xff1a0000 &#x2F;* Load the x0 register with 0xff1a0000 *&#x2F;
+mov x1, &amp;#39;!&amp;#39;         &#x2F;* Load the x1 register with &amp;#39;!&amp;#39; (zero-extended) *&#x2F;
+strb w1, [x0]       &#x2F;* Store the value in x1 to the address given by x0 *&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This stores the &lt;code&gt;!&lt;&#x2F;code&gt; character in the Transmit Holding Register of the UART. Technically, we need to wait for the Transmit Holding Register Empty Bit of the Line Status Register to be 1. We do this with:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;	ldr x0, =0xff1a0000
+wait_for_tx_ok:
+	ldrb w1, [x0, #0x14]      &#x2F;* Offset the address in x0 by 0x14 *&#x2F;
+	tbz w1, 5, wait_for_tx_ok &#x2F;* Loop if bit 5 of x1 is zero *&#x2F;
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Of course, a real OS should use the FIFOs, be interrupt-triggered, and maybe even use DMA. That&#x27;s outside the scope of this article, but I&#x27;ll probably touch on it in a future post.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;putting-it-all-together&quot;&gt;Putting it All Together&lt;&#x2F;h1&gt;
+&lt;p&gt;We can use the above with a bit of glue code to make our &amp;quot;Hello, world&amp;quot; program:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;.section .text
+
+.global _start
+_start:
+	ldr x0, =0xff1a0000
+	ldr x3, =msg
+	mov x4, len
+	bl write_string     &#x2F;* Call the write_string procedure *&#x2F;
+	b .                 &#x2F;* Infinite loop *&#x2F;
+
+&#x2F;** write_string: Writes a string to a UART
+ *
+ * Input:
+ *   x0: UART base address
+ *   x3: Address of first character of string
+ *   x4: Length of string
+ *
+ * Side Effects:
+ * - Trashes x1, x2, x5
+ *&#x2F;
+write_string:
+	cbz x4, write_string.end &#x2F;* If x4 is zero, go to write_string.end *&#x2F;
+
+write_string.wait_for_tx_ok:
+	ldrb w1, [x0, #0x14]
+	tbz w1, 5, write_string.wait_for_tx_ok
+
+	ldrb w2, [x3], #1 &#x2F;* After fetching a byte to w2, increment x3 *&#x2F;
+	sub x4, x4, 1     &#x2F;* Decrement x4 *&#x2F;
+	strb w2, [x0]
+
+	b write_string
+write_string.end:
+	ret
+
+.section .rodata
+
+msg: .string &amp;quot;Hello, world!\r\n&amp;quot;
+.equ len, . - msg
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We also need a linker script for this:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f92672;&quot;&gt;OUTPUT_FORMAT&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(elf64-littleaarch64)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;ENTRY&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(_start)
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;MEMORY&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; {
+	kernel : ORIGIN = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0x00280000&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, LENGTH = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0x00080000&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;
+}
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;SECTIONS&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; {
+	.text : {
+		. += &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;SIZEOF_HEADERS&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+		*(.text)
+	} &amp;gt; kernel
+	.rodata : { *(.rodata) } &amp;gt; kernel
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;We compile and link with:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;aarch64-none-elf-as -o main.o main.s
+aarch64-none-elf-ld -o main.elf -T linker.ld main.o -N -z max-page-size=4096
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;aside-tricks-for-a-smaller-executable&quot;&gt;Aside: Tricks for a Smaller Executable&lt;&#x2F;h2&gt;
+&lt;p&gt;Thanks to &lt;code&gt;clever&lt;&#x2F;code&gt; and &lt;code&gt;doug16k&lt;&#x2F;code&gt; in the &lt;code&gt;#osdev&lt;&#x2F;code&gt; channel on Freenode for showing me a couple of tricks to reduce the size of the ELF file:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Adding &lt;code&gt;. += SIZEOF_HEADERS;&lt;&#x2F;code&gt; to the first section, and passing &lt;code&gt;-N&lt;&#x2F;code&gt; to &lt;code&gt;ld&lt;&#x2F;code&gt; lets LD overlap the &lt;code&gt;.text&lt;&#x2F;code&gt; section with the ELF header itself.&lt;&#x2F;li&gt;
+&lt;li&gt;Passing &lt;code&gt;-z max-page-size=4096&lt;&#x2F;code&gt; to &lt;code&gt;ld&lt;&#x2F;code&gt; lets it only align the sections to 4k instead of 64k.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This brings the binary size down from 66k to 1.3k.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;hello-world&quot;&gt;Hello, world!&lt;&#x2F;h1&gt;
+&lt;p&gt;Finally, we&#x27;re ready to run our program. Connect the Pinebook Pro to your serial port, connect Minicom to the serial port, and boot it. Hit a key to drop to the U-Boot shell, then run &lt;code&gt;loady 0x00880000&lt;&#x2F;code&gt; to start the upload. Hit Ctrl-A, S to open Minicom&#x27;s &amp;quot;Send files&amp;quot; menu. Once the file is uploaded, run &lt;code&gt;bootelf 0x00880000&lt;&#x2F;code&gt;. If all&#x27;s gone well, you should see &lt;code&gt;Hello, world!&lt;&#x2F;code&gt; printed, followed by the machine hanging.&lt;&#x2F;p&gt;
+&lt;script id=&quot;asciicast-297430&quot; src=&quot;https:&#x2F;&#x2F;asciinema.org&#x2F;a&#x2F;297430.js&quot; async&gt;&lt;&#x2F;script&gt;
+&lt;p&gt;&lt;noscript&gt;Click &lt;a href=&quot;https:&#x2F;&#x2F;asciinema.org&#x2F;a&#x2F;297430&quot;&gt;here&lt;&#x2F;a&gt; to view screen recording (powered by asciinema).&lt;&#x2F;noscript&gt;&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

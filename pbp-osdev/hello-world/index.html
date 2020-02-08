@@ -20,16 +20,16 @@
 				<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;pbp-osdev&#x2F;hello-world&#x2F;">Pinebook Pro OSDev: Hello World</a>
 				<span class="spacer"></span>
 				<span class="meta">
-					Draft
+					2020-02-08
 					</span>
 			</h1>
 			<p>I recently got a Pinebook Pro, and I want to port <a href="https://remexre.xyz/stahl/dream/#stahlos">StahlOS</a> to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a &quot;Hello, world&quot; program running on it.</p>
 <h1 id="the-hardware">The Hardware</h1>
 <p>This is written about (and largely on) the ANSI model of the <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a>. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.</p>
-<p>Initially, I tried <a href="https://www.adafruit.com/product/954">Adafruit's USB to TTL Serial Cable</a>, since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399, however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.</p>
+<p>Initially, I tried <a href="https://www.adafruit.com/product/954">Adafruit's USB to TTL Serial Cable</a>, since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399 (the board inside the Pinebook Pro), however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.</p>
 <h1 id="out-of-the-box">Out of the Box</h1>
 <p>The Pinebook Pro ships with an ancient (oldstable?) version of Debian. I ditched it for Manjaro running off an SD card. From the default install, I <code>systemctl disable</code>d lightdm and installed i3 instead. I'm doing most of my usage (including typing this!) from the kernel console in tmux, though.</p>
-<p>A hardware switch needs to be flipped inside the device to enable UART2, which provides a serial port over the headphone jack. The Pine wiki documents the location of the switch fairly well; check it for pictures.</p>
+<p>A hardware switch needs to be flipped inside the device to enable UART2, which provides a serial port over the headphone jack. The <a href="https://wiki.pine64.org/index.php/Pinebook_Pro_Main_Page">Pine wiki</a> documents the location of the switch fairly well; check it for <a href="https://wiki.pine64.org/index.php/Pinebook_Pro_Main_Page#Pinebook_Pro_Internal_Layout">pictures</a>.</p>
 <h1 id="u-boot">U-Boot</h1>
 <p>Once the serial port is connected, rebooting the machine shows the boot logs. Mashing Ctrl-C (or any key on the Manjaro U-Boot, it appears) gets a shell, with vaguely sh-like semantics.</p>
 <p>I recommend updating to Manjaro's U-Boot; the U-Boot the Pinebook Pro ships with (as of the January 2020 batch) can't boot from 64-bit ELF files. If your machine boots with an amber power LED instead of a green one, that's a strong indicator you're on the newer Manjaro U-Boot.</p>
@@ -136,8 +136,24 @@ aarch64-none-elf-ld -o main.elf -T linker.ld main.o -N -z max-page-size=4096
 <p><noscript>Click <a href="https://asciinema.org/a/297430">here</a> to view screen recording (powered by asciinema).</noscript></p>
 
 		</article>
-		<div class="comments">
-				Comments are not enabled on this post.
+		<script src="https://utteranc.es/client.js"
+					repo="remexre/remexre.github.io"
+					issue-number="7"
+					label="comments"
+					theme="github-dark"
+					crossorigin="anonymous"
+					async>
+			</script>
+			<div class="comments">
+				<!-- This needs to be in a div because the NoScript extension
+				transforms noscript elements into spans, while also getting rid
+				of id and class, so applying CSS is no longer possible (without
+				awful, awful hacks). -->
+				<noscript>
+					Comments (powered by
+					<a href="https://utteranc.es">utteranc.es</a>) require
+					JavaScript.
+				</noscript>
 			</div>
 		<div class="spacer"></div>
 		<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
