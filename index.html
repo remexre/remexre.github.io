@@ -20,20 +20,6 @@
 	
 	
 	<div class="item">
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;">
-				The StahlDream
-				<span class="spacer"></span>
-				<span class="meta">2020-02-06</span>
-			</a>
-		</div>
-	<div class="item">
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;2020&#x2F;">
-				Stahl in 2020
-				<span class="spacer"></span>
-				<span class="meta">2020-01-01</span>
-			</a>
-		</div>
-	<div class="item">
 			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;pbp-osdev&#x2F;hello-world&#x2F;">
 				Pinebook Pro OSDev: Hello World
 				<span class="spacer"></span>
@@ -41,10 +27,24 @@
 			</a>
 		</div>
 	<div class="item">
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;">
+				The StahlDream
+				<span class="spacer"></span>
+				<span class="meta">2020-02-06</span>
+			</a>
+		</div>
+	<div class="item">
 			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;">
 				G1: The Query Language
 				<span class="spacer"></span>
 				<span class="meta">2020-02-01</span>
+			</a>
+		</div>
+	<div class="item">
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;2020&#x2F;">
+				Stahl in 2020
+				<span class="spacer"></span>
+				<span class="meta">2020-01-01</span>
 			</a>
 		</div>
 	<div class="item">
@@ -62,6 +62,726 @@
 			</a>
 		</div>
 	
+	<!-- {
+  "all_pages": [
+    {
+      "relative_path": "2019-12-13-reboot.md",
+      "content": "<p>Only 11 months less a day between posts, this time!</p>\n<p>I'm restarting the blog, again. All the old content is still on GitHub, on <a href=\"https://github.com/remexre/remexre.github.io/tree/authoring-old-2019-01-14\">the <code>authoring-old-2019-01-14</code> branch</a>. The real reason is that upstream changes to Zola broke a template I wasn't really using anyway, and I've been putting off fixing it.</p>\n<p>I actually have a few things to blog about planned out, this time. Expect:</p>\n<ul>\n<li>A project to allow more ergonomic FFI between Rust and Lisp/Python</li>\n<li>Notes about a simple graph store from scratch in Rust</li>\n<li>Read-throughs of academic papers, usually related to some project</li>\n</ul>\n<p>Hopefully, I'll finish at least one post a month this time...</p>\n",
+      "permalink": "https://remexre.xyz/reboot/",
+      "slug": "reboot",
+      "ancestors": [
+        "_index.md"
+      ],
+      "title": "Reboot of the Blog, again!",
+      "description": null,
+      "date": "2019-12-13",
+      "year": 2019,
+      "month": 12,
+      "day": 13,
+      "taxonomies": {
+        "tags": [
+          "meta"
+        ]
+      },
+      "extra": {
+        "comment_issue": 1
+      },
+      "path": "reboot/",
+      "components": [
+        "reboot"
+      ],
+      "summary": null,
+      "toc": [],
+      "word_count": 122,
+      "reading_time": 1,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    },
+    {
+      "relative_path": "g1/2019-12-15-intro.md",
+      "content": "<h1 id=\"motivation\">Motivation</h1>\n<p>Over the next few weeks/months, I'm planning to implement a graph store in Rust, <a href=\"https://github.com/remexre/g1\">G1</a>. I mainly want to do this because <a href=\"https://github.com/mozilla/mentat\">mentat</a> became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.</p>\n<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)</p>\n<h1 id=\"data-model\">Data Model</h1>\n<p><strong>Atoms</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>\n<p><strong>Names</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>\n<p><strong>Edges</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>\n<p><strong>Attributes</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>\n<p><strong>Blobs</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary string. Blobs are referred to by a SHA256 hash.</p>\n<p>Strings are UTF-8 strings, which should be no longer than 256 bytes.</p>\n<h1 id=\"query-language\">Query Language</h1>\n<p>The query language is a variant of <a href=\"https://en.wikipedia.org/wiki/Datalog\">Datalog</a>. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.</p>\n<p>An example of a query:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#a6e22e;\">friend</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You) </span><span style=\"color:#f92672;\">:-\n\t</span><span style=\"font-style:italic;color:#fd971f;\">edge</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You</span><span style=\"color:#f92672;\">, </span><span style=\"color:#e6db74;\">&quot;friend&quot;</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"font-style:italic;color:#fd971f;\">friendOfFriend</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You) </span><span style=\"color:#f92672;\">:-\n\t</span><span style=\"font-style:italic;color:#fd971f;\">friend</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> Other)</span><span style=\"color:#f92672;\">,\n\t</span><span style=\"font-style:italic;color:#fd971f;\">friend</span><span style=\"color:#f8f8f2;\">(Other</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"font-style:italic;color:#fd971f;\">sameAtom</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">atom</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"font-style:italic;color:#fd971f;\">frenemyName</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> YourName) </span><span style=\"color:#f92672;\">:-\n\t</span><span style=\"font-style:italic;color:#fd971f;\">friendOfFriend</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You)</span><span style=\"color:#f92672;\">,\n\t! </span><span style=\"color:#a6e22e;\">friend</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You)</span><span style=\"color:#f92672;\">,\n\t! </span><span style=\"color:#a6e22e;\">sameAtom</span><span style=\"color:#f8f8f2;\">(Me</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> You)</span><span style=\"color:#f92672;\">,\n\t</span><span style=\"font-style:italic;color:#fd971f;\">attr</span><span style=\"color:#f8f8f2;\">(You</span><span style=\"color:#f92672;\">, </span><span style=\"color:#e6db74;\">&quot;name&quot;</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> YourName)</span><span style=\"color:#f92672;\">.\n\n?- </span><span style=\"color:#a6e22e;\">frenemy</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#e6db74;\">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> YourName)</span><span style=\"color:#f92672;\">.\n</span></pre>\n<p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>\n<h1 id=\"roadmap\">Roadmap</h1>\n<p>Currently, I'm tracking work on the implementation in <a href=\"https://github.com/remexre/g1/issues\">GitHub Issues</a>, but note that at the time of writing, these issues are in the context of a laughably unoptimized implementation on top of SQLite.</p>\n<p>In terms of the blog posts, I'm thinking of roughly the order:</p>\n<ul>\n<li><a href=\"https://remexre.xyz/g1/query-lang/\">G1's Query Language</a></li>\n<li>The Magic Sets Transformation</li>\n<li>How G1 Stores Data (in-memory and on disk)</li>\n<li>Implementing Transactions in G1</li>\n<li>Ensuring Crash-Safety in G1</li>\n</ul>\n",
+      "permalink": "https://remexre.xyz/g1/intro/",
+      "slug": "intro",
+      "ancestors": [
+        "_index.md",
+        "g1/_index.md"
+      ],
+      "title": "G1: A simple graph store, written in Rust",
+      "description": null,
+      "date": "2019-12-15",
+      "year": 2019,
+      "month": 12,
+      "day": 15,
+      "taxonomies": {
+        "tags": [
+          "g1",
+          "rust"
+        ]
+      },
+      "extra": {
+        "comment_issue": 2
+      },
+      "path": "g1/intro/",
+      "components": [
+        "g1",
+        "intro"
+      ],
+      "summary": null,
+      "toc": [
+        {
+          "level": 1,
+          "id": "motivation",
+          "permalink": "https://remexre.xyz/g1/intro/#motivation",
+          "title": "Motivation",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "data-model",
+          "permalink": "https://remexre.xyz/g1/intro/#data-model",
+          "title": "Data Model",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "query-language",
+          "permalink": "https://remexre.xyz/g1/intro/#query-language",
+          "title": "Query Language",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "roadmap",
+          "permalink": "https://remexre.xyz/g1/intro/#roadmap",
+          "title": "Roadmap",
+          "children": []
+        }
+      ],
+      "word_count": 459,
+      "reading_time": 3,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    },
+    {
+      "relative_path": "g1/2020-02-01-query-lang.md",
+      "content": "<p><em>This post assumes you've read the <a href=\"https://remexre.xyz/g1/intro/\">previous one in the series</a>.</em></p>\n<p>The G1 query language is a variant of Datalog, a sound subset of Prolog whose properties make it a useful query language. Datalog queries are provably terminating in polynomial time (with respect to the size of the DB), and can be analyzed and optimized ahead of time for significant speed boosts.</p>\n<p>G1's implementation is unusual largely in that there exists both a parser for strings of Datalog source code and a parser that operates on Rust tokens, and also allows interpolation, for use in a procedural macro.</p>\n<h1 id=\"syntax\">Syntax</h1>\n<p>The G1 grammar is (somewhat informally) as follows:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">&lt;query&gt; ::= &lt;clause&gt;* &quot;?-&quot; &lt;predicate&gt; &quot;.&quot;\n\n&lt;clause&gt; ::= &lt;predicate&gt; &quot;.&quot;\n&lt;clause&gt; ::= &lt;predicate&gt; &quot;:-&quot; commaSeparated1(&lt;possiblyNegatedPredicate&gt;) &quot;.&quot;\n\n&lt;possiblyNegatedPredicate&gt; ::= &lt;predicate&gt;\n&lt;possiblyNegatedPredicate&gt; ::= &quot;!&quot; &lt;predicate&gt;\n\n&lt;predicate&gt; ::= &lt;var&gt; &quot;(&quot; commaSeparated(&lt;value&gt;) &quot;)&quot;\n\n&lt;value&gt; ::= &quot;_&quot;\n&lt;value&gt; ::= &lt;string&gt;\n&lt;value&gt; ::= &lt;var&gt;\n\n&lt;string&gt; ::= &#39;&quot;&#39; &lt;stringChar&gt;* &#39;&quot;&#39;\n\n&lt;var&gt; ::= &quot;&#39;&quot; &lt;stringChar&gt;* &quot;&#39;&quot;\n&lt;var&gt; ::= /[A-Za-z][0-9A-Za-z_]*/\n\n&lt;stringChar&gt; ::= any printable character other than &quot;&#39;&quot;, &#39;&quot;&#39;, or &quot;\\&quot;\n&lt;stringChar&gt; ::= &quot;\\&quot; &lt;escChar&gt;\n\n&lt;escChar&gt; ::= &quot;\\&quot;\n&lt;escChar&gt; ::= &quot;&#39;&quot;\n&lt;escChar&gt; ::= &#39;&quot;&#39;\n&lt;escChar&gt; ::= &quot;n&quot;\n&lt;escChar&gt; ::= &quot;r&quot;\n&lt;escChar&gt; ::= &quot;t&quot;\n\ncommaSeparated(NT) ::=\ncommaSeparated1(NT) ::= commaSeparated1(NT)\n\ncommaSeparated1(NT) ::= NT\ncommaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT\n</span></pre>\n<p>Note that unlike Prolog, Datalog doesn't allow functors as values (i.e. <code>foo(1, bar(2))</code> is not a predicate). Also of note is the G1 query language's choices regarding strings -- double quotes are <strong>always</strong> used for strings, and unquoted and single-quoted symbols are <strong>always</strong> variables. This differs significantly from Prolog, which uses case to disambiguate between variables and atoms.</p>\n<h2 id=\"string-parser\">String Parser</h2>\n<p>The parser for strings is able to be a fairly traditional LALR parser, using <a href=\"https://github.com/lalrpop/lalrpop\">LALRPOP</a> as a parser generator and <a href=\"https://github.com/maciejhirsz/logos\">Logos</a> as a lexer generator. This parser is rather straightforward, so there's not much more to say about it here.</p>\n<h2 id=\"proc-macro-parser\">Proc Macro Parser</h2>\n<p>The parser for the <code>query!()</code> macro is more complex, because it needs to operate on Rust tokens. So that macros don't need to break compatibility with future Rust syntax changes, procedural macros receive a <code>TokenStream</code> type, which is an iterator of <code>TokenTree</code>s.</p>\n<p>A <code>TokenTree</code> is either a token (an identifier, literal, or piece of punctuation) or a bracket-delimited <code>TokenStream</code>. This is reasonably easy to parse with a hand-written recursive-descent parser, but it doesn't fit well with LALRPOP. The <code>g1_macros</code> crate therefore defines a <code>Token</code> type that represents a single token, with delimiters explicitly present.</p>\n<p>For example, the Rust tokens</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#66d9ef;\">foo</span><span style=\"color:#f8f8f2;\">(bar, baz, </span><span style=\"color:#f92672;\">_</span><span style=\"color:#f8f8f2;\">).\n</span></pre>\n<p>become the <code>TokenStream</code></p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">TokenStream::from(vec![\n\tTokenTree::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;foo&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\tTokenTree::Group(Group::new(Delimiter::Parenthesis, TokenStream::from(vec![\n\t\tTokenTree::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;bar&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\t\tTokenTree::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;,&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n\t\tTokenTree::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;baz&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\t\tTokenTree::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;,&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n\t\tTokenTree::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;_&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\t]))),\n\tTokenTree::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;.&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n])\n</span></pre>\n<p>which in turn becomes the <code>Vec&lt;Token&gt;</code></p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">vec![\n\tToken::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;foo&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\tToken::ParenOpen(Span::call_site()),\n\tToken::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;bar&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\tToken::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;,&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n\tToken::Ident(Ident::new(</span><span style=\"color:#e6db74;\">&quot;baz&quot;</span><span style=\"color:#f8f8f2;\">, Span::call_site())),\n\tToken::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;,&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n\tToken::Hole(Span::call_site()),\n\tToken::ParenClose(Span::call_site()),\n\tToken::Punct(Punct::new(</span><span style=\"color:#e6db74;\">&#39;.&#39;</span><span style=\"color:#f8f8f2;\">, Spacing::Alone)),\n]\n</span></pre>\n<p>Note that since we use Rust's lexer, the <code>query!()</code> proc macro will inherit e.g. Rust's string escapes (which are a superset of the ones the string parser's lexer supports). Additionally, quoted symbols are not supported, since they conflict with Rust's character literals.</p>\n<h1 id=\"semantic-analysis\">Semantic Analysis</h1>\n<h2 id=\"restrictions\">Restrictions</h2>\n<p>In order to maintain Datalog's properties, two restrictions hold for G1 queries. Both of the restrictions are based around ensuring the following statement is true:</p>\n<blockquote>\n<p>A Datalog program can be evaluated bottom-up and incrementally, in finite time.</p>\n</blockquote>\n<h3 id=\"positivity\">Positivity</h3>\n<p>The positivity restriction ensures a clause always computes a finite number of tuples of strings (i.e. without them containing variables).</p>\n<p>Examples of violating clauses include:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#75715e;\">// Disallowed, since this computes the set of all strings, which is infinite.\n</span><span style=\"color:#a6e22e;\">alwaysSucceeds</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"color:#75715e;\">// Disallowed, since the complement of a finite set is infinite.\n</span><span style=\"color:#a6e22e;\">color</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#e6db74;\">&quot;red&quot;</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span><span style=\"color:#a6e22e;\">color</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#e6db74;\">&quot;green&quot;</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span><span style=\"color:#a6e22e;\">color</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#e6db74;\">&quot;blue&quot;</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span><span style=\"color:#a6e22e;\">notColor</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- !</span><span style=\"color:#a6e22e;\">color</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span></pre>\n<p>It turns out there's a simple rule we can use to check this:</p>\n<blockquote>\n<p>Every variable that either appears in the head of the clause or in a negative call must also appear in a positive call.</p>\n</blockquote>\n<p>Currently, a negative call is negated (i.e., uses the <code>!</code> operator), and a positive call is non-negated. This isn't true of all Datalog variants (nor of other Prolog-like languages) in general, but in the G1 query language this definition holds.</p>\n<h3 id=\"stratification\">Stratification</h3>\n<p>The stratification restriction gives an order for evaluating bottom-up and ensures a clause can be evaluated in finite time, by disallowing some forms of recursion. We want to disallow clauses like:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#75715e;\">// Inherently paradoxical.\n</span><span style=\"color:#a6e22e;\">paradox</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- !</span><span style=\"color:#a6e22e;\">paradox</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"color:#75715e;\">// Could require infinite deductions.\n</span><span style=\"color:#a6e22e;\">foo</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">bar</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span><span style=\"color:#a6e22e;\">bar</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">foo</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span></pre>\n<p>However, we want to be able to preserve recursion like:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#75715e;\">// A bit useless, but still well-defined.\n</span><span style=\"color:#a6e22e;\">foo</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">foo</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n\n</span><span style=\"color:#75715e;\">// This is well-defined, and even useful.\n</span><span style=\"color:#a6e22e;\">path</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">atom</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span><span style=\"color:#a6e22e;\">path</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">Z</span><span style=\"color:#f8f8f2;\">) </span><span style=\"color:#f92672;\">:- </span><span style=\"color:#a6e22e;\">edge</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">X</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">Y</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">_</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">, </span><span style=\"color:#a6e22e;\">path</span><span style=\"color:#f8f8f2;\">(</span><span style=\"color:#66d9ef;\">Y</span><span style=\"color:#f92672;\">, </span><span style=\"color:#66d9ef;\">Z</span><span style=\"color:#f8f8f2;\">)</span><span style=\"color:#f92672;\">.\n</span></pre>\n<p>It turns out the procedure for ensuring that recursion is well-behaved is fairly simple. Each clause name is assigned an index, and the recursion is judged to be well-behaved if:</p>\n<ul>\n<li>If any clause with the name <code>i</code> calls the name <code>j</code> (including recursively), <code>i &lt;= j</code>.</li>\n<li>If any clause with the name <code>i</code> calls the negation of the name <code>j</code> (including recursively), <code>i &lt; j</code>.</li>\n</ul>\n<p>(As an implementation note: we define the names as signed integers, assigning only non-negative ones to user-defined predicates, and negative ones to built-in predicates.)</p>\n<h2 id=\"implementation\">Implementation</h2>\n<p>Since we have multiple &quot;first-level ASTs,&quot; we use the <a href=\"https://en.wikipedia.org/wiki/Visitor_pattern\">visitor pattern</a> to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).</p>\n<p>These visitors directly assign stratification indices using <a href=\"https://crates.io/crates/topological-sort\">the <code>topological-sort</code> crate</a>. It only supports <code>&lt;</code> bounds (rather than <code>&lt;=</code>), so a simple test for self-recursion is needed, which fails for negated self-recursion.</p>\n<p>The positivity test is then easy to define on the resulting <code>VerifiedQuery</code> AST.</p>\n",
+      "permalink": "https://remexre.xyz/g1/query-lang/",
+      "slug": "query-lang",
+      "ancestors": [
+        "_index.md",
+        "g1/_index.md"
+      ],
+      "title": "G1: The Query Language",
+      "description": null,
+      "date": "2020-02-01",
+      "year": 2020,
+      "month": 2,
+      "day": 1,
+      "taxonomies": {
+        "tags": [
+          "g1",
+          "rust"
+        ]
+      },
+      "extra": {
+        "comment_issue": 4
+      },
+      "path": "g1/query-lang/",
+      "components": [
+        "g1",
+        "query-lang"
+      ],
+      "summary": null,
+      "toc": [
+        {
+          "level": 1,
+          "id": "syntax",
+          "permalink": "https://remexre.xyz/g1/query-lang/#syntax",
+          "title": "Syntax",
+          "children": [
+            {
+              "level": 2,
+              "id": "string-parser",
+              "permalink": "https://remexre.xyz/g1/query-lang/#string-parser",
+              "title": "String Parser",
+              "children": []
+            },
+            {
+              "level": 2,
+              "id": "proc-macro-parser",
+              "permalink": "https://remexre.xyz/g1/query-lang/#proc-macro-parser",
+              "title": "Proc Macro Parser",
+              "children": []
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "id": "semantic-analysis",
+          "permalink": "https://remexre.xyz/g1/query-lang/#semantic-analysis",
+          "title": "Semantic Analysis",
+          "children": [
+            {
+              "level": 2,
+              "id": "restrictions",
+              "permalink": "https://remexre.xyz/g1/query-lang/#restrictions",
+              "title": "Restrictions",
+              "children": [
+                {
+                  "level": 3,
+                  "id": "positivity",
+                  "permalink": "https://remexre.xyz/g1/query-lang/#positivity",
+                  "title": "Positivity",
+                  "children": []
+                },
+                {
+                  "level": 3,
+                  "id": "stratification",
+                  "permalink": "https://remexre.xyz/g1/query-lang/#stratification",
+                  "title": "Stratification",
+                  "children": []
+                }
+              ]
+            },
+            {
+              "level": 2,
+              "id": "implementation",
+              "permalink": "https://remexre.xyz/g1/query-lang/#implementation",
+              "title": "Implementation",
+              "children": []
+            }
+          ]
+        }
+      ],
+      "word_count": 1011,
+      "reading_time": 6,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    },
+    {
+      "relative_path": "pbp-osdev/2020-02-08-hello-world.md",
+      "content": "<p>I recently got a Pinebook Pro, and I want to port <a href=\"https://remexre.xyz/stahl/dream/#stahlos\">StahlOS</a> to it. The journey of a thousand miles begins with a single step, so here's a journal entry on getting a &quot;Hello, world&quot; program running on it.</p>\n<h1 id=\"the-hardware\">The Hardware</h1>\n<p>This is written about (and largely on) the ANSI model of the <a href=\"https://www.pine64.org/pinebook-pro/\">Pinebook Pro</a>. Additionally, I use a cable to access the serial port, which wires it up to a 3.5mm headphone jack physical connector. Pine sells a nicely packaged cable, but as people on the forums note (and I've verified), it runs at 5 volts, which causes spooky behavior (up to and including hardware damage) on the Pinebook. Instead, I'm using some jumpers spliced to a headphone cord I cut in half to provide the physical connector to the board.</p>\n<p>Initially, I tried <a href=\"https://www.adafruit.com/product/954\">Adafruit's USB to TTL Serial Cable</a>, since I already had it sitting around. However, it turns out it's based on the CP2102 chip, which only supports speeds up to 1Mbps (1000000 baud). The RK3399 (the board inside the Pinebook Pro), however, boots at 1.5Mbps (1500000 baud). Instead, I bought a converter based on the PL2302DX, which can do up to 12Mbps.</p>\n<h1 id=\"out-of-the-box\">Out of the Box</h1>\n<p>The Pinebook Pro ships with an ancient (oldstable?) version of Debian. I ditched it for Manjaro running off an SD card. From the default install, I <code>systemctl disable</code>d lightdm and installed i3 instead. I'm doing most of my usage (including typing this!) from the kernel console in tmux, though.</p>\n<p>A hardware switch needs to be flipped inside the device to enable UART2, which provides a serial port over the headphone jack. The <a href=\"https://wiki.pine64.org/index.php/Pinebook_Pro_Main_Page\">Pine wiki</a> documents the location of the switch fairly well; check it for <a href=\"https://wiki.pine64.org/index.php/Pinebook_Pro_Main_Page#Pinebook_Pro_Internal_Layout\">pictures</a>.</p>\n<h1 id=\"u-boot\">U-Boot</h1>\n<p>Once the serial port is connected, rebooting the machine shows the boot logs. Mashing Ctrl-C (or any key on the Manjaro U-Boot, it appears) gets a shell, with vaguely sh-like semantics.</p>\n<p>I recommend updating to Manjaro's U-Boot; the U-Boot the Pinebook Pro ships with (as of the January 2020 batch) can't boot from 64-bit ELF files. If your machine boots with an amber power LED instead of a green one, that's a strong indicator you're on the newer Manjaro U-Boot.</p>\n<p>The commands in the shell I find most useful are:</p>\n<ul>\n<li><code>bootelf</code>: Loads the ELF file at the given address, and jumps to its entrypoint.</li>\n<li><code>go</code>: Jumps to the given address. Useful when loading raw binaries (not ELFs).</li>\n<li><code>load</code>: Loads a file from a filesystem to an arbitrary address.</li>\n<li><code>loady</code>: Loads a file over the <a href=\"https://en.wikipedia.org/wiki/YMODEM\">ymodem protocol</a> to an arbitrary address.</li>\n<li><code>md</code>: Gives a hexdump of an arbitrary address. Note that it displays in little endian. Also callable as <code>md.b</code>, <code>md.w</code>, <code>md.l</code>, <code>md.q</code> to display with different widths for atoms of data.</li>\n</ul>\n<h1 id=\"toolchain\">Toolchain</h1>\n<p>You'll need at least binutils for the <code>aarch64-none-elf</code> target. On Gentoo, this is fairly easy with <a href=\"https://wiki.gentoo.org/wiki/Crossdev\">crossdev</a>. It'll also probably be useful to have your system binutils be built multitarget; this doesn't apply to <code>gas</code>, though, so the <code>aarch64-none-elf</code> versions are still necessary.</p>\n<h1 id=\"writing-to-the-uart\">Writing to the UART</h1>\n<p>The RK3399's <a href=\"http://opensource.rock-chips.com/images/e/ee/Rockchip_RK3399TRM_V1.4_Part1-20170408.pdf\">Technical Reference Manual</a> is your friend for all of this; it notes that UART2 is mapped to <code>0xff1a0000</code>. There's also some information on how to interface with the chip; if you're familar with programming the <a href=\"https://en.wikipedia.org/wiki/8250_UART\">8250</a> or <a href=\"https://en.wikipedia.org/wiki/16550_UART\">16550</a> UARTs, I believe it's effectively the latter. (Note that unlike how x86 serial ports are typically connected, the UARTs in the Pinebook Pro are all memory-mapped.)</p>\n<p>We can write to the UART with an assembly sequence like:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">ldr x0, =0xff1a0000 /* Load the x0 register with 0xff1a0000 */\nmov x1, &#39;!&#39;         /* Load the x1 register with &#39;!&#39; (zero-extended) */\nstrb w1, [x0]       /* Store the value in x1 to the address given by x0 */\n</span></pre>\n<p>This stores the <code>!</code> character in the Transmit Holding Register of the UART. Technically, we need to wait for the Transmit Holding Register Empty Bit of the Line Status Register to be 1. We do this with:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">\tldr x0, =0xff1a0000\nwait_for_tx_ok:\n\tldrb w1, [x0, #0x14]      /* Offset the address in x0 by 0x14 */\n\ttbz w1, 5, wait_for_tx_ok /* Loop if bit 5 of x1 is zero */\n</span></pre>\n<p>Of course, a real OS should use the FIFOs, be interrupt-triggered, and maybe even use DMA. That's outside the scope of this article, but I'll probably touch on it in a future post.</p>\n<h1 id=\"putting-it-all-together\">Putting it All Together</h1>\n<p>We can use the above with a bit of glue code to make our &quot;Hello, world&quot; program:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">.section .text\n\n.global _start\n_start:\n\tldr x0, =0xff1a0000\n\tldr x3, =msg\n\tmov x4, len\n\tbl write_string     /* Call the write_string procedure */\n\tb .                 /* Infinite loop */\n\n/** write_string: Writes a string to a UART\n *\n * Input:\n *   x0: UART base address\n *   x3: Address of first character of string\n *   x4: Length of string\n *\n * Side Effects:\n * - Trashes x1, x2, x5\n */\nwrite_string:\n\tcbz x4, write_string.end /* If x4 is zero, go to write_string.end */\n\nwrite_string.wait_for_tx_ok:\n\tldrb w1, [x0, #0x14]\n\ttbz w1, 5, write_string.wait_for_tx_ok\n\n\tldrb w2, [x3], #1 /* After fetching a byte to w2, increment x3 */\n\tsub x4, x4, 1     /* Decrement x4 */\n\tstrb w2, [x0]\n\n\tb write_string\nwrite_string.end:\n\tret\n\n.section .rodata\n\nmsg: .string &quot;Hello, world!\\r\\n&quot;\n.equ len, . - msg\n</span></pre>\n<p>We also need a linker script for this:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f92672;\">OUTPUT_FORMAT</span><span style=\"color:#f8f8f2;\">(elf64-littleaarch64)\n</span><span style=\"color:#f92672;\">ENTRY</span><span style=\"color:#f8f8f2;\">(_start)\n\n</span><span style=\"color:#f92672;\">MEMORY</span><span style=\"color:#f8f8f2;\"> {\n\tkernel : ORIGIN = </span><span style=\"color:#ae81ff;\">0x00280000</span><span style=\"color:#f8f8f2;\">, LENGTH = </span><span style=\"color:#ae81ff;\">0x00080000</span><span style=\"color:#f8f8f2;\">\n}\n\n</span><span style=\"color:#f92672;\">SECTIONS</span><span style=\"color:#f8f8f2;\"> {\n\t.text : {\n\t\t. += </span><span style=\"color:#f92672;\">SIZEOF_HEADERS</span><span style=\"color:#f8f8f2;\">;\n\t\t*(.text)\n\t} &gt; kernel\n\t.rodata : { *(.rodata) } &gt; kernel\n}\n</span></pre>\n<p>We compile and link with:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">aarch64-none-elf-as -o main.o main.s\naarch64-none-elf-ld -o main.elf -T linker.ld main.o -N -z max-page-size=4096\n</span></pre><h2 id=\"aside-tricks-for-a-smaller-executable\">Aside: Tricks for a Smaller Executable</h2>\n<p>Thanks to <code>clever</code> and <code>doug16k</code> in the <code>#osdev</code> channel on Freenode for showing me a couple of tricks to reduce the size of the ELF file:</p>\n<ul>\n<li>Adding <code>. += SIZEOF_HEADERS;</code> to the first section, and passing <code>-N</code> to <code>ld</code> lets LD overlap the <code>.text</code> section with the ELF header itself.</li>\n<li>Passing <code>-z max-page-size=4096</code> to <code>ld</code> lets it only align the sections to 4k instead of 64k.</li>\n</ul>\n<p>This brings the binary size down from 66k to 1.3k.</p>\n<h1 id=\"hello-world\">Hello, world!</h1>\n<p>Finally, we're ready to run our program. Connect the Pinebook Pro to your serial port, connect Minicom to the serial port, and boot it. Hit a key to drop to the U-Boot shell, then run <code>loady 0x00880000</code> to start the upload. Hit Ctrl-A, S to open Minicom's &quot;Send files&quot; menu. Once the file is uploaded, run <code>bootelf 0x00880000</code>. If all's gone well, you should see <code>Hello, world!</code> printed, followed by the machine hanging.</p>\n<script id=\"asciicast-297430\" src=\"https://asciinema.org/a/297430.js\" async></script>\n<p><noscript>Click <a href=\"https://asciinema.org/a/297430\">here</a> to view screen recording (powered by asciinema).</noscript></p>\n",
+      "permalink": "https://remexre.xyz/pbp-osdev/hello-world/",
+      "slug": "hello-world",
+      "ancestors": [
+        "_index.md",
+        "pbp-osdev/_index.md"
+      ],
+      "title": "Pinebook Pro OSDev: Hello World",
+      "description": null,
+      "date": "2020-02-08",
+      "year": 2020,
+      "month": 2,
+      "day": 8,
+      "taxonomies": {
+        "tags": [
+          "osdev",
+          "pbp"
+        ]
+      },
+      "extra": {
+        "comment_issue": 7
+      },
+      "path": "pbp-osdev/hello-world/",
+      "components": [
+        "pbp-osdev",
+        "hello-world"
+      ],
+      "summary": null,
+      "toc": [
+        {
+          "level": 1,
+          "id": "the-hardware",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#the-hardware",
+          "title": "The Hardware",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "out-of-the-box",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#out-of-the-box",
+          "title": "Out of the Box",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "u-boot",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#u-boot",
+          "title": "U-Boot",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "toolchain",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#toolchain",
+          "title": "Toolchain",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "writing-to-the-uart",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#writing-to-the-uart",
+          "title": "Writing to the UART",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "putting-it-all-together",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#putting-it-all-together",
+          "title": "Putting it All Together",
+          "children": [
+            {
+              "level": 2,
+              "id": "aside-tricks-for-a-smaller-executable",
+              "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#aside-tricks-for-a-smaller-executable",
+              "title": "Aside: Tricks for a Smaller Executable",
+              "children": []
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "id": "hello-world",
+          "permalink": "https://remexre.xyz/pbp-osdev/hello-world/#hello-world",
+          "title": "Hello, world!",
+          "children": []
+        }
+      ],
+      "word_count": 1128,
+      "reading_time": 6,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    },
+    {
+      "relative_path": "stahl/2020-01-01-2020.md",
+      "content": "<p>This is a quick roadmap for the Stahl project(s) in (at least the beginning of) 2020. I've been slowly reading <a href=\"https://homotopytypetheory.org/book/\">Homotopy Type Theory</a> over the last week, and I'm getting a <a href=\"https://www.pine64.org/pinebook-pro/\">Pinebook Pro</a> as a hackable dev platform.</p>\n<h1 id=\"overview\">Overview</h1>\n<p>Stahl (Language):</p>\n<ul>\n<li>Stahl Core interpreter</li>\n<li>Stahl Core compiler</li>\n<li>Properly grok higher-order pattern unification</li>\n<li>Write Stahl to Stahl Core conversion</li>\n<li>Proper Stahl frontend</li>\n<li>Linux Runtime</li>\n<li>GRIN backend</li>\n</ul>\n<p>StahlOS:</p>\n<ul>\n<li>Rewrite/port StahlOS for Pinebook Pro</li>\n<li>Spawn driver and process for serial console on UART</li>\n</ul>\n<h1 id=\"stahl-core\">Stahl Core</h1>\n<p>The Stahl surface syntax is translated down to a simpler intermediate language, Stahl Core. Stahl Core uses an intensional constructive type theory. Currently, I don't think I can make it completely HoTT-friendly, since I'm not sure how to compute with the univalence axiom, but if that changes it probably will be. Lastly, &quot;normal universes&quot; are explicitly indexed with ordinals, which inhabit their own universe, <code>Ordinal</code>.</p>\n<p>I'd like to also introduce the tricks from <a href=\"http://jmchapman.github.io/papers/levitation.pdf\">The Gentle Art of Levitation</a>, so its <code>Tag</code> and <code>Desc</code> will likely make an appearance in some form. (<code>Tag</code>, in particular, I'm likely to rename to <code>Atom</code>.)</p>\n<h1 id=\"stahlos\">StahlOS</h1>\n<p>Since the Pinebook Pro is such a well-documented machine, I want to switch to porting StahlOS to it, rather than continuing to not work on it for amd64. The current codebase is basically blocked on my not wanted to grok ACPI; <a href=\"https://www.devicetree.org/\">DeviceTrees</a> seem much saner, and the RK3399 (the SoC the Pinebook Pro uses) looks like it has static addresses for its peripherals (e.g. the serial port is at a fixed physical address of <code>0xff1a0000</code>).</p>\n",
+      "permalink": "https://remexre.xyz/stahl/2020/",
+      "slug": "2020",
+      "ancestors": [
+        "_index.md",
+        "stahl/_index.md"
+      ],
+      "title": "Stahl in 2020",
+      "description": null,
+      "date": "2020-01-01",
+      "year": 2020,
+      "month": 1,
+      "day": 1,
+      "taxonomies": {
+        "tags": [
+          "stahl"
+        ]
+      },
+      "extra": {
+        "comment_issue": 3
+      },
+      "path": "stahl/2020/",
+      "components": [
+        "stahl",
+        "2020"
+      ],
+      "summary": null,
+      "toc": [
+        {
+          "level": 1,
+          "id": "overview",
+          "permalink": "https://remexre.xyz/stahl/2020/#overview",
+          "title": "Overview",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "stahl-core",
+          "permalink": "https://remexre.xyz/stahl/2020/#stahl-core",
+          "title": "Stahl Core",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "stahlos",
+          "permalink": "https://remexre.xyz/stahl/2020/#stahlos",
+          "title": "StahlOS",
+          "children": []
+        }
+      ],
+      "word_count": 277,
+      "reading_time": 2,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    },
+    {
+      "relative_path": "stahl/2020-02-06-dream.md",
+      "content": "<p>The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases. (And that's before I get to any actual applications.)</p>\n<p>I realized I don't actually have all this written down in one place anywhere, so this serves as a snapshot into the current vision.</p>\n<p>This is certainly inspired by <a href=\"https://en.wikipedia.org/wiki/Oberon_(operating_system)\">Oberon</a>, which showed one could create a single-machine system in a few thousand lines of code (12,227 by <a href=\"http://www.edm2.com/0608/oberon.html\">one count</a>). I don't think I can fit a system in so few lines of code, but I also want to have a much more complicated language in use for most of the system.</p>\n<h1 id=\"stahlos\">StahlOS</h1>\n<p>The part I'm currently working on is an operating system on which the rest of the system runs. The system is quite minimal — there's neither MMU-based process isolation, nor pre-emptive multitasking (though the latter may change).</p>\n<p>The StahlOS model fundamentally relies on all actual machine code executed by the CPU to be trustworthy, and disallows loading binaries other than the kernel itself. Instead, system drivers and essential processes are written in <a href=\"https://remexre.xyz/stahl/dream/#stahlos-forth\">StahlOS Forth</a>, which user programs are compiled to at runtime. Even the Forth programs themselves are only loadable from a read-only filesystem (excepting those that are compiled into the kernel), since Forth is low-level enough that it might as be machine code, security-wise.</p>\n<p>Each of the compiler processes only produce memory-safe code; assuming this property and the correctness of the above TCB, all code the system can run is memory-safe. This allows wholly ignoring the MMU as a security mechanism. Instead, memory ownership is implicit, and controlled at the page level. Each process (with exceptions such as a low-level debugging REPL) is shared-nothing, with message-passing as a fundamental operation, implemented as the transfer of page ownership. (I haven't ruled out eventually allowing shared pages with <a href=\"https://en.wikipedia.org/wiki/Software_transactional_memory\">STM</a> or similar for concurrent modification, but I'm leery of shared pointers.)</p>\n<p>StahlOS will also provide Erlang-like mechanisms for orchestrating processes (i.e. monitors and links). However, cross-machine message-passing will not be directly supported (and for this reason, message-passing should only really be considered a intra-app mechanism, despite being inter-process). Instead, applications should generally use the <a href=\"https://remexre.xyz/stahl/dream/#tuple-space\">tuple space</a> as a synchronization point: it's not significantly more expensive than message passing for local communications, but allows remote communications.</p>\n<h1 id=\"languages\">Languages</h1>\n<h2 id=\"stahl\">Stahl</h2>\n<p>The primary language being designed currently, and the most complicated one by far, is Stahl. Stahl is a dependently typed lambda calculus with a Lisp-like syntax.</p>\n<p>I'm probably basing the core type theory on the type theory presented in <a href=\"https://homotopytypetheory.org/book/\">Homotopy Type Theory</a>, but without the univalence axiom (at least, until I can figure out how to make it computable).</p>\n<p>I also want to make the language the testbed for experimenting with automated theorem proving and making manual theorem proving convenient in a &quot;casual&quot; setting (e.g. from a smartphone while on a bus).</p>\n<h2 id=\"stahlos-forth\">StahlOS Forth</h2>\n<p>StahlOS uses a Forth dialect as the low-level programming language. <a href=\"https://en.wikipedia.org/wiki/Forth_(programming_language)\">Forth</a> is the best language I've found for bare-metal development. A Forth system can be constructed with amazingly little machine code; the resulting language is capable of Common Lisp-tier metaprogramming, while also being able to peek and poke at memory, without needing dynamic memory allocation.</p>\n<h1 id=\"databases\">Databases</h1>\n<h2 id=\"tuple-space\">Tuple Space</h2>\n<p><a href=\"https://en.wikipedia.org/wiki/Tuple_space\">Tuple spaces</a> are a sufficiently old, and sufficiently nice-seeming database abstraction that I'm honestly surprised there isn't a high-quality implementation some programming subculture is smugly using (in same way similar subcultures exist for e.g. Smalltalk, Erlang, Common Lisp).</p>\n<p>Essentially, a tuple space is a distributed multiset with five primitive operations:</p>\n<ul>\n<li><code>put TUPLE</code> adds a tuple to the multiset</li>\n<li><code>try-take PATTERN</code> returns a tuple matching <code>PATTERN</code> if one exists in the multiset, removing it from the multiset</li>\n<li><code>try-peek PATTERN</code> returns a tuple matching <code>PATTERN</code> if one exists in the multiset, without removing it from the multiset</li>\n<li><code>take PATTERN, TIMEOUT</code> returns a tuple matching <code>PATTERN</code> if one can be found within <code>TIMEOUT</code>, removing it from the multiset</li>\n<li><code>peek PATTERN, TIMEOUT</code> returns a tuple matching <code>PATTERN</code> if one can be found within <code>TIMEOUT</code>, without removing it from the multiset</li>\n</ul>\n<p>With a sufficiently expressive pattern language, it becomes easy to have applications sharing a database with loose coupling between them.</p>\n<p>I need more design work to determine many of the details of this tuple space (as well as a name for it!) — particularly, I'm unsure of how precisely I want to make the database distributed. Given that I'm using it as a coordination mechanism as well as a (short-term) database, it's not clear what semantics I actually want on netsplit. Furthermore, it seems like there ought to be a large class of optimizations I could apply to make common patterns of use more efficient, though these might require real-world usage data to evaluate.</p>\n<h2 id=\"g1\">G1</h2>\n<p>I'm already writing about G1 <a href=\"https://remexre.xyz/g1/intro/\">elsewhere</a> on this blog, but I'll summarize how it fits into the larger StahlDream.</p>\n<p>The tuple space doesn't seem particularly good as a database for bulk storage — I'm planning to implement it with the expectation that it will contain at most a few megabytes of data at once. I therefore want a flexible database for storing and querying larger data.</p>\n<p>I'm planning to implement the tuple space on top of both StahlOS and some Linux system, likely with the Linux implementation being in Rust. The thinking here is somewhat similar to Erlang's port drivers, which allow interfacing with a native-code process as if it were an Erlang process. G1 can then be easily bridged to StahlOS, by acting on the tuple space directly.</p>\n",
+      "permalink": "https://remexre.xyz/stahl/dream/",
+      "slug": "dream",
+      "ancestors": [
+        "_index.md",
+        "stahl/_index.md"
+      ],
+      "title": "The StahlDream",
+      "description": null,
+      "date": "2020-02-06",
+      "year": 2020,
+      "month": 2,
+      "day": 6,
+      "taxonomies": {
+        "tags": [
+          "stahl"
+        ]
+      },
+      "extra": {
+        "comment_issue": 5
+      },
+      "path": "stahl/dream/",
+      "components": [
+        "stahl",
+        "dream"
+      ],
+      "summary": null,
+      "toc": [
+        {
+          "level": 1,
+          "id": "stahlos",
+          "permalink": "https://remexre.xyz/stahl/dream/#stahlos",
+          "title": "StahlOS",
+          "children": []
+        },
+        {
+          "level": 1,
+          "id": "languages",
+          "permalink": "https://remexre.xyz/stahl/dream/#languages",
+          "title": "Languages",
+          "children": [
+            {
+              "level": 2,
+              "id": "stahl",
+              "permalink": "https://remexre.xyz/stahl/dream/#stahl",
+              "title": "Stahl",
+              "children": []
+            },
+            {
+              "level": 2,
+              "id": "stahlos-forth",
+              "permalink": "https://remexre.xyz/stahl/dream/#stahlos-forth",
+              "title": "StahlOS Forth",
+              "children": []
+            }
+          ]
+        },
+        {
+          "level": 1,
+          "id": "databases",
+          "permalink": "https://remexre.xyz/stahl/dream/#databases",
+          "title": "Databases",
+          "children": [
+            {
+              "level": 2,
+              "id": "tuple-space",
+              "permalink": "https://remexre.xyz/stahl/dream/#tuple-space",
+              "title": "Tuple Space",
+              "children": []
+            },
+            {
+              "level": 2,
+              "id": "g1",
+              "permalink": "https://remexre.xyz/stahl/dream/#g1",
+              "title": "G1",
+              "children": []
+            }
+          ]
+        }
+      ],
+      "word_count": 990,
+      "reading_time": 5,
+      "assets": [],
+      "draft": false,
+      "lang": "en",
+      "lighter": null,
+      "heavier": null,
+      "earlier": null,
+      "later": null,
+      "translations": []
+    }
+  ],
+  "config": {
+    "base_url": "https://remexre.xyz/",
+    "theme": null,
+    "title": "remexre.xyz",
+    "description": null,
+    "default_language": "en",
+    "languages": [],
+    "translations": {},
+    "slugify_paths": true,
+    "highlight_code": true,
+    "highlight_theme": "monokai",
+    "external_renderers": {},
+    "generate_rss": true,
+    "rss_limit": null,
+    "hard_link_static": false,
+    "taxonomies": [
+      {
+        "name": "tags",
+        "paginate_by": null,
+        "paginate_path": null,
+        "rss": true,
+        "lang": "en"
+      }
+    ],
+    "compile_sass": false,
+    "build_search_index": false,
+    "ignored_content": [],
+    "extra_syntaxes": [],
+    "link_checker": {
+      "skip_prefixes": [],
+      "skip_anchor_prefixes": []
+    },
+    "extra": {},
+    "build_timestamp": 1581201454
+  },
+  "current_path": "",
+  "current_url": "https://remexre.xyz/",
+  "flat_pages": [
+    "Pinebook Pro OSDev: Hello World|https://remexre.xyz/pbp-osdev/hello-world/|2020-02-08",
+    "The StahlDream|https://remexre.xyz/stahl/dream/|2020-02-06",
+    "G1: The Query Language|https://remexre.xyz/g1/query-lang/|2020-02-01",
+    "Stahl in 2020|https://remexre.xyz/stahl/2020/|2020-01-01",
+    "G1: A simple graph store, written in Rust|https://remexre.xyz/g1/intro/|2019-12-15",
+    "Reboot of the Blog, again!|https://remexre.xyz/reboot/|2019-12-13"
+  ],
+  "lang": "",
+  "section": {
+    "relative_path": "_index.md",
+    "content": "",
+    "permalink": "https://remexre.xyz/",
+    "ancestors": [],
+    "title": null,
+    "description": null,
+    "extra": {},
+    "path": "",
+    "components": [],
+    "toc": [],
+    "word_count": null,
+    "reading_time": null,
+    "lang": "",
+    "assets": [],
+    "pages": [
+      {
+        "relative_path": "2019-12-13-reboot.md",
+        "content": "<p>Only 11 months less a day between posts, this time!</p>\n<p>I'm restarting the blog, again. All the old content is still on GitHub, on <a href=\"https://github.com/remexre/remexre.github.io/tree/authoring-old-2019-01-14\">the <code>authoring-old-2019-01-14</code> branch</a>. The real reason is that upstream changes to Zola broke a template I wasn't really using anyway, and I've been putting off fixing it.</p>\n<p>I actually have a few things to blog about planned out, this time. Expect:</p>\n<ul>\n<li>A project to allow more ergonomic FFI between Rust and Lisp/Python</li>\n<li>Notes about a simple graph store from scratch in Rust</li>\n<li>Read-throughs of academic papers, usually related to some project</li>\n</ul>\n<p>Hopefully, I'll finish at least one post a month this time...</p>\n",
+        "permalink": "https://remexre.xyz/reboot/",
+        "slug": "reboot",
+        "ancestors": [
+          "_index.md"
+        ],
+        "title": "Reboot of the Blog, again!",
+        "description": null,
+        "date": "2019-12-13",
+        "year": 2019,
+        "month": 12,
+        "day": 13,
+        "taxonomies": {
+          "tags": [
+            "meta"
+          ]
+        },
+        "extra": {
+          "comment_issue": 1
+        },
+        "path": "reboot/",
+        "components": [
+          "reboot"
+        ],
+        "summary": null,
+        "toc": [],
+        "word_count": 122,
+        "reading_time": 1,
+        "assets": [],
+        "draft": false,
+        "lang": "en",
+        "lighter": null,
+        "heavier": null,
+        "earlier": null,
+        "later": null,
+        "translations": []
+      },
+      {
+        "relative_path": "contact/index.md",
+        "content": "<ul>\n<li><a href=\"mailto:remexre@gmail.com\">Email</a></li>\n<li><a href=\"https://keybase.io/remexre\">Keybase</a></li>\n<li><a href=\"https://remexre.xyz/contact/remexre.asc\">GPG Key</a></li>\n<li><a href=\"https://remexre.xyz/contact/id_rsa.pub\">SSH Key</a></li>\n</ul>\n",
+        "permalink": "https://remexre.xyz/contact/",
+        "slug": "contact",
+        "ancestors": [
+          "_index.md"
+        ],
+        "title": "Contact",
+        "description": null,
+        "date": null,
+        "year": null,
+        "month": null,
+        "day": null,
+        "taxonomies": {},
+        "extra": {},
+        "path": "contact/",
+        "components": [
+          "contact"
+        ],
+        "summary": null,
+        "toc": [],
+        "word_count": 13,
+        "reading_time": 1,
+        "assets": [
+          "contact/remexre.asc",
+          "contact/id_rsa.pub"
+        ],
+        "draft": false,
+        "lang": "en",
+        "lighter": null,
+        "heavier": null,
+        "earlier": null,
+        "later": null,
+        "translations": []
+      },
+      {
+        "relative_path": "enterprise-strawman.md",
+        "content": "<p>A friend (<a href=\"https://iptq.io/\">Michael Zhang</a>) and I may be working on a web framework for Rust, <a href=\"https://crates.io/crates/enterprise\"><code>enterprise</code></a>. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.</p>\n<p>Also note that despite the authorial &quot;we,&quot; this is almost entirely my vision (hence the S-expressions, use of Prolog, etc.), so expect this to be a strawman that's lit aflame rather than fortified.</p>\n<h1 id=\"introduction\">Introduction</h1>\n<p>The model we use for webapps is described by a dependency diagram:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"font-style:italic;color:#66d9ef;\">digraph </span><span style=\"color:#e6db74;\">&quot;dependency graph&quot; </span><span style=\"color:#f8f8f2;\">{\n\t</span><span style=\"font-style:italic;color:#66d9ef;\">graph</span><span style=\"color:#f8f8f2;\">[</span><span style=\"color:#66d9ef;\">bgcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#1e1f29&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\tBLogic[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">label</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;Business</span><span style=\"color:#ae81ff;\">\\n</span><span style=\"color:#e6db74;\">Logic&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#business-logic&quot;</span><span style=\"color:#f8f8f2;\">];\n\tActions[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#actions&quot;</span><span style=\"color:#f8f8f2;\">];\n\tSchema[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#schema&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#views&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViewAdapters[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">label</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;View</span><span style=\"color:#ae81ff;\">\\n</span><span style=\"color:#e6db74;\">Adapters&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#view-adapters&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthentication[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#authentication&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthorization[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#authorization&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\tActions -&gt; Schema [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthorization -&gt; Actions [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthorization -&gt; Authentication [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthorization -&gt; Schema [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tBLogic -&gt; Actions [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tBLogic -&gt; Authentication [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tBLogic -&gt; Schema [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews -&gt; Authentication [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews -&gt; Schema [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews -&gt; ViewAdapters [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4346&quot;</span><span style=\"color:#f8f8f2;\">];\n}\n</span></pre>\n<p>As well as a dataflow diagram for server-side rendering:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"font-style:italic;color:#66d9ef;\">digraph </span><span style=\"color:#e6db74;\">&quot;dataflow graph&quot; </span><span style=\"color:#f8f8f2;\">{\n\t</span><span style=\"font-style:italic;color:#66d9ef;\">graph</span><span style=\"color:#f8f8f2;\">[</span><span style=\"color:#66d9ef;\">bgcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#1e1f29&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\tHTTP[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot; </span><span style=\"color:#66d9ef;\">shape</span><span style=\"color:#f92672;\">=</span><span style=\"color:#f8f8f2;\">plaintext];\n\tDatabases[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot; </span><span style=\"color:#66d9ef;\">label</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;Databases and</span><span style=\"color:#ae81ff;\">\\n</span><span style=\"color:#e6db74;\">External Services&quot; </span><span style=\"color:#66d9ef;\">shape</span><span style=\"color:#f92672;\">=</span><span style=\"color:#f8f8f2;\">plaintext];\n\n\tAuthorization[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#authorization&quot;</span><span style=\"color:#f8f8f2;\">];\n\tActions[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#actions&quot;</span><span style=\"color:#f8f8f2;\">];\n\tBLogic[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#8be9fe&quot; </span><span style=\"color:#66d9ef;\">label</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;Business</span><span style=\"color:#ae81ff;\">\\n</span><span style=\"color:#e6db74;\">Logic&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#business-logic&quot;</span><span style=\"color:#f8f8f2;\">];\n\tDAL[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#data-access-layer&quot;</span><span style=\"color:#f8f8f2;\">];\n\tRouter[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#router&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViewAdapters[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">label</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;View</span><span style=\"color:#ae81ff;\">\\n</span><span style=\"color:#e6db74;\">Adapters&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#view-adapters&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#fc4cb4&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#views&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthentication[</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">fontcolor</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#f0fb8c&quot; </span><span style=\"color:#66d9ef;\">URL</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#authentication&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t{</span><span style=\"color:#66d9ef;\">rank</span><span style=\"color:#f92672;\">=</span><span style=\"color:#f8f8f2;\">same; Authentication, ViewAdapters};\n\t{</span><span style=\"color:#66d9ef;\">rank</span><span style=\"color:#f92672;\">=</span><span style=\"color:#f8f8f2;\">same; BLogic, Views};\n\t{</span><span style=\"color:#66d9ef;\">rank</span><span style=\"color:#f92672;\">=</span><span style=\"color:#f8f8f2;\">same; Actions, Authorization};\n\n\tHTTP -&gt; Router [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot;</span><span style=\"color:#f8f8f2;\">];\n\tRouter -&gt; HTTP [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot;</span><span style=\"color:#f8f8f2;\">];\n\tDatabases -&gt; DAL [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot;</span><span style=\"color:#f8f8f2;\">];\n\tDAL -&gt; Databases [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#cfcfcf&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t</span><span style=\"color:#75715e;\">// When the router gets a request, it passes it to the business logic,\n\t// along with the results of authentication.\n</span><span style=\"color:#f8f8f2;\">\tRouter -&gt; BLogic [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tRouter -&gt; Authentication [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthentication -&gt; BLogic [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t</span><span style=\"color:#75715e;\">// The business logic performs actions (and gets data from them).\n</span><span style=\"color:#f8f8f2;\">\tBLogic -&gt; Actions [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tActions -&gt; BLogic [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t</span><span style=\"color:#75715e;\">// Actions are allowed or disallowed based on the results of\n\t// authorization, which is also informed by authentication and the\n\t// database (via the DAL).\n</span><span style=\"color:#f8f8f2;\">\tAuthentication -&gt; Authorization [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tAuthorization -&gt; Actions [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tDAL -&gt; Authorization [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t</span><span style=\"color:#75715e;\">// Actions communicate with the database via the DAL.\n</span><span style=\"color:#f8f8f2;\">\tActions -&gt; DAL [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tDAL -&gt; Actions [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\n\t</span><span style=\"color:#75715e;\">// The business logic then communicates the response to views, which\n\t// are rendered with view adapters, which then send a rendered response\n\t// to the router.\n</span><span style=\"color:#f8f8f2;\">\tBLogic -&gt; Views [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViews -&gt; ViewAdapters [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n\tViewAdapters -&gt; Router [</span><span style=\"color:#66d9ef;\">color</span><span style=\"color:#f92672;\">=</span><span style=\"color:#e6db74;\">&quot;#50fb7c&quot;</span><span style=\"color:#f8f8f2;\">];\n}\n</span></pre>\n<p>In the above diagrams, <span style=\"color: #f0fb8c\">yellow</span> components are provided by <code>enterprise</code>, <span style=\"color: #8be9fe\">blue</span> components are written by the application author in Rust, and <span style=\"color: #fc4cb4\">pink</span> components are written by the application author in a DSL.</p>\n<p>The Schema and DAL components are taken from <a href=\"https://www.tedinski.com/2018/09/11/stateless-mvc.html\">Ted Kaminski's &quot;Stateless MVC,&quot;</a> which describes them in detail.</p>\n<h1 id=\"schema\">Schema</h1>\n<p>The Schema component contains type declarations for each of the &quot;domain objects.&quot; If a type ends up being sent over the network, it should probably be declared here. <a href=\"https://iptq.io/magic-forms-with-proc-macros/\">Derive macros</a> are provided to allow the Router to validate these values.</p>\n<p>The only exports of the Schema should be types -- if you find yourself exporting functions, they probably belong in the business logic.</p>\n<h1 id=\"actions\">Actions</h1>\n<p>Actions are the atomic primitive functions that are used to define the business logic. Macros are available to define CRUD actions for types in the Schema (relative to some data store supported by the DAL).</p>\n<h1 id=\"business-logic\">Business Logic</h1>\n<p>The Business Logic module transforms requests into data that can be handled directly by a View.</p>\n<h1 id=\"views\">Views</h1>\n<p>Views are written in a React-like DSL.</p>\n<h1 id=\"view-adapters\">View Adapters</h1>\n<p>View Adapters are backends for Views -- one exists to translate to HTML, another to translate to JSON, and another that performs tree-diffing to efficiently update HTML.</p>\n<h1 id=\"auth\">Auth</h1>\n<p>The generic phrase &quot;auth&quot; confusingly can refer to either &quot;authentication&quot; or &quot;authorization.&quot; These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.</p>\n<h2 id=\"authentication\">Authentication</h2>\n<p>Authentication is the answer to the question &quot;what user does this request correspond to?&quot; As with other parts of a web application, <code>enterprise</code> simplifies authentication by abstracting it heavily.</p>\n<p>For our app, we want to allow a plethora of authentication methods, while also allowing a user to have multiple authentication methods. (This is useful since a user might forget whether they registered with their Google account or email, and it allows an anonymous user to add an email and stop being anonymous!)</p>\n<p>In <code>app.sexp</code>:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">(authentication\n  (multiple true)\n  (providers\n    anonymous</span><span style=\"color:#f92672;\">-</span><span style=\"color:#f8f8f2;\">cookie\n    (email</span><span style=\"color:#f92672;\">-</span><span style=\"color:#f8f8f2;\">password :reset email)\n    oauth</span><span style=\"color:#f92672;\">-</span><span style=\"color:#f8f8f2;\">facebook\n    oauth</span><span style=\"color:#f92672;\">-</span><span style=\"color:#f8f8f2;\">google\n    oauth</span><span style=\"color:#f92672;\">-</span><span style=\"color:#f8f8f2;\">twitter))\n</span></pre>\n<p>In <code>views/login.sexp</code>:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#f8f8f2;\">TODO\n</span></pre><h2 id=\"authorization\">Authorization</h2>\n<p>Authorization is the answer to the question &quot;can this user perform this action?&quot; This is almost entirely application-specific, so we leave the logic here to the app author.</p>\n<p>But wait, we're using logic on a question with a boolean answer? Well, I know the best way to do this! <code>enterprise</code> apps specify authorization information with a Prolog dialect.</p>\n<p>For our app, TODO.</p>\n<p>In <code>src/authorization.pro</code>:</p>\n<pre style=\"background-color:#272822;\">\n<span style=\"color:#a6e22e;\">authorized</span><span style=\"color:#f8f8f2;\">(UserID</span><span style=\"color:#f92672;\">,</span><span style=\"color:#f8f8f2;\"> Action)</span><span style=\"color:#f92672;\">. </span><span style=\"color:#75715e;\"># TODO\n</span></pre>",
+        "permalink": "https://remexre.xyz/enterprise-strawman/",
+        "slug": "enterprise-strawman",
+        "ancestors": [
+          "_index.md"
+        ],
+        "title": "enterprise: Strawman Proposal",
+        "description": null,
+        "date": null,
+        "year": null,
+        "month": null,
+        "day": null,
+        "taxonomies": {
+          "tags": [
+            "enterprise",
+            "rust"
+          ]
+        },
+        "extra": {},
+        "path": "enterprise-strawman/",
+        "components": [
+          "enterprise-strawman"
+        ],
+        "summary": null,
+        "toc": [
+          {
+            "level": 1,
+            "id": "introduction",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#introduction",
+            "title": "Introduction",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "schema",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#schema",
+            "title": "Schema",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "actions",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#actions",
+            "title": "Actions",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "business-logic",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#business-logic",
+            "title": "Business Logic",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "views",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#views",
+            "title": "Views",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "view-adapters",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#view-adapters",
+            "title": "View Adapters",
+            "children": []
+          },
+          {
+            "level": 1,
+            "id": "auth",
+            "permalink": "https://remexre.xyz/enterprise-strawman/#auth",
+            "title": "Auth",
+            "children": [
+              {
+                "level": 2,
+                "id": "authentication",
+                "permalink": "https://remexre.xyz/enterprise-strawman/#authentication",
+                "title": "Authentication",
+                "children": []
+              },
+              {
+                "level": 2,
+                "id": "authorization",
+                "permalink": "https://remexre.xyz/enterprise-strawman/#authorization",
+                "title": "Authorization",
+                "children": []
+              }
+            ]
+          }
+        ],
+        "word_count": 908,
+        "reading_time": 5,
+        "assets": [],
+        "draft": true,
+        "lang": "en",
+        "lighter": null,
+        "heavier": null,
+        "earlier": null,
+        "later": null,
+        "translations": []
+      }
+    ],
+    "subsections": [
+      "g1/_index.md",
+      "pbp-osdev/_index.md",
+      "stahl/_index.md"
+    ],
+    "translations": []
+  }
+} -->
 </main>
 
 		<div class="spacer"></div>
