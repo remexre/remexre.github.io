@@ -2,7 +2,6 @@
 title = "Pinebook Pro OSDev: Hello World"
 
 [taxonomies]
-categories = ["post"]
 tags = ["osdev", "pbp"]
 
 [extra]

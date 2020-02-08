@@ -1,22 +1,7 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Not Found &mdash; {{ config.title }}</title>
-		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
-		<style>h1 { margin: auto; }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
-			<a class="subtle" href="https://github.com/remexre">GitHub</a>
-			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
-			<a class="subtle" href="{{ config.base_url }}remexre.asc">GPG Key</a>
-			<a class="subtle" href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
-		</header>
-		<div class="spacer"></div>
-		<h1>404 File Not Found</h1>
-		<div class="spacer"></div>
-	</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Not Found &mdash; {{ config.title }}{% endblock title %}
+
+{% block endhead %}<style>h1 { margin: auto; }</style>{% endblock endhead %}
+
+{% block body %}<h1>404 File Not Found</h1>{% endblock body %}

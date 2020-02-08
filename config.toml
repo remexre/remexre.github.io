@@ -10,9 +10,5 @@ compile_sass = false
 dot = "set -e; echo -n '<p class=\"graphviz\">'; dot -Tsvg | tail -n +4; echo '</p>'"
 
 [[taxonomies]]
-name = "categories"
-rss = true
-
-[[taxonomies]]
 name = "tags"
 rss = true

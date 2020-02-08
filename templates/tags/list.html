@@ -1,33 +1,26 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Tags &mdash; {{ config.title }}</title>
-		<link rel="stylesheet" type="text/css" href="{{ config.base_url }}css/main.css">
-	</head>
-	<body>
-		<a class="back subtle" href="{{ config.base_url }}" title="Back">&lsaquo;</a>
-		<header>
-			<a class="subtle" href="mailto:remexre@gmail.com">Email</a>
-			<a class="subtle" href="https://github.com/remexre">GitHub</a>
-			<a class="subtle" href="https://keybase.io/remexre">Keybase</a>
-			<a class="subtle" href="{{ config.base_url }}remexre.asc">GPG Key</a>
-			<a class="subtle" href="{{ config.base_url }}id_rsa.pub">SSH Key</a>
-		</header>
-		<div class="spacer"></div>
-		<div class="list">
-			{% for term in terms -%}
-				<div class="item">
-					<a class="subtle" href="{{ term.permalink }}">
-						{{ term.name }}
-						<span class="spacer"></span>
-						<span class="meta">{{ term.pages | length }}</span>
-					</a>
-				</div>
-			{% endfor -%}
-		</div>
-		<div class="spacer"></div>
-		<script src="{{ config.base_url }}js/search.js"></script>
-	</body>
-</html>
+{% extends "base.html" %}
+{% import "macros.html" as macros %}
+
+{% block title %}Tags &mdash; {{ config.title }}{% endblock title %}
+
+{% block body %}
+<main>
+	{% set_global items = [] -%}
+	{% for term in terms -%}
+		{% set_global page_count = 0 -%}
+		{% for page in term.pages -%}
+			{% if not page.draft and "_index.md" in page.ancestors -%}
+				{% set_global page_count = page_count + 1 -%}
+			{% endif -%}
+		{% endfor -%}
+		{% if page_count != 0 -%}
+			{% set_global items = items | concat(with=[term.name ~ "|" ~ term.permalink ~ "|" ~ page_count]) -%}
+		{% endif -%}
+	{% endfor -%}
+	{{ macros::list(items=items) }}
+</main>
+{% endblock body %}
+
+{% block endbody %}
+<script src="{{ config.base_url }}js/search.js"></script>
+{% endblock endbody %}

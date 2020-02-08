@@ -3,7 +3,6 @@ title = "enterprise: Strawman Proposal"
 draft = true
 
 [taxonomies]
-categories = ["post"]
 tags = ["enterprise", "rust"]
 
 [extra]

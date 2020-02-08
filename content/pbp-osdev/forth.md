@@ -3,7 +3,6 @@ title = "Pinebook Pro OSDev: Forth"
 draft = true
 
 [taxonomies]
-categories = ["post"]
 tags = ["forth", "osdev", "pbp"]
 
 [extra]

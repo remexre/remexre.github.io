@@ -2,7 +2,6 @@
 title = "G1: The Query Language"
 
 [taxonomies]
-categories = ["post"]
 tags = ["g1", "rust"]
 
 [extra]

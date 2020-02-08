@@ -2,7 +2,6 @@
 title = "Notebook: Vulkan"
 
 [taxonomies]
-categories = ["notebook"]
 tags = ["vulkan"]
 +++
 

@@ -2,7 +2,6 @@
 title = "Notebook: Stahl (Language)"
 
 [taxonomies]
-categories = ["notebook"]
 tags = ["stahl", "stahl-lang"]
 +++
 
