@@ -183,6 +183,8 @@ article > h3 {
 	font-size: 1.25rem;
 }
 
+article img { max-width: 100%; }
+
 article .asciicast { display: flex !important; }
 article .asciicast > iframe { margin: auto !important; }
 

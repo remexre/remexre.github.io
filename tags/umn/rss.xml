@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>remexre.xyz</title>
+        <link>https://remexre.xyz/</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://remexre.xyz/tags/umn/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Tue, 10 Oct 2017 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Helpful Tools for CSCI2021</title>
+                <pubDate>Tue, 10 Oct 2017 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/umn/csci2021-helpful-tools/</link>
+                <guid>https://remexre.xyz/umn/csci2021-helpful-tools/</guid>
+                <description>&lt;h1 id=&quot;radare2&quot;&gt;radare2&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;rada.re&#x2F;r&#x2F;&quot;&gt;radare2&lt;&#x2F;a&gt; can replace GDB, and has many more analysis tools.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;installing&quot;&gt;Installing&lt;&#x2F;h2&gt;
+&lt;p&gt;Check your repos. It&#x27;s in the repos for Arch, Ubuntu, and Homebrew (for you macOS kids).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;example-of-usage&quot;&gt;Example of Usage&lt;&#x2F;h2&gt;
+&lt;p&gt;Start radare2 with &lt;code&gt;radare2 -d &amp;lt;program&amp;gt;&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Radare2 has very terse commands, unlike GDB. Reading a tutorial is &lt;em&gt;highly&lt;&#x2F;em&gt;, &lt;strong&gt;highly&lt;&#x2F;strong&gt;, &lt;em&gt;&lt;strong&gt;highly&lt;&#x2F;strong&gt;&lt;&#x2F;em&gt; recommended; try &lt;a href=&quot;http:&#x2F;&#x2F;sushant94.me&#x2F;2015&#x2F;05&#x2F;31&#x2F;Introduction_to_radare2&#x2F;&quot;&gt;this one&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;However, here&#x27;s a cool demo of one of the more useful things. Load your bomblab file with the above commands.&lt;&#x2F;p&gt;
+&lt;p&gt;Then run the commands:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;aaa
+VV @ sym.initialize_bomb
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;You can now use the arrow keys or Vim-style &lt;code&gt;hjkl&lt;&#x2F;code&gt; scrolling to pan around the control-flow graph of your bomb.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;umn&#x2F;csci2021-helpful-tools&#x2F;radare2-cfg.png&quot; alt=&quot;&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;godbolt&quot;&gt;godbolt&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;https:&#x2F;&#x2F;gcc.godbolt.org&#x2F;&quot;&gt;godbolt&lt;&#x2F;a&gt; is a useful online tool for reading the assembly output of C code. It highlights the lines different blocks of assembly come from too, which makes reading it much easier.&lt;&#x2F;p&gt;
+&lt;p&gt;Protip: Use &lt;code&gt;-O1&lt;&#x2F;code&gt; in the &amp;quot;Compiler Flags&amp;quot; field -- it makes the code a lot more efficient without sacrificing much readability (and sometimes improving it).&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;umn&#x2F;csci2021-helpful-tools&#x2F;godbolt-o1-example.png&quot; alt=&quot;&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;clang&quot;&gt;clang&lt;&#x2F;h1&gt;
+&lt;p&gt;Clang gives much better error messages than GCC. Just replace gcc in your commands with clang. It&#x27;s the default C compiler on macOS, and is installed on the CSELabs machines (and again is probably in your standard repos).&lt;&#x2F;p&gt;
+&lt;p&gt;For example, instead of:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;gcc -o main main.c
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;run&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;clang -o main main.c
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;useful-flags&quot;&gt;Useful flags&lt;&#x2F;h2&gt;
+&lt;p&gt;Other flags that can check your code include:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;-Wall&lt;&#x2F;code&gt; -- add more warnings for incorrect (and likely to crash) code&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;-g&lt;&#x2F;code&gt; -- emit debug information into the program, so you can debug it easier&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;valgrind&quot;&gt;valgrind&lt;&#x2F;h1&gt;
+&lt;p&gt;Valgrind can help find the causes of segmentation faults and memory leaks a lot better than most programmers. Run your program with it to find them.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, instead of:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;.&#x2F;main
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;run&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;valgrind .&#x2F;main
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;installing-1&quot;&gt;Installing&lt;&#x2F;h2&gt;
+&lt;p&gt;Check your repos.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;reading-valgrind-s-output&quot;&gt;Reading Valgrind&#x27;s output&lt;&#x2F;h2&gt;
+&lt;p&gt;After running valgrind, you might get output like:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;==30038== Memcheck, a memory error detector
+==30038== Copyright (C) 2002-2017, and GNU GPL&amp;#39;d, by Julian Seward et al.
+==30038== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==30038== Command: .&#x2F;a.out
+==30038==
+==30038== Invalid read of size 1
+==30038==    at 0x108611: main (main.c:3)
+==30038==  Address 0x0 is not stack&amp;#39;d, malloc&amp;#39;d or (recently) free&amp;#39;d
+==30038==
+==30038==
+==30038== Process terminating with default action of signal 11 (SIGSEGV): dumping core
+==30038==  Access not within mapped region at address 0x0
+==30038==    at 0x108611: main (main.c:3)
+==30038==  If you believe this happened as a result of a stack
+==30038==  overflow in your program&amp;#39;s main thread (unlikely but
+==30038==  possible), you can try to increase the size of the
+==30038==  main thread stack using the --main-stacksize= flag.
+==30038==  The main thread stack size used in this run was 8388608.
+==30038==
+==30038== HEAP SUMMARY:
+==30038==     in use at exit: 0 bytes in 0 blocks
+==30038==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==30038==
+==30038== All heap blocks were freed -- no leaks are possible
+==30038==
+==30038== For counts of detected and suppressed errors, rerun with: -v
+==30038== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+[1]    30038 segmentation fault (core dumped)  valgrind .&#x2F;a.out
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This may look difficult to read, but the important part is the middle section:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;==30038== Invalid read of size 1
+==30038==    at 0x108611: main (main.c:3)
+==30038==  Address 0x0 is not stack&amp;#39;d, malloc&amp;#39;d or (recently) free&amp;#39;d
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Let&#x27;s break this down line-by-line.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;Invalid read of size 1&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;The error in your program is that it tried to read one byte from memory in a way that was invalid.&lt;&#x2F;p&gt;
+&lt;p&gt;The only common one-byte type is a char, so we can be pretty sure that it was that.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;at 0x108611: main (main.c:3)&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;You can ignore &lt;code&gt;0x108611&lt;&#x2F;code&gt; -- it&#x27;s the memory address the code was at. If it&#x27;s the only piece of information present, you might&#x27;ve tried to call a string as a function or something similar. Otherwise, the other two pieces of information are much more useful.&lt;&#x2F;p&gt;
+&lt;p&gt;We know that it&#x27;s in the &lt;code&gt;main&lt;&#x2F;code&gt; function, specifically at line 3 of &lt;code&gt;main.c&lt;&#x2F;code&gt;. If a line number isn&#x27;t present, compile your program with &lt;code&gt;-g&lt;&#x2F;code&gt; and run it again.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;code&gt;Address 0x0 is not stack&#x27;d, malloc&#x27;d or (recently) free&#x27;d&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;From this, we know that the memory address we couldn&#x27;t read from was &lt;code&gt;0x0&lt;&#x2F;code&gt;. Since this is &lt;code&gt;NULL&lt;&#x2F;code&gt;, we know that we&#x27;re trying to read from a null pointer. &lt;code&gt;not stack&#x27;d, malloc&#x27;d or (recently) free&#x27;d&lt;&#x2F;code&gt; tells us that this pointer is neither a stack nor a heap pointer, which is obviously true for &lt;code&gt;NULL&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;nasm&quot;&gt;NASM&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;a href=&quot;http:&#x2F;&#x2F;nasm.us&#x2F;&quot;&gt;NASM&lt;&#x2F;a&gt; is an assembler that is often preferred to GAS (the assembler taught directly in class). It uses the more intuitive Intel syntax rather than the AT&amp;amp;T syntax used by GAS, and is versatile enough to have your entire attacklab payload be created from a single assembly file, rather than needing to stich together a bunch of &lt;code&gt;printf&lt;&#x2F;code&gt; calls with &lt;code&gt;cat&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;intel-vs-at-t-syntax&quot;&gt;Intel vs. AT&amp;amp;T Syntax&lt;&#x2F;h2&gt;
+&lt;p&gt;C version:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) {
+	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;20&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;while&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;!= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) {
+		&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;if&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;% &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) {
+			n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;&#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+		} &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;else &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;{
+			n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;= &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;3 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+		}
+	}
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;return&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;GAS&#x2F;AT&amp;amp;T Syntax version:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#a6e22e;&quot;&gt;main:
+	movl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;20&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax               &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;n = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;20&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jmp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;# while(n != &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;) {
+.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;loop&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;:
+	testl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jz &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.if_true                  #   if(n % &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;== &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;)
+.if_true:                        #   {
+    shrl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax                &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;#     n = n &#x2F; &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jmp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;#   }
+.if_false:                       #   else {
+	leal &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;(%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;rax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;rax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax  &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;#     n = &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;3 &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;:                           #   }
+	cmpl &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;$&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jne &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;loop                    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;# }
+.end:
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;dec &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax                     &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;# return n &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;ret
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Intel Syntax version:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#a6e22e;&quot;&gt;main:
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;mov &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;20&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                ; int n = 20;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jmp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                  ; while(n != 1) {
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;loop&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;:
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jz &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.if_true&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                ;   if(n % 2 == 0)
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.if_true:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                      ;   {
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;shr &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                 ;     n = n &#x2F; 2;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jmp &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                  ;   }
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.if_false:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                     ;   else {
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;lea &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, [&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;]&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt; ;     n = 3 * n + 1;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;test&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                         ;   }
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;cmp &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;jne &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;loop&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                  ; }
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;.end:
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;dec &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;                    ; return n - 1;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;ret
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;As you can see, the Intel syntax version is more C-like (&lt;code&gt;n = 20&lt;&#x2F;code&gt; becomes &lt;code&gt;mov eax, 20&lt;&#x2F;code&gt;), and has less visual noise (&lt;code&gt;20&lt;&#x2F;code&gt; is obviously a number, you don&#x27;t need to call it &lt;code&gt;$20&lt;&#x2F;code&gt;). This is especially noticeable in the &lt;code&gt;lea&lt;&#x2F;code&gt; instructions corresponding to &lt;code&gt;n = 3 * n + 1&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#75715e;&quot;&gt;; Intel
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;lea &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, [&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;*&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;+ &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;]
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#a6e22e;&quot;&gt;# &lt;&#x2F;span&gt;&lt;span style=&quot;color:#66d9ef;&quot;&gt;AT&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;&amp;amp;T
+leal &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;(%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;rax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;rax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;%&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;I really have no idea what the person who came up with &lt;code&gt;1(%rax, %rax, 2)&lt;&#x2F;code&gt; was thinking...&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;misc-tips&quot;&gt;Misc. Tips&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;argument-passing-order&quot;&gt;Argument Passing Order&lt;&#x2F;h2&gt;
+&lt;p&gt;The mnemonic to remember is:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Di&lt;&#x2F;strong&gt;ane&#x27;s&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;Si&lt;&#x2F;strong&gt;lk&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;D&lt;&#x2F;strong&gt;ress&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;C&lt;&#x2F;strong&gt;ost&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;8&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;9&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;strong&gt;$&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;From first to last, these are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;di&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;si&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;d&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;code&gt;x&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;c&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;code&gt;x&lt;&#x2F;code&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;8&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;code&gt;r&lt;&#x2F;code&gt;&lt;strong&gt;&lt;code&gt;9&lt;&#x2F;code&gt;&lt;&#x2F;strong&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;The &lt;strong&gt;$&lt;&#x2F;strong&gt; tack&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;So if we have the code:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;x&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;unsigned int &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;y&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;char&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;* &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;z&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;);
+
+&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;int &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;main&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#66d9ef;&quot;&gt;void&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;) {
+	foo(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;NULL&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;);
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;return &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;0&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;;
+}
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;This will turn into the assembly:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#a6e22e;&quot;&gt;main:&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;
+	; MOVing to a register that starts with e
+	; will clear the upper half of the r register
+	; that it corresponds to.
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;mov &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;1
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;mov &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;esi&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#ae81ff;&quot;&gt;2
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;xor &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edx&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;edx&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt; ; Or `mov edx, 0&amp;#39;
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;call &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;foo&lt;&#x2F;span&gt;&lt;span style=&quot;color:#75715e;&quot;&gt;
+
+	; return 0
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;xor &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;eax
+	&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;ret
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;</description>
+            </item>
+        
+    </channel>
+</rss>
