@@ -182,3 +182,8 @@ Since we have multiple "first-level ASTs," we use the [visitor pattern](https://
 These visitors directly assign stratification indices using [the `topological-sort` crate](https://crates.io/crates/topological-sort). It only supports `<` bounds (rather than `<=`), so a simple test for self-recursion is needed, which fails for negated self-recursion.
 
 The positivity test is then easy to define on the resulting `VerifiedQuery` AST.
+
+Conclusion
+----------
+
+At this point we have in hand a parser and validator for G1 queries, but not yet any way to evaluate them. While doing so is fairly easy (assuming we have the database contents easily accessible), it's also unusably slow.  Next time, I'll go through the [magic sets transformation](@/g1/magic-sets.md), which makes evaluation significantly more efficient.
