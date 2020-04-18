@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block endhead %}<style>article { width: calc(100% - 1.0rem); }</style>{% endblock endhead %}
+
 {% block title %}{{ page.title }} &mdash; {{ config.title }}{% endblock title %}
 
 {% block body %}
