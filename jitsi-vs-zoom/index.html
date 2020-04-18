@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Initial Impressions: Jitsi vs Zoom &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		
+	</head>
+	<body>
+		<header>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
+			<a class="subtle" href="https://github.com/remexre">GitHub</a>
+		</header>
+		<div class="spacer"></div>
+		
+<article>
+	<h1 class="title">
+		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;jitsi-vs-zoom&#x2F;">Initial Impressions: Jitsi vs Zoom</a>
+		<span class="spacer"></span>
+		<span class="meta">
+			2020-04-18</span>
+	</h1>
+	<p>I've been using Zoom via the Linux client at work. Last night, I tried out Jitsi with some friends; my review is:</p>
+<p>Pros:</p>
+<ul>
+<li>Yay, Self-Hosting! A friend installed it on a DigitalOcean droplet in ~10 minutes. (Note that he already had a domain to add DNS records to.)</li>
+<li>Nicer UI than zoom (subjectively)</li>
+<li>Works in browser with no install on PC</li>
+<li>Chat and hand-raising are easier to see in the UI</li>
+<li>Rooms have names instead of numbers, and are persistent</li>
+<li>There's a pretty cool <a href="https://remexre.xyz/jitsi-vs-zoom/blur-mode.png">blur mode</a> for privacy, but it reduces the framerate of your video drastically, even on a powerful machine</li>
+</ul>
+<p>Cons:</p>
+<ul>
+<li>Seems to require more bandwidth? didn't measure, but a friend on a slower inet connection who doesn't usually have issues with zoom was breaking up on video and audio
+<ul>
+<li>Mitigation: there's a separate low-bandwidth mode he turned on that made it easier to understand him</li>
+</ul>
+</li>
+<li>On Android, requires the app; I haven't tried zoom on mobile though, so that might be same</li>
+<li>Chat on mobile seems buggy (hard to close the UI, some things were overlapping on my device)</li>
+<li>It looks like the only permissions are &quot;is this client allowed by the server&quot; rather than &quot;is this user allowed to join this room&quot;
+<ul>
+<li>Somewhat mitigated by it autogenerating high-entropy names for rooms, e.g. GrossBasketsSuspendSeriously</li>
+</ul>
+</li>
+<li>By default, there's a watermark for guest users; this is allegedly easy to disable in the config, though.</li>
+<li>Screensharing is relatively laggy; it's fine for slides or coding, but it made streaming games to each other difficult</li>
+<li>No push-to-talk. Zoom doesn't support this on Linux either, but still a con.</li>
+</ul>
+<p>Mixed Pro/Con:</p>
+<ul>
+<li>There's a concept of &quot;the current speaker,&quot; and everyone else has their mic quieter; this is nice when some people have slightly noisy backgrounds, but it makes it hard to interrupt someone</li>
+<li>Instead of meetings you invite people to that start at a given time, there's rooms anyone with the link can join at any time; though as far as I can tell, you can configure either one to act like the other</li>
+</ul>
+<p>Overall, Jitsi seems better for the case of &quot;some friends chatting,&quot; and probably for smaller meetings.</p>
+
+</article>
+<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
+		issue-number="8" label="comments" theme="github-dark"
+		crossorigin="anonymous" async>
+	</script>
+	<div class="comments">
+		<!-- This needs to be in a div because the NoScript extension transforms noscript
+		elements into spans, while also getting rid of id and class, so applying CSS is no
+		longer possible (without awful, awful hacks). -->
+		<noscript>
+			<hr>
+			Comments (powered by
+			<a href="https://utteranc.es">utteranc.es</a>) require
+			JavaScript. However, you can comment directly on the
+			<a href="https://github.com/remexre/remexre.github.io/issues/8">GitHub issue</a>
+			that stores the comments.
+		</noscript>
+	</div>
+
+		<div class="spacer"></div>
+		
+<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+<script>
+	const anchors = new AnchorJS();
+	anchors.options.class = "icon subtle";
+	anchors.options.placement = "left";
+	anchors.add("article h1:not(.title), article h2");
+</script>
+
+	</body>
+</html>

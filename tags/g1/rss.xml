@@ -147,6 +147,8 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 &lt;p&gt;Since we have multiple &amp;quot;first-level ASTs,&amp;quot; we use the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Visitor_pattern&quot;&gt;visitor pattern&lt;&#x2F;a&gt; to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).&lt;&#x2F;p&gt;
 &lt;p&gt;These visitors directly assign stratification indices using &lt;a href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;topological-sort&quot;&gt;the &lt;code&gt;topological-sort&lt;&#x2F;code&gt; crate&lt;&#x2F;a&gt;. It only supports &lt;code&gt;&amp;lt;&lt;&#x2F;code&gt; bounds (rather than &lt;code&gt;&amp;lt;=&lt;&#x2F;code&gt;), so a simple test for self-recursion is needed, which fails for negated self-recursion.&lt;&#x2F;p&gt;
 &lt;p&gt;The positivity test is then easy to define on the resulting &lt;code&gt;VerifiedQuery&lt;&#x2F;code&gt; AST.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;At this point we have in hand a parser and validator for G1 queries, but not yet any way to evaluate them. While doing so is fairly easy (assuming we have the database contents easily accessible), it&#x27;s also unusably slow.  Next time, I&#x27;ll go through the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;magic-sets&#x2F;&quot;&gt;magic sets transformation&lt;&#x2F;a&gt;, which makes evaluation significantly more efficient.&lt;&#x2F;p&gt;
 </description>
             </item>
         
@@ -157,7 +159,7 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
                 <guid>https://remexre.xyz/g1/intro/</guid>
                 <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
 &lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m planning to implement a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;. I mainly want to do this because &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mozilla&#x2F;mentat&quot;&gt;mentat&lt;&#x2F;a&gt; became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.&lt;&#x2F;p&gt;
-&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)&lt;&#x2F;p&gt;
+&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;&quot;&gt;the Stahl project&lt;&#x2F;a&gt;.)&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;data-model&quot;&gt;Data Model&lt;&#x2F;h1&gt;
 &lt;p&gt;&lt;strong&gt;Atoms&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Names&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
@@ -184,7 +186,7 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 	! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;sameAtom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
 	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 
-?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemyName&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This query finds the names of the friends of the friends of the user represented by the atom with a UUID of &lt;code&gt;59760f34-eee0-44e2-9358-f48d46c686ee&lt;&#x2F;code&gt;, excluding that user and their direct friends. I&#x27;ll describe the language more fully in a later post.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;roadmap&quot;&gt;Roadmap&lt;&#x2F;h1&gt;
@@ -192,8 +194,9 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 &lt;p&gt;In terms of the blog posts, I&#x27;m thinking of roughly the order:&lt;&#x2F;p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;&quot;&gt;G1&#x27;s Query Language&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;The Magic Sets Transformation&lt;&#x2F;li&gt;
-&lt;li&gt;How G1 Stores Data (in-memory and on disk)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;disk&#x2F;&quot;&gt;How G1 Stores Data On Disk&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;magic-sets&#x2F;&quot;&gt;The Magic Sets Transformation&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;How G1 Stores Data In Memory&lt;&#x2F;li&gt;
 &lt;li&gt;Implementing Transactions in G1&lt;&#x2F;li&gt;
 &lt;li&gt;Ensuring Crash-Safety in G1&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;

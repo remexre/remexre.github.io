@@ -7,7 +7,49 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Sat, 08 Feb 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Initial Impressions: Jitsi vs Zoom</title>
+                <pubDate>Sat, 18 Apr 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/jitsi-vs-zoom/</link>
+                <guid>https://remexre.xyz/jitsi-vs-zoom/</guid>
+                <description>&lt;p&gt;I&#x27;ve been using Zoom via the Linux client at work. Last night, I tried out Jitsi with some friends; my review is:&lt;&#x2F;p&gt;
+&lt;p&gt;Pros:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Yay, Self-Hosting! A friend installed it on a DigitalOcean droplet in ~10 minutes. (Note that he already had a domain to add DNS records to.)&lt;&#x2F;li&gt;
+&lt;li&gt;Nicer UI than zoom (subjectively)&lt;&#x2F;li&gt;
+&lt;li&gt;Works in browser with no install on PC&lt;&#x2F;li&gt;
+&lt;li&gt;Chat and hand-raising are easier to see in the UI&lt;&#x2F;li&gt;
+&lt;li&gt;Rooms have names instead of numbers, and are persistent&lt;&#x2F;li&gt;
+&lt;li&gt;There&#x27;s a pretty cool &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;jitsi-vs-zoom&#x2F;blur-mode.png&quot;&gt;blur mode&lt;&#x2F;a&gt; for privacy, but it reduces the framerate of your video drastically, even on a powerful machine&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Cons:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Seems to require more bandwidth? didn&#x27;t measure, but a friend on a slower inet connection who doesn&#x27;t usually have issues with zoom was breaking up on video and audio
+&lt;ul&gt;
+&lt;li&gt;Mitigation: there&#x27;s a separate low-bandwidth mode he turned on that made it easier to understand him&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;On Android, requires the app; I haven&#x27;t tried zoom on mobile though, so that might be same&lt;&#x2F;li&gt;
+&lt;li&gt;Chat on mobile seems buggy (hard to close the UI, some things were overlapping on my device)&lt;&#x2F;li&gt;
+&lt;li&gt;It looks like the only permissions are &amp;quot;is this client allowed by the server&amp;quot; rather than &amp;quot;is this user allowed to join this room&amp;quot;
+&lt;ul&gt;
+&lt;li&gt;Somewhat mitigated by it autogenerating high-entropy names for rooms, e.g. GrossBasketsSuspendSeriously&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;By default, there&#x27;s a watermark for guest users; this is allegedly easy to disable in the config, though.&lt;&#x2F;li&gt;
+&lt;li&gt;Screensharing is relatively laggy; it&#x27;s fine for slides or coding, but it made streaming games to each other difficult&lt;&#x2F;li&gt;
+&lt;li&gt;No push-to-talk. Zoom doesn&#x27;t support this on Linux either, but still a con.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Mixed Pro&#x2F;Con:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;There&#x27;s a concept of &amp;quot;the current speaker,&amp;quot; and everyone else has their mic quieter; this is nice when some people have slightly noisy backgrounds, but it makes it hard to interrupt someone&lt;&#x2F;li&gt;
+&lt;li&gt;Instead of meetings you invite people to that start at a given time, there&#x27;s rooms anyone with the link can join at any time; though as far as I can tell, you can configure either one to act like the other&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Overall, Jitsi seems better for the case of &amp;quot;some friends chatting,&amp;quot; and probably for smaller meetings.&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Pinebook Pro OSDev: Hello World</title>
@@ -306,6 +348,8 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 &lt;p&gt;Since we have multiple &amp;quot;first-level ASTs,&amp;quot; we use the &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Visitor_pattern&quot;&gt;visitor pattern&lt;&#x2F;a&gt; to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).&lt;&#x2F;p&gt;
 &lt;p&gt;These visitors directly assign stratification indices using &lt;a href=&quot;https:&#x2F;&#x2F;crates.io&#x2F;crates&#x2F;topological-sort&quot;&gt;the &lt;code&gt;topological-sort&lt;&#x2F;code&gt; crate&lt;&#x2F;a&gt;. It only supports &lt;code&gt;&amp;lt;&lt;&#x2F;code&gt; bounds (rather than &lt;code&gt;&amp;lt;=&lt;&#x2F;code&gt;), so a simple test for self-recursion is needed, which fails for negated self-recursion.&lt;&#x2F;p&gt;
 &lt;p&gt;The positivity test is then easy to define on the resulting &lt;code&gt;VerifiedQuery&lt;&#x2F;code&gt; AST.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;&#x2F;h2&gt;
+&lt;p&gt;At this point we have in hand a parser and validator for G1 queries, but not yet any way to evaluate them. While doing so is fairly easy (assuming we have the database contents easily accessible), it&#x27;s also unusably slow.  Next time, I&#x27;ll go through the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;magic-sets&#x2F;&quot;&gt;magic sets transformation&lt;&#x2F;a&gt;, which makes evaluation significantly more efficient.&lt;&#x2F;p&gt;
 </description>
             </item>
         
@@ -346,7 +390,7 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
                 <guid>https://remexre.xyz/g1/intro/</guid>
                 <description>&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
 &lt;p&gt;Over the next few weeks&#x2F;months, I&#x27;m planning to implement a graph store in Rust, &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;g1&quot;&gt;G1&lt;&#x2F;a&gt;. I mainly want to do this because &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;mozilla&#x2F;mentat&quot;&gt;mentat&lt;&#x2F;a&gt; became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.&lt;&#x2F;p&gt;
-&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)&lt;&#x2F;p&gt;
+&lt;p&gt;I also want a &amp;quot;database of everything&amp;quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;&quot;&gt;the Stahl project&lt;&#x2F;a&gt;.)&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;data-model&quot;&gt;Data Model&lt;&#x2F;h1&gt;
 &lt;p&gt;&lt;strong&gt;Atoms&lt;&#x2F;strong&gt;: Atoms are the nodes of the graph. Each is represented as a UUID.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;strong&gt;Names&lt;&#x2F;strong&gt;: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.&lt;&#x2F;p&gt;
@@ -373,7 +417,7 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 	! &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;sameAtom&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(Me&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; You)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,
 	&lt;&#x2F;span&gt;&lt;span style=&quot;font-style:italic;color:#fd971f;&quot;&gt;attr&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(You&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;name&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 
-?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemy&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
+?- &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a6e22e;&quot;&gt;frenemyName&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;(&lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;59760f34-eee0-44e2-9358-f48d46c686ee&amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;,&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; YourName)&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;.
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;This query finds the names of the friends of the friends of the user represented by the atom with a UUID of &lt;code&gt;59760f34-eee0-44e2-9358-f48d46c686ee&lt;&#x2F;code&gt;, excluding that user and their direct friends. I&#x27;ll describe the language more fully in a later post.&lt;&#x2F;p&gt;
 &lt;h1 id=&quot;roadmap&quot;&gt;Roadmap&lt;&#x2F;h1&gt;
@@ -381,8 +425,9 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &amp;quot;,&amp;quot; NT
 &lt;p&gt;In terms of the blog posts, I&#x27;m thinking of roughly the order:&lt;&#x2F;p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;query-lang&#x2F;&quot;&gt;G1&#x27;s Query Language&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
-&lt;li&gt;The Magic Sets Transformation&lt;&#x2F;li&gt;
-&lt;li&gt;How G1 Stores Data (in-memory and on disk)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;disk&#x2F;&quot;&gt;How G1 Stores Data On Disk&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;magic-sets&#x2F;&quot;&gt;The Magic Sets Transformation&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;How G1 Stores Data In Memory&lt;&#x2F;li&gt;
 &lt;li&gt;Implementing Transactions in G1&lt;&#x2F;li&gt;
 &lt;li&gt;Ensuring Crash-Safety in G1&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;

@@ -156,6 +156,8 @@ commaSeparated1(NT) ::= commaSeparated1(NT) &quot;,&quot; NT
 <p>Since we have multiple &quot;first-level ASTs,&quot; we use the <a href="https://en.wikipedia.org/wiki/Visitor_pattern">visitor pattern</a> to hide some of the more annoying bits (assigning indices to names, deduplicating strings, etc.).</p>
 <p>These visitors directly assign stratification indices using <a href="https://crates.io/crates/topological-sort">the <code>topological-sort</code> crate</a>. It only supports <code>&lt;</code> bounds (rather than <code>&lt;=</code>), so a simple test for self-recursion is needed, which fails for negated self-recursion.</p>
 <p>The positivity test is then easy to define on the resulting <code>VerifiedQuery</code> AST.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>At this point we have in hand a parser and validator for G1 queries, but not yet any way to evaluate them. While doing so is fairly easy (assuming we have the database contents easily accessible), it's also unusably slow.  Next time, I'll go through the <a href="https://remexre.xyz/g1/magic-sets/">magic sets transformation</a>, which makes evaluation significantly more efficient.</p>
 
 </article>
 <script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"

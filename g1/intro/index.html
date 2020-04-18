@@ -25,7 +25,7 @@
 	</h1>
 	<h1 id="motivation">Motivation</h1>
 <p>Over the next few weeks/months, I'm planning to implement a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>. I mainly want to do this because <a href="https://github.com/mozilla/mentat">mentat</a> became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.</p>
-<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into the Stahl project -- to be written about at a later date.)</p>
+<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into <a href="https://remexre.xyz/stahl/dream/">the Stahl project</a>.)</p>
 <h1 id="data-model">Data Model</h1>
 <p><strong>Atoms</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
 <p><strong>Names</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
@@ -52,7 +52,7 @@
 	! </span><span style="color:#a6e22e;">sameAtom</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
 	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
 
-?- </span><span style="color:#a6e22e;">frenemy</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+?- </span><span style="color:#a6e22e;">frenemyName</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
 </span></pre>
 <p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>
 <h1 id="roadmap">Roadmap</h1>
@@ -60,8 +60,9 @@
 <p>In terms of the blog posts, I'm thinking of roughly the order:</p>
 <ul>
 <li><a href="https://remexre.xyz/g1/query-lang/">G1's Query Language</a></li>
-<li>The Magic Sets Transformation</li>
-<li>How G1 Stores Data (in-memory and on disk)</li>
+<li><a href="https://remexre.xyz/g1/disk/">How G1 Stores Data On Disk</a></li>
+<li><a href="https://remexre.xyz/g1/magic-sets/">The Magic Sets Transformation</a></li>
+<li>How G1 Stores Data In Memory</li>
 <li>Implementing Transactions in G1</li>
 <li>Ensuring Crash-Safety in G1</li>
 </ul>
