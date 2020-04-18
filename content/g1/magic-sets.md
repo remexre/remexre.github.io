@@ -26,8 +26,7 @@ read_db_to_stream()
 	}).await;
 ```
 
-In theory, this results in no IO wasted by continuing to traverse after we have the minimum required to satisfy the query. In practice, this wastes an enormous amount of IO -- it's reading the whole database in, every query!
-Even if a more efficient means for pulling tuples from disk were used, there would still be computation wasted: tuples are computed without regard to whether they're useful in the producing results.
+In theory, this results in no IO wasted by continuing to traverse after we have the minimum required to satisfy the query. In practice, this wastes an enormous amount of IO -- it's reading the whole database in, every query! Even if a more efficient means for pulling tuples from disk were used, there would still be computation wasted: tuples are computed without regard to whether they're useful in the producing results.
 
 The Magic Sets transformation works to ensure that only necessary tuples are computed, by creating and using specialized clauses when possible.
 
@@ -76,3 +75,5 @@ frenemyName_bf(YourName) :-
 
 ?- frenemyName_bf(YourName).
 ```
+
+TODO

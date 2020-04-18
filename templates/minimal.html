@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} &mdash; {{ config.title }}{% endblock title %}
+
+{% block body %}
+<article>
+	{{ page.content | safe }}
+</article>
+{% endblock body %}
