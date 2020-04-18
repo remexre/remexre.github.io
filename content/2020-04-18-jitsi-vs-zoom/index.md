@@ -30,6 +30,7 @@ Cons:
 -	By default, there's a watermark for guest users; this is allegedly easy to disable in the config, though.
 -	Screensharing is relatively laggy; it's fine for slides or coding, but it made streaming games to each other difficult
 -	No push-to-talk. Zoom doesn't support this on Linux either, but still a con.
+-	No virtual backgrounds. A lot of people are asking for it though, and I conjecture that the code for blur mode could probably be extended without too much pain to provide this; hopefully it'll be coming soon.
 
 Mixed Pro/Con:
 
