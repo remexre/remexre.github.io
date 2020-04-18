@@ -41,6 +41,7 @@
 &lt;li&gt;By default, there&#x27;s a watermark for guest users; this is allegedly easy to disable in the config, though.&lt;&#x2F;li&gt;
 &lt;li&gt;Screensharing is relatively laggy; it&#x27;s fine for slides or coding, but it made streaming games to each other difficult&lt;&#x2F;li&gt;
 &lt;li&gt;No push-to-talk. Zoom doesn&#x27;t support this on Linux either, but still a con.&lt;&#x2F;li&gt;
+&lt;li&gt;No virtual backgrounds. A lot of people are asking for it though, and I conjecture that the code for blur mode could probably be extended without too much pain to provide this; hopefully it&#x27;ll be coming soon.&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
 &lt;p&gt;Mixed Pro&#x2F;Con:&lt;&#x2F;p&gt;
 &lt;ul&gt;
