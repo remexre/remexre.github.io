@@ -16,7 +16,7 @@ Pros:
 -	Nicer UI than zoom (subjectively)
 -	Works in browser with no install on PC
 -	Chat and hand-raising are easier to see in the UI
--	Rooms have names instead of numbers, and are persistent
+-	Rooms have names instead of numbers
 -	There's a pretty cool [blur mode](blur-mode.png) for privacy, but it reduces the framerate of your video drastically, even on a powerful machine
 
 Cons:
