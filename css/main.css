@@ -182,6 +182,12 @@ article > h3 {
 	font-size: 1.25rem;
 }
 
+article blockquote {
+	border-left: 0.25em solid #cfcfcf;
+	margin: 0 0 0 0.25em;
+	padding: 0 0 0 0.5em;
+}
+
 article img { max-width: 100%; }
 
 article .asciicast { display: flex !important; }
