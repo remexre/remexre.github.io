@@ -7,7 +7,25 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Sat, 18 Apr 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sun, 07 Jun 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Thoughts on ML-style Modules</title>
+                <pubDate>Sun, 07 Jun 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/stahl/thoughts-on-ml-modules/</link>
+                <guid>https://remexre.xyz/stahl/thoughts-on-ml-modules/</guid>
+                <description>&lt;p&gt;I&#x27;ve been confused for a while about why SML&#x2F;OCaml advocates tout the module system as being such a useful thing. I mean, sure, it&#x27;s useful to be able to be able to talk about interfaces and relationships between types and functions, but I&#x27;d argue that typeclasses are a far more ergonomic solution to that problem.&lt;&#x2F;p&gt;
+&lt;p&gt;A claim that I&#x27;ve heard was that they enable &amp;quot;programming in the large.&amp;quot; This term seems to be a reference to &lt;a href=&quot;https:&#x2F;&#x2F;doi.org&#x2F;10.1145&#x2F;800027.808431&quot;&gt;Programming-in-the-large versus Programming-in-the-small&lt;&#x2F;a&gt;. From that paper:&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;We argue that structuring a large collection of modules to form a &amp;quot;system&amp;quot; is
+an essentially distinct and different intellectual activity from that of
+constructing the individual modules. That is, we distinguish
+programming-in-the-large from programming-in-the-small. Correspondingly, we
+believe that essentially distinct and different languages should be used for
+the two activities.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+</description>
+            </item>
         
             <item>
                 <title>Initial Impressions: Jitsi vs Zoom</title>
