@@ -1,0 +1,26 @@
+* = strongly want to take
+f = "just for fun" class
+R = recommended by other students to take
+? = need advice on whether to take
+- = will take prereq/learn more before deciding status
+
+* CSCI4203 (Computer Architecture)
+* CSCI5103 (Operating Systems)
+* CSCI5105 (Distributed Systems)
+- CSCI5204 (Advanced Computer Architecture)
+? CSCI5211 (Data Communications and Computer Networks)
+? CSCI5221 (Foundations of Advanced Networking)
+f CSCI5608 (Fundamentals of Computer Graphics II)
+f CSCI5611 (Animation & Planning in Games)
+- CSCI8101 (Advanced Operating Systems)
+- CSCI8102 (Foundations of Distributed Computing)
+* CSCI8161 (Advanced Compiler Techniques)
+- CSCI8205 (Parallel Computer Organization)
+? CSCI8701 (Overview of Database Research)
+R   EE5351 (Applied Parallel Programming)
+R MATH5251 (Error-Correcting Codes, Finite Fields, Algebraic Curves)
+? MATH8172 (Model Theory)
+? MATH8201 (General Algebra)
+- MATH8202 (General Algebra 2)
+? MATH8253 (Algebraic Geometry)
+- MATH8254 (Algebraic Geometry 2)
