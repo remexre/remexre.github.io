@@ -50,6 +50,7 @@ To take a narrative voice,
 > TODO
 
 [AgdaInstArgs]: https://agda.readthedocs.io/en/v2.5.2/language/instance-arguments.html
+[AwelonStoneSoup]: https://awelonblue.wordpress.com/2012/09/12/stone-soup-programming/
 [DeRemer75]: https://doi.org/10.1145/800027.808431
 [TedinskiWizEng]: https://www.tedinski.com/2018/03/20/wizarding-vs-engineering.html
 [WikiOusterhout]: https://en.wikipedia.org/wiki/Ousterhout%27s_dichotomy
