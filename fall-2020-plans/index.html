@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>Fall 2020 Plans &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		<style>article { width: calc(100% - 1.0rem); }</style>
+	</head>
+	<body>
+		<header>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
+		</header>
+		<div class="spacer"></div>
+		
+<article>
+	<h1 class="title">
+		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;fall-2020-plans&#x2F;">Fall 2020 Plans</a>
+		<span class="spacer"></span>
+		<span class="meta">
+			2020-09-04</span>
+	</h1>
+	<p>RIP, 5 month gap.</p>
+<h1 id="short-term-plans-next-semester">Short-Term Plans (Next Semester)</h1>
+<ul>
+<li>
+<p>Silver: Finish highlighting, maybe take a look at LSP? Perf still seems
+problematic, though if the Eclipse plugin's performance is less bad than
+Monto 3's was, seems like there's still low-hanging fruit.</p>
+</li>
+<li>
+<p>Algebraic Effects for ableC: The <a href="https://github.com/koka-lang/koka">Koka</a> group recently had a talk on
+how they compile their language (with algebraic effects) to efficient C. I
+think the same approach should work to implement an algebraic effects
+extension for ableC too.</p>
+</li>
+<li>
+<p>Stahl eliminators: In theory, I should be able to define a function that
+recurses over the definition of a datatype to be act as an
+eliminator/induction principle for it. The original levitation paper defines
+one, but their formulation doesn't work for the cleaned-up representation for
+datatypes I'm using (from A Practical Guide to Levitation). I've been toying
+with a different representation that I hope would make defining the generic
+eliminator easier, and improve the performance of a naive compiled
+implementation, so hopefully that works?</p>
+</li>
+</ul>
+<h1 id="long-term-plans-thesis">Long-Term Plans (Thesis?)</h1>
+<h2 id="algebraic-effects-in-stahl">Algebraic Effects in Stahl</h2>
+<p>I think either linear types (or one of its extensions, such as quantitative
+type theory) or /maybe/ coinduction might be able to fix the soundness issues?
+I don't know how to do the proofs of soundness for MLTT (or dependent type
+theories in general), so I'd need to learn to do those first.</p>
+<h2 id="cubical-levitation">Cubical Levitation</h2>
+<p>Even if I get the Stahl eliminators item above working, Stahl still won't have
+everything present in most HoTT/Cubical type theories. The biggest item is
+higher inductive types (HITs). I don't think these should actually be too
+incredibly hard to work in, but I don't know what soundness problems exist with
+HITs, and I should like, actually learn the mathematical model behind cubical
+type theory.</p>
+<h2 id="formally-verifying-stahlos">Formally Verifying StahlOS</h2>
+<p>The parts of the implementation that (in my opinion at least) it makes sense to
+formally verify are:</p>
+<ul>
+<li>the <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/builtins.s">builtins</a>, which I'd probably need to define axiomatically in the
+high-level semantics.</li>
+<li>the &quot;<a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/pseudobuiltins.s">pseudobuiltins</a>&quot;, which are basically just hand-compiled code that
+should be identical (or nearly so) to what the normal compiler would output.</li>
+<li>the first file of the <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/init.fth">init process</a>, which defines functions, IF,
+loops, string literals, and a lot of other stuff that would normally be built
+into the language itself.</li>
+<li>a simple <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/repl.fth">REPL</a> that runs over the serial port.</li>
+</ul>
+<p>This notably excludes the serial driver and the bootloader, but I think I'd
+like to try and verify everything from when the bootloader hands off to the
+kernel on.</p>
+<p>I think this would probably have me learning separation logic, and possibly one
+of the theorem provers with better support for calling an SMT solver (e.g.
+Isabelle, though I remember a paper about extending Coq with one).</p>
+
+</article>
+<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
+		issue-number="9" label="comments" theme="github-dark"
+		crossorigin="anonymous" async>
+	</script>
+	<div class="comments">
+		<!-- This needs to be in a div because the NoScript extension transforms noscript
+		elements into spans, while also getting rid of id and class, so applying CSS is no
+		longer possible (without awful, awful hacks). -->
+		<noscript>
+			<hr>
+			Comments (powered by
+			<a href="https://utteranc.es">utteranc.es</a>) require
+			JavaScript. However, you can comment directly on the
+			<a href="https://github.com/remexre/remexre.github.io/issues/9">GitHub issue</a>
+			that stores the comments.
+		</noscript>
+	</div>
+
+		<div class="spacer"></div>
+		
+<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+<script>
+	const anchors = new AnchorJS();
+	anchors.options.class = "icon subtle";
+	anchors.options.placement = "left";
+	anchors.add("article h1:not(.title), article h2");
+</script>
+
+	</body>
+</html>

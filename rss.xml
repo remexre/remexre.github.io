@@ -7,7 +7,72 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Sun, 07 Jun 2020 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Fri, 04 Sep 2020 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>Fall 2020 Plans</title>
+                <pubDate>Fri, 04 Sep 2020 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/fall-2020-plans/</link>
+                <guid>https://remexre.xyz/fall-2020-plans/</guid>
+                <description>&lt;p&gt;RIP, 5 month gap.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;short-term-plans-next-semester&quot;&gt;Short-Term Plans (Next Semester)&lt;&#x2F;h1&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Silver: Finish highlighting, maybe take a look at LSP? Perf still seems
+problematic, though if the Eclipse plugin&#x27;s performance is less bad than
+Monto 3&#x27;s was, seems like there&#x27;s still low-hanging fruit.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Algebraic Effects for ableC: The &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;koka-lang&#x2F;koka&quot;&gt;Koka&lt;&#x2F;a&gt; group recently had a talk on
+how they compile their language (with algebraic effects) to efficient C. I
+think the same approach should work to implement an algebraic effects
+extension for ableC too.&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;li&gt;
+&lt;p&gt;Stahl eliminators: In theory, I should be able to define a function that
+recurses over the definition of a datatype to be act as an
+eliminator&#x2F;induction principle for it. The original levitation paper defines
+one, but their formulation doesn&#x27;t work for the cleaned-up representation for
+datatypes I&#x27;m using (from A Practical Guide to Levitation). I&#x27;ve been toying
+with a different representation that I hope would make defining the generic
+eliminator easier, and improve the performance of a naive compiled
+implementation, so hopefully that works?&lt;&#x2F;p&gt;
+&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;long-term-plans-thesis&quot;&gt;Long-Term Plans (Thesis?)&lt;&#x2F;h1&gt;
+&lt;h2 id=&quot;algebraic-effects-in-stahl&quot;&gt;Algebraic Effects in Stahl&lt;&#x2F;h2&gt;
+&lt;p&gt;I think either linear types (or one of its extensions, such as quantitative
+type theory) or &#x2F;maybe&#x2F; coinduction might be able to fix the soundness issues?
+I don&#x27;t know how to do the proofs of soundness for MLTT (or dependent type
+theories in general), so I&#x27;d need to learn to do those first.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;cubical-levitation&quot;&gt;Cubical Levitation&lt;&#x2F;h2&gt;
+&lt;p&gt;Even if I get the Stahl eliminators item above working, Stahl still won&#x27;t have
+everything present in most HoTT&#x2F;Cubical type theories. The biggest item is
+higher inductive types (HITs). I don&#x27;t think these should actually be too
+incredibly hard to work in, but I don&#x27;t know what soundness problems exist with
+HITs, and I should like, actually learn the mathematical model behind cubical
+type theory.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;formally-verifying-stahlos&quot;&gt;Formally Verifying StahlOS&lt;&#x2F;h2&gt;
+&lt;p&gt;The parts of the implementation that (in my opinion at least) it makes sense to
+formally verify are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;builtins.s&quot;&gt;builtins&lt;&#x2F;a&gt;, which I&#x27;d probably need to define axiomatically in the
+high-level semantics.&lt;&#x2F;li&gt;
+&lt;li&gt;the &amp;quot;&lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;pseudobuiltins.s&quot;&gt;pseudobuiltins&lt;&#x2F;a&gt;&amp;quot;, which are basically just hand-compiled code that
+should be identical (or nearly so) to what the normal compiler would output.&lt;&#x2F;li&gt;
+&lt;li&gt;the first file of the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;init.fth&quot;&gt;init process&lt;&#x2F;a&gt;, which defines functions, IF,
+loops, string literals, and a lot of other stuff that would normally be built
+into the language itself.&lt;&#x2F;li&gt;
+&lt;li&gt;a simple &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;repl.fth&quot;&gt;REPL&lt;&#x2F;a&gt; that runs over the serial port.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;This notably excludes the serial driver and the bootloader, but I think I&#x27;d
+like to try and verify everything from when the bootloader hands off to the
+kernel on.&lt;&#x2F;p&gt;
+&lt;p&gt;I think this would probably have me learning separation logic, and possibly one
+of the theorem provers with better support for calling an SMT solver (e.g.
+Isabelle, though I remember a paper about extending Coq with one).&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>Thoughts on ML-style Modules</title>
