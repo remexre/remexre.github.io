@@ -56,14 +56,14 @@ type theory.&lt;&#x2F;p&gt;
 &lt;p&gt;The parts of the implementation that (in my opinion at least) it makes sense to
 formally verify are:&lt;&#x2F;p&gt;
 &lt;ul&gt;
-&lt;li&gt;the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;builtins.s&quot;&gt;builtins&lt;&#x2F;a&gt;, which I&#x27;d probably need to define axiomatically in the
+&lt;li&gt;the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahl&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;builtins.s&quot;&gt;builtins&lt;&#x2F;a&gt;, which I&#x27;d probably need to define axiomatically in the
 high-level semantics.&lt;&#x2F;li&gt;
-&lt;li&gt;the &amp;quot;&lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;pseudobuiltins.s&quot;&gt;pseudobuiltins&lt;&#x2F;a&gt;&amp;quot;, which are basically just hand-compiled code that
+&lt;li&gt;the &amp;quot;&lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahl&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;forth&#x2F;pseudobuiltins.s&quot;&gt;pseudobuiltins&lt;&#x2F;a&gt;&amp;quot;, which are basically just hand-compiled code that
 should be identical (or nearly so) to what the normal compiler would output.&lt;&#x2F;li&gt;
-&lt;li&gt;the first file of the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;init.fth&quot;&gt;init process&lt;&#x2F;a&gt;, which defines functions, IF,
+&lt;li&gt;the first file of the &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahl&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;init.fth&quot;&gt;init process&lt;&#x2F;a&gt;, which defines functions, IF,
 loops, string literals, and a lot of other stuff that would normally be built
 into the language itself.&lt;&#x2F;li&gt;
-&lt;li&gt;a simple &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahlos&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;repl.fth&quot;&gt;REPL&lt;&#x2F;a&gt; that runs over the serial port.&lt;&#x2F;li&gt;
+&lt;li&gt;a simple &lt;a href=&quot;https:&#x2F;&#x2F;git.sr.ht&#x2F;%7Eremexre&#x2F;stahl&#x2F;tree&#x2F;7bf2eb256167be5b7093a32d8819707d1bca1286&#x2F;src&#x2F;kernel-aarch64&#x2F;init&#x2F;repl.fth&quot;&gt;REPL&lt;&#x2F;a&gt; that runs over the serial port.&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
 &lt;p&gt;This notably excludes the serial driver and the bootloader, but I think I&#x27;d
 like to try and verify everything from when the bootloader hands off to the

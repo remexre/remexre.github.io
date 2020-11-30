@@ -65,14 +65,14 @@ type theory.</p>
 <p>The parts of the implementation that (in my opinion at least) it makes sense to
 formally verify are:</p>
 <ul>
-<li>the <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/builtins.s">builtins</a>, which I'd probably need to define axiomatically in the
+<li>the <a href="https://git.sr.ht/%7Eremexre/stahl/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/builtins.s">builtins</a>, which I'd probably need to define axiomatically in the
 high-level semantics.</li>
-<li>the &quot;<a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/pseudobuiltins.s">pseudobuiltins</a>&quot;, which are basically just hand-compiled code that
+<li>the &quot;<a href="https://git.sr.ht/%7Eremexre/stahl/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/forth/pseudobuiltins.s">pseudobuiltins</a>&quot;, which are basically just hand-compiled code that
 should be identical (or nearly so) to what the normal compiler would output.</li>
-<li>the first file of the <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/init.fth">init process</a>, which defines functions, IF,
+<li>the first file of the <a href="https://git.sr.ht/%7Eremexre/stahl/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/init.fth">init process</a>, which defines functions, IF,
 loops, string literals, and a lot of other stuff that would normally be built
 into the language itself.</li>
-<li>a simple <a href="https://git.sr.ht/%7Eremexre/stahlos/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/repl.fth">REPL</a> that runs over the serial port.</li>
+<li>a simple <a href="https://git.sr.ht/%7Eremexre/stahl/tree/7bf2eb256167be5b7093a32d8819707d1bca1286/src/kernel-aarch64/init/repl.fth">REPL</a> that runs over the serial port.</li>
 </ul>
 <p>This notably excludes the serial driver and the bootloader, but I think I'd
 like to try and verify everything from when the bootloader hands off to the
