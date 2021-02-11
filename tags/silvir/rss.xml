@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
+    <channel>
+        <title>remexre.xyz</title>
+        <link>https://remexre.xyz/</link>
+        <description></description>
+        <generator>Zola</generator>
+        <language>en</language>
+        <atom:link href="https://remexre.xyz/tags/silvir/rss.xml" rel="self" type="application/rss+xml"/>
+        <lastBuildDate>Wed, 10 Feb 2021 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>SilvIR: Introduction</title>
+                <pubDate>Wed, 10 Feb 2021 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/silvir/introduction/</link>
+                <guid>https://remexre.xyz/silvir/introduction/</guid>
+                <description>&lt;p&gt;I&#x27;m planning to work on an IR for &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;melt-umn&#x2F;silver&quot;&gt;Silver&lt;&#x2F;a&gt;, an attribute-grammar based language for compiler construction.
+This&#x27;ll probably form the core of my MS thesis work, so my advisor recommended I blog about it as a way to communicate everything properly to the rest of the group, with the side benefits of getting a head start on laying everything out for writing the actual thesis.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;background&quot;&gt;Background&lt;&#x2F;h1&gt;
+&lt;p&gt;&lt;em&gt;(If you&#x27;re a MELT group member I&#x27;m making read this, feel free to skip this section.)&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;Attribute grammars are a formalism for describing computations on trees.
+The core idea is that you describe the syntax (concrete or abstract) of your language with a grammar, and then can perform transformations on it by describing them in terms of attributes.&lt;&#x2F;p&gt;
+&lt;p&gt;Generally, attributes can be divided into two classes, &lt;em&gt;inherited&lt;&#x2F;em&gt; and &lt;em&gt;synthesized&lt;&#x2F;em&gt;.
+Inherited attributes (informally, inhs) are passed from the parent node down to its children.
+Synthesized attributes (informally, syns) are computed from inherited attributes and children, and typically are passed from children up to their parents.&lt;&#x2F;p&gt;
+&lt;p&gt;Typical examples of inherited attributes include the environment and other information about the context of a term.
+Typical examples of synthesized attributes include the type of a term, the errors present on a term and its subterms, and the translation of a term to an IR or target language.&lt;&#x2F;p&gt;
+&lt;p&gt;Silver implements one particular evaluation strategy for attribute grammars, demand-driven evaluation.
+This looks approximately like a lazy functional language, and many idioms are shared between Haskell and Silver as a result.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;motivation&quot;&gt;Motivation&lt;&#x2F;h1&gt;
+&lt;p&gt;Silver is super convenient to use for writing compilers with, but its performance is a lot worse than I wish it was.
+Furthermore, lots of optimizations that would be really nice to have implemented are pretty dang tricky.
+This is mostly for historical reasons relating to the implementation of Silver, rather than its properties or expressiveness as a language -- Silver best-practices didn&#x27;t exist when Silver was written, so it doesn&#x27;t follow them.&lt;&#x2F;p&gt;
+&lt;p&gt;Currently, Silver compiles directly (i.e., without an IR!) to a huge amount of Java source code, which is unideal from an aesthetic perspective, and makes implementing additional passes pretty tricky.&lt;&#x2F;p&gt;
+&lt;p&gt;The big goals of SilvIR as an IR for Silver are:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;To make experimenting with different translations easier (eg. &amp;quot;can we do aggressive stack allocation &lt;em&gt;a la&lt;&#x2F;em&gt; Go to reduce GC pressure?&amp;quot; &amp;quot;would &lt;a href=&quot;https:&#x2F;&#x2F;www.microsoft.com&#x2F;en-us&#x2F;research&#x2F;uploads&#x2F;prod&#x2F;2020&#x2F;11&#x2F;perceus-tr-v1.pdf&quot;&gt;Perceus&lt;&#x2F;a&gt; result in measurable speedups?&amp;quot;)&lt;&#x2F;li&gt;
+&lt;li&gt;To implement &amp;quot;linking,&amp;quot; which should drastically reduce startup time versus the Java translation&lt;&#x2F;li&gt;
+&lt;li&gt;To make writing relatively low-level optimization passes (eg. and esp. strictness analysis) easier&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Initially I plan to compile Silver to SilvIR, and write an interpreter for SilvIR with the &lt;a href=&quot;https:&#x2F;&#x2F;www.graalvm.org&#x2F;graalvm-as-a-platform&#x2F;language-implementation-framework&#x2F;&quot;&gt;Truffle Language Implementation Framework&lt;&#x2F;a&gt; in order to get access to a fast runtime and high-throughput GC easily.&lt;&#x2F;p&gt;
+&lt;p&gt;Furthermore, as &amp;quot;stretch goals,&amp;quot; it&#x27;d be kinda nice to have:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;A real profiler that can map hotspots to source language positions (via &lt;a href=&quot;https:&#x2F;&#x2F;visualvm.github.io&#x2F;graal.html&quot;&gt;VisualVM&#x27;s GraalVM support&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;A real debugger (via &lt;a href=&quot;https:&#x2F;&#x2F;www.graalvm.org&#x2F;tools&#x2F;chrome-debugger&#x2F;&quot;&gt;GraalVM&#x27;s Chrome DevTools Protocol support&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;https:&#x2F;&#x2F;www.graalvm.org&#x2F;tools&#x2F;code-coverage&#x2F;&quot;&gt;Code coverage checking&lt;&#x2F;a&gt; for seeing what dark corners of the compiler are never exercised (and for test coverage purposes in general)&lt;&#x2F;li&gt;
+&lt;li&gt;A JavaScript or WASM backend, as a step towards being able to do a non-cursed &amp;quot;try Silver in the browser&amp;quot; thing&lt;&#x2F;li&gt;
+&lt;li&gt;A formal semantics of SilvIR in Coq or Lean, to talk about the correctness of optimizations and backends&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;design-considerations&quot;&gt;Design Considerations&lt;&#x2F;h1&gt;
+&lt;p&gt;Silver supports a large number of extensions to the basic idea of attribute grammars, and supporting all of them is necessarily a goal.
+Notable extensions include:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;aspects&#x2F;&quot;&gt;Aspect productions&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;automatic-attributes&#x2F;&quot;&gt;Automatic attributes&lt;&#x2F;a&gt;, including functor and monoid attributes.&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;collections&#x2F;&quot;&gt;Collection attributes&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;ref&#x2F;stmt&#x2F;forwarding&#x2F;&quot;&gt;Forwarding&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;decorated-vs-undecorated&#x2F;#higher-order-undecorated&quot;&gt;Higher-order attributes&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;ref&#x2F;expr&#x2F;pattern-matching&#x2F;&quot;&gt;Pattern matching&lt;&#x2F;a&gt;, which has some &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;melt-umn&#x2F;silver&#x2F;issues&#x2F;387&quot;&gt;unusual consequences&lt;&#x2F;a&gt; when combined with forwarding (&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;interference&#x2F;#patterns-arent-exceptions&quot;&gt;though you shouldn&#x27;t do this anyway&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
+&lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;decorated-vs-undecorated&#x2F;#reference-decorated&quot;&gt;Reference attributes&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.&lt;&#x2F;p&gt;
+</description>
+            </item>
+        
+    </channel>
+</rss>

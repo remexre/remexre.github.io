@@ -99,7 +99,12 @@
         </url>
     
         <url>
-            <loc>https://remexre.xyz/silvir/motivation/</loc>
+            <loc>https://remexre.xyz/silvir/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/silvir/introduction/</loc>
             
                 <lastmod>2021-02-10</lastmod>
             
@@ -188,6 +193,11 @@
     
         <url>
             <loc>https://remexre.xyz/tags/rust/</loc>
+            
+        </url>
+    
+        <url>
+            <loc>https://remexre.xyz/tags/silvir/</loc>
             
         </url>
     

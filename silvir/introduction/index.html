@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>SilvIR: Introduction &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		<style>article { width: calc(100% - 1.0rem); }</style>
+	</head>
+	<body>
+		<header>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
+		</header>
+		<div class="spacer"></div>
+		
+<article>
+	<h1 class="title">
+		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;introduction&#x2F;">SilvIR: Introduction</a>
+		<span class="spacer"></span>
+		<span class="meta">
+			2021-02-10</span>
+	</h1>
+	<p>I'm planning to work on an IR for <a href="https://github.com/melt-umn/silver">Silver</a>, an attribute-grammar based language for compiler construction.
+This'll probably form the core of my MS thesis work, so my advisor recommended I blog about it as a way to communicate everything properly to the rest of the group, with the side benefits of getting a head start on laying everything out for writing the actual thesis.</p>
+<h1 id="background">Background</h1>
+<p><em>(If you're a MELT group member I'm making read this, feel free to skip this section.)</em></p>
+<p>Attribute grammars are a formalism for describing computations on trees.
+The core idea is that you describe the syntax (concrete or abstract) of your language with a grammar, and then can perform transformations on it by describing them in terms of attributes.</p>
+<p>Generally, attributes can be divided into two classes, <em>inherited</em> and <em>synthesized</em>.
+Inherited attributes (informally, inhs) are passed from the parent node down to its children.
+Synthesized attributes (informally, syns) are computed from inherited attributes and children, and typically are passed from children up to their parents.</p>
+<p>Typical examples of inherited attributes include the environment and other information about the context of a term.
+Typical examples of synthesized attributes include the type of a term, the errors present on a term and its subterms, and the translation of a term to an IR or target language.</p>
+<p>Silver implements one particular evaluation strategy for attribute grammars, demand-driven evaluation.
+This looks approximately like a lazy functional language, and many idioms are shared between Haskell and Silver as a result.</p>
+<h1 id="motivation">Motivation</h1>
+<p>Silver is super convenient to use for writing compilers with, but its performance is a lot worse than I wish it was.
+Furthermore, lots of optimizations that would be really nice to have implemented are pretty dang tricky.
+This is mostly for historical reasons relating to the implementation of Silver, rather than its properties or expressiveness as a language -- Silver best-practices didn't exist when Silver was written, so it doesn't follow them.</p>
+<p>Currently, Silver compiles directly (i.e., without an IR!) to a huge amount of Java source code, which is unideal from an aesthetic perspective, and makes implementing additional passes pretty tricky.</p>
+<p>The big goals of SilvIR as an IR for Silver are:</p>
+<ul>
+<li>To make experimenting with different translations easier (eg. &quot;can we do aggressive stack allocation <em>a la</em> Go to reduce GC pressure?&quot; &quot;would <a href="https://www.microsoft.com/en-us/research/uploads/prod/2020/11/perceus-tr-v1.pdf">Perceus</a> result in measurable speedups?&quot;)</li>
+<li>To implement &quot;linking,&quot; which should drastically reduce startup time versus the Java translation</li>
+<li>To make writing relatively low-level optimization passes (eg. and esp. strictness analysis) easier</li>
+</ul>
+<p>Initially I plan to compile Silver to SilvIR, and write an interpreter for SilvIR with the <a href="https://www.graalvm.org/graalvm-as-a-platform/language-implementation-framework/">Truffle Language Implementation Framework</a> in order to get access to a fast runtime and high-throughput GC easily.</p>
+<p>Furthermore, as &quot;stretch goals,&quot; it'd be kinda nice to have:</p>
+<ul>
+<li>A real profiler that can map hotspots to source language positions (via <a href="https://visualvm.github.io/graal.html">VisualVM's GraalVM support</a>)</li>
+<li>A real debugger (via <a href="https://www.graalvm.org/tools/chrome-debugger/">GraalVM's Chrome DevTools Protocol support</a>)</li>
+<li><a href="https://www.graalvm.org/tools/code-coverage/">Code coverage checking</a> for seeing what dark corners of the compiler are never exercised (and for test coverage purposes in general)</li>
+<li>A JavaScript or WASM backend, as a step towards being able to do a non-cursed &quot;try Silver in the browser&quot; thing</li>
+<li>A formal semantics of SilvIR in Coq or Lean, to talk about the correctness of optimizations and backends</li>
+</ul>
+<h1 id="design-considerations">Design Considerations</h1>
+<p>Silver supports a large number of extensions to the basic idea of attribute grammars, and supporting all of them is necessarily a goal.
+Notable extensions include:</p>
+<ul>
+<li><a href="http://melt.cs.umn.edu/silver/concepts/aspects/">Aspect productions</a></li>
+<li><a href="http://melt.cs.umn.edu/silver/concepts/automatic-attributes/">Automatic attributes</a>, including functor and monoid attributes.</li>
+<li><a href="http://melt.cs.umn.edu/silver/concepts/collections/">Collection attributes</a></li>
+<li><a href="http://melt.cs.umn.edu/silver/ref/stmt/forwarding/">Forwarding</a></li>
+<li><a href="http://melt.cs.umn.edu/silver/concepts/decorated-vs-undecorated/#higher-order-undecorated">Higher-order attributes</a></li>
+<li><a href="http://melt.cs.umn.edu/silver/ref/expr/pattern-matching/">Pattern matching</a>, which has some <a href="https://github.com/melt-umn/silver/issues/387">unusual consequences</a> when combined with forwarding (<a href="http://melt.cs.umn.edu/silver/concepts/interference/#patterns-arent-exceptions">though you shouldn't do this anyway</a>)</li>
+<li><a href="http://melt.cs.umn.edu/silver/concepts/decorated-vs-undecorated/#reference-decorated">Reference attributes</a></li>
+</ul>
+<p>All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.</p>
+
+</article>
+<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
+		issue-number="10" label="comments" theme="github-dark"
+		crossorigin="anonymous" async>
+	</script>
+	<div class="comments">
+		<!-- This needs to be in a div because the NoScript extension transforms noscript
+		elements into spans, while also getting rid of id and class, so applying CSS is no
+		longer possible (without awful, awful hacks). -->
+		<noscript>
+			<hr>
+			Comments (powered by
+			<a href="https://utteranc.es">utteranc.es</a>) require
+			JavaScript. However, you can comment directly on the
+			<a href="https://github.com/remexre/remexre.github.io/issues/10">GitHub issue</a>
+			that stores the comments.
+		</noscript>
+	</div>
+
+		<div class="spacer"></div>
+		
+<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+<script>
+	const anchors = new AnchorJS();
+	anchors.options.class = "icon subtle";
+	anchors.options.placement = "left";
+	anchors.add("article h1:not(.title), article h2");
+</script>
+
+	</body>
+</html>
