@@ -7,7 +7,180 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/tags/silvir/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Wed, 10 Feb 2021 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Fri, 12 Feb 2021 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>SilvIR: Definition, Draft 1</title>
+                <pubDate>Fri, 12 Feb 2021 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/silvir/definition-draft-1/</link>
+                <guid>https://remexre.xyz/silvir/definition-draft-1/</guid>
+                <description>&lt;p&gt;&lt;em&gt;This post assumes you&#x27;ve read the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;introduction&#x2F;&quot;&gt;previous one in the series&lt;&#x2F;a&gt;.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
+I&#x27;ll dump the full grammar, then go over it in pieces.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Literal ::= Int
+         |  String
+
+PrimPattern ::= varPat(LocalName)
+             |  litPat(Literal)
+             |  anyPat
+
+Pattern ::= recordPat(Map&amp;lt;String, PrimPattern&amp;gt;)
+         |  treeOrTermPat(ProdName, List&amp;lt;PrimPattern&amp;gt;)
+         |  primPat(PrimPattern)
+
+IsChildDecorable ::= childIsDecorable
+                  |  childIsntDecorable
+
+Expr ::= local(LocalName)
+      |  global(GlobalName)
+      |  lit(Literal)
+      |  let(LocalName, Expr, Expr)
+      |  letrec(Map&amp;lt;LocalName, Expr&amp;gt;, Expr)
+      |  lam(List&amp;lt;LocalName&amp;gt;, Expr)
+      |  call(Expr, List&amp;lt;Expr&amp;gt;)
+      |  error(Expr)
+      |  thunk(Expr)
+      |  force(Expr)
+      |  case(Expr, List&amp;lt;Pair&amp;lt;Pattern, Expr&amp;gt;&amp;gt;)
+      |  pureForeign(String, List&amp;lt;Expr&amp;gt;)
+      |  impureForeign(String, List&amp;lt;Expr&amp;gt;)
+      |  makeRecord(Map&amp;lt;String, Expr&amp;gt;)
+      |  getRecordMember(String, Expr)
+      |  cons(ProdName, List&amp;lt;Pair&amp;lt;IsChildDecorable, Expr&amp;gt;&amp;gt;)
+      |  getChild(Nat, Expr)
+      |  getAttr(AttrName, Expr)
+      |  setAttr(AttrName, Expr, Expr, Expr)
+      |  combineAttr(AttrName, Expr, Expr, Expr, Expr)
+      |  copyTree(Expr)
+      |  decorate(Expr, Map&amp;lt;AttrName, Expr&amp;gt;)
+      |  undecorate(Expr)
+
+Priority ::= Nat
+
+TopLevelItem ::= globalDecl(GlobalName, Expr)
+              |  prodDecl(ProdName, NTName)
+	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
+	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
+
+Program ::= Set&amp;lt;TopLevelItem&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;&lt;h2 id=&quot;literals&quot;&gt;&lt;code&gt;Literal&lt;&#x2F;code&gt;s&lt;&#x2F;h2&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Literal ::= Int
+         |  String
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Literals are used in a few places in the grammar; they are a subset of the runtime values that exist.
+Runtime values also include functions (which are constructed with &lt;code&gt;lam&lt;&#x2F;code&gt;), thunks (which are constructed with &lt;code&gt;thunk&lt;&#x2F;code&gt;), records (which are constructed with &lt;code&gt;makeRecord&lt;&#x2F;code&gt;), terms (which are constructed with &lt;code&gt;cons&lt;&#x2F;code&gt;), and trees (which are constructed with &lt;code&gt;decorate&lt;&#x2F;code&gt;).&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;patterns&quot;&gt;&lt;code&gt;Pattern&lt;&#x2F;code&gt;s&lt;&#x2F;h2&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;PrimPattern ::= varPat(LocalName)
+             |  litPat(Literal)
+             |  anyPat
+
+Pattern ::= recordPat(Map&amp;lt;String, PrimPattern&amp;gt;)
+         |  treeOrTermPat(ProdName, List&amp;lt;PrimPattern&amp;gt;)
+         |  primPat(PrimPattern)
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Patterns in SilvIR are restricted to &amp;quot;simple patterns,&amp;quot; which disallow nested patterns.
+SilvIR patterns also do &lt;em&gt;not&lt;&#x2F;em&gt; interact with forwarding in any way; there will be later discussion on this.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that &lt;code&gt;recordPat&lt;&#x2F;code&gt; implements a &amp;quot;subset match&amp;quot;; fields not present in the pattern are ignored.
+As an example, the following expression evaluates to &lt;code&gt;1&lt;&#x2F;code&gt;:&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;case(makeRecord({ &amp;quot;a&amp;quot; = lit(1), &amp;quot;b&amp;quot; = lit(2) }),
+  [ (recordPat({ &amp;quot;a&amp;quot; = varPat(&amp;quot;x&amp;quot;) }), local(&amp;quot;x&amp;quot;))
+  , (anyPat, lit(3))
+  ])
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Everything else in patterns should have fairly intuitive semantics.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exprs-and-toplevelitems-the-fp-looking-parts&quot;&gt;&lt;code&gt;Expr&lt;&#x2F;code&gt;s and &lt;code&gt;TopLevelItem&lt;&#x2F;code&gt;s, the FP-looking parts&lt;&#x2F;h2&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Expr ::= local(LocalName)
+      |  global(GlobalName)
+      |  lit(Literal)
+      |  let(LocalName, Expr, Expr)
+      |  letrec(Map&amp;lt;LocalName, Expr&amp;gt;, Expr)
+      |  lam(List&amp;lt;LocalName&amp;gt;, Expr)
+      |  call(Expr, List&amp;lt;Expr&amp;gt;)
+      |  error(Expr)
+      |  thunk(Expr)
+      |  force(Expr)
+      |  case(Expr, List&amp;lt;Pair&amp;lt;Pattern, Expr&amp;gt;&amp;gt;)
+      |  pureForeign(String, List&amp;lt;Expr&amp;gt;)
+      |  impureForeign(String, List&amp;lt;Expr&amp;gt;)
+      |  makeRecord(Map&amp;lt;String, Expr&amp;gt;)
+      |  getRecordMember(String, Expr)
+      |  ...
+
+TopLevelItem ::= globalDecl(GlobalName, Expr)
+              |  ...
+
+Program ::= Set&amp;lt;TopLevelItem&amp;gt;
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Most of what appears here should look &amp;quot;fairly normal&amp;quot; for a dynamically-typed, call-by-value, functional language with multi-argument functions and optional laziness.
+(Well, I guess I said &amp;quot;tastes like Scheme&amp;quot; in more words...)&lt;&#x2F;p&gt;
+&lt;p&gt;SilvIR is a call-by-value language, but supports thunks as a built-in type in order to support Silver&#x27;s demand-driven attribute evaluation strategy.
+Thunks are created with the &lt;code&gt;thunk&lt;&#x2F;code&gt; AST node, but also result from using &lt;code&gt;global&lt;&#x2F;code&gt; to access global variables, and &lt;code&gt;local&lt;&#x2F;code&gt; to access variables bound by a &lt;code&gt;letrec&lt;&#x2F;code&gt;.
+This is because laziness is also used to implement circular&#x2F;recursive values, which one can create with both global bindings and letrec-created bindings.&lt;&#x2F;p&gt;
+&lt;p&gt;Calls to foreign functions are split into &amp;quot;pure&amp;quot; and &amp;quot;impure&amp;quot; versions.
+Essentially, a call is considered pure if there is no non-UB way for the function to exhibit side effects, &lt;em&gt;including non-termination&lt;&#x2F;em&gt;.
+This gives the optimizer leeway to aggressively transform, duplicate, or eliminate calls to these functions.
+Examples of pure foreign functions are arithmetic operators on integers, string concatenation, and &lt;code&gt;reflect&lt;&#x2F;code&gt;.
+Examples of impure foreign functions are &lt;code&gt;genInt&lt;&#x2F;code&gt; and &lt;code&gt;error&lt;&#x2F;code&gt; (though, &lt;code&gt;error&lt;&#x2F;code&gt; has its own AST node to facilitate debugger integration).&lt;&#x2F;p&gt;
+&lt;p&gt;At program startup, a global environment is established from the top-level items.
+The expression &lt;code&gt;call(force(global(&amp;quot;main&amp;quot;)))&lt;&#x2F;code&gt; is then evaluated.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exprs-and-toplevelitems-the-attribute-grammar-specific-parts&quot;&gt;&lt;code&gt;Expr&lt;&#x2F;code&gt;s and &lt;code&gt;TopLevelItem&lt;&#x2F;code&gt;s, the attribute-grammar-specific parts&lt;&#x2F;h2&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Expr ::= ...
+      |  cons(ProdName, List&amp;lt;Pair&amp;lt;IsChildDecorable, Expr&amp;gt;&amp;gt;)
+      |  getChild(Nat, Expr)
+      |  getAttr(AttrName, Expr)
+      |  setAttr(AttrName, Expr, Expr, Expr)
+      |  combineAttr(AttrName, Expr, Expr, Expr, Expr)
+      |  copyTree(Expr)
+      |  decorate(Expr, Map&amp;lt;AttrName, Expr&amp;gt;)
+      |  undecorate(Expr)
+
+IsChildDecorable ::= childIsDecorable
+                  |  childIsntDecorable
+
+TopLevelItem ::= ...
+              |  prodDecl(ProdName, NTName)
+	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
+	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
+
+Priority ::= Nat
+&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.&lt;&#x2F;p&gt;
+&lt;p&gt;TODO: copy-paste tree vs term here&lt;&#x2F;p&gt;
+&lt;p&gt;Undecorated terms can be constructed with the &lt;code&gt;cons&lt;&#x2F;code&gt; expression.
+It takes the name of the production the value belongs to (sometimes referred to as the tag) and a list of arguments, as well as a flag describing whether the child is decorable.
+This flag (formerly, misleadingly, known as &lt;code&gt;IsChildDeclaredDecorated&lt;&#x2F;code&gt;) determines whether the child will be traversed at tree-construction time.
+This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via &lt;code&gt;prodDecl&lt;&#x2F;code&gt; instead.
+Most nonterminal types should be declared &lt;code&gt;childIsDecorable&lt;&#x2F;code&gt;.
+Examples of types for which this should be &lt;code&gt;childIsntDecorable&lt;&#x2F;code&gt; are &lt;code&gt;Integer&lt;&#x2F;code&gt; (since integers aren&#x27;t nonterminal types), &lt;code&gt;Decorated Foo&lt;&#x2F;code&gt; (since references to other trees shouldn&#x27;t be redecorated), and skolem variables (since these may be instantiated to one of the former).
+If the exact semantics of this are unclear, they should hopefully become more clear later, when the execution semantics are gone over.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;getChild&lt;&#x2F;code&gt; simply reads a child from a term or tree.
+It&#x27;s UB to read a child that doesn&#x27;t exist, etc, etc.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;getAttr&lt;&#x2F;code&gt; reads an attribute off of a tree.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;setAttr&lt;&#x2F;code&gt; and &lt;code&gt;combineAttr&lt;&#x2F;code&gt; are used at tree-construction time to write attributes to a tree.
+&lt;code&gt;setAttr(attr, tree, value, next)&lt;&#x2F;code&gt; evaluates to the same value &lt;code&gt;next&lt;&#x2F;code&gt; evaluates to, after performing the side effect of setting the attribute &lt;code&gt;attr&lt;&#x2F;code&gt; on the tree &lt;code&gt;tree&lt;&#x2F;code&gt; to the value that results from evaluating &lt;code&gt;value&lt;&#x2F;code&gt;.
+This possibly replaces a previous value of the attribute.
+&lt;code&gt;combineAttr(attr, tree, value, func, next)&lt;&#x2F;code&gt; is similar, and is used to implement collection attributes.
+If &lt;code&gt;attr&lt;&#x2F;code&gt; was already set on &lt;code&gt;tree&lt;&#x2F;code&gt;, it sets it to the result of evaluating &lt;code&gt;call(func, getAttr(attr, tree), value)&lt;&#x2F;code&gt;.
+If &lt;code&gt;attr&lt;&#x2F;code&gt; was not already set on &lt;code&gt;tree&lt;&#x2F;code&gt;, it sets it to the result of evaluating &lt;code&gt;value&lt;&#x2F;code&gt;.
+This whole &lt;code&gt;combineAttr&lt;&#x2F;code&gt; expression then evalutes to the result of evaluating &lt;code&gt;next&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;copyTree&lt;&#x2F;code&gt; simply copies a tree, so mutations can be made on it without disturbing the original.
+This copy is deep in the decorable-term-structure of the tree, but shallow in the attributes and in the non-decorable-children.
+(This isn&#x27;t needed by current Silver semantics, but will come in handy for Lucas&#x27; redecoration work, and is easy.)&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;undecorate&lt;&#x2F;code&gt; returns a copy of a tree as a term, stripping off all attributes on decorable children.
+This copy is deep in the decorable-term-structure of the tree, but shallow in the non-decorable-children.&lt;&#x2F;p&gt;
+&lt;p&gt;All these pieces come together with &lt;code&gt;decorate&lt;&#x2F;code&gt;.
+TODO Finish`&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;remarks&quot;&gt;Remarks&lt;&#x2F;h2&gt;
+&lt;p&gt;For a worked-through example of a simple grammar translated to this IR and run, see &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;arithmetic-example.html&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;TODO mention annotations lol&lt;&#x2F;p&gt;
+</description>
+            </item>
         
             <item>
                 <title>SilvIR: Introduction</title>
@@ -59,7 +232,8 @@ Notable extensions include:&lt;&#x2F;p&gt;
 &lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;ref&#x2F;expr&#x2F;pattern-matching&#x2F;&quot;&gt;Pattern matching&lt;&#x2F;a&gt;, which has some &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;melt-umn&#x2F;silver&#x2F;issues&#x2F;387&quot;&gt;unusual consequences&lt;&#x2F;a&gt; when combined with forwarding (&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;interference&#x2F;#patterns-arent-exceptions&quot;&gt;though you shouldn&#x27;t do this anyway&lt;&#x2F;a&gt;)&lt;&#x2F;li&gt;
 &lt;li&gt;&lt;a href=&quot;http:&#x2F;&#x2F;melt.cs.umn.edu&#x2F;silver&#x2F;concepts&#x2F;decorated-vs-undecorated&#x2F;#reference-decorated&quot;&gt;Reference attributes&lt;&#x2F;a&gt;&lt;&#x2F;li&gt;
 &lt;&#x2F;ul&gt;
-&lt;p&gt;All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.&lt;&#x2F;p&gt;
+&lt;p&gt;All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.
+In the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;&quot;&gt;next post&lt;&#x2F;a&gt;, we&#x27;ll look at (the current draft of) the actual definition of the IR.&lt;&#x2F;p&gt;
 </description>
             </item>
         

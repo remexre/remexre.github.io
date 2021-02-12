@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>SilvIR: Definition, Draft 1 &mdash; remexre.xyz</title>
+		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
+		<style>article { width: calc(100% - 1.0rem); }</style>
+	</head>
+	<body>
+		<header>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
+			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
+		</header>
+		<div class="spacer"></div>
+		
+<article>
+	<h1 class="title">
+		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;">SilvIR: Definition, Draft 1</a>
+		<span class="spacer"></span>
+		<span class="meta">
+			Draft</span>
+	</h1>
+	<p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/introduction/">previous one in the series</a>.</em></p>
+<p>As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
+I'll dump the full grammar, then go over it in pieces.</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">Literal ::= Int
+         |  String
+
+PrimPattern ::= varPat(LocalName)
+             |  litPat(Literal)
+             |  anyPat
+
+Pattern ::= recordPat(Map&lt;String, PrimPattern&gt;)
+         |  treeOrTermPat(ProdName, List&lt;PrimPattern&gt;)
+         |  primPat(PrimPattern)
+
+IsChildDecorable ::= childIsDecorable
+                  |  childIsntDecorable
+
+Expr ::= local(LocalName)
+      |  global(GlobalName)
+      |  lit(Literal)
+      |  let(LocalName, Expr, Expr)
+      |  letrec(Map&lt;LocalName, Expr&gt;, Expr)
+      |  lam(List&lt;LocalName&gt;, Expr)
+      |  call(Expr, List&lt;Expr&gt;)
+      |  error(Expr)
+      |  thunk(Expr)
+      |  force(Expr)
+      |  case(Expr, List&lt;Pair&lt;Pattern, Expr&gt;&gt;)
+      |  pureForeign(String, List&lt;Expr&gt;)
+      |  impureForeign(String, List&lt;Expr&gt;)
+      |  makeRecord(Map&lt;String, Expr&gt;)
+      |  getRecordMember(String, Expr)
+      |  cons(ProdName, List&lt;Pair&lt;IsChildDecorable, Expr&gt;&gt;)
+      |  getChild(Nat, Expr)
+      |  getAttr(AttrName, Expr)
+      |  setAttr(AttrName, Expr, Expr, Expr)
+      |  combineAttr(AttrName, Expr, Expr, Expr, Expr)
+      |  copyTree(Expr)
+      |  decorate(Expr, Map&lt;AttrName, Expr&gt;)
+      |  undecorate(Expr)
+
+Priority ::= Nat
+
+TopLevelItem ::= globalDecl(GlobalName, Expr)
+              |  prodDecl(ProdName, NTName)
+	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
+	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
+
+Program ::= Set&lt;TopLevelItem&gt;
+</span></pre><h2 id="literals"><code>Literal</code>s</h2>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">Literal ::= Int
+         |  String
+</span></pre>
+<p>Literals are used in a few places in the grammar; they are a subset of the runtime values that exist.
+Runtime values also include functions (which are constructed with <code>lam</code>), thunks (which are constructed with <code>thunk</code>), records (which are constructed with <code>makeRecord</code>), terms (which are constructed with <code>cons</code>), and trees (which are constructed with <code>decorate</code>).</p>
+<h2 id="patterns"><code>Pattern</code>s</h2>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">PrimPattern ::= varPat(LocalName)
+             |  litPat(Literal)
+             |  anyPat
+
+Pattern ::= recordPat(Map&lt;String, PrimPattern&gt;)
+         |  treeOrTermPat(ProdName, List&lt;PrimPattern&gt;)
+         |  primPat(PrimPattern)
+</span></pre>
+<p>Patterns in SilvIR are restricted to &quot;simple patterns,&quot; which disallow nested patterns.
+SilvIR patterns also do <em>not</em> interact with forwarding in any way; there will be later discussion on this.</p>
+<p>Note that <code>recordPat</code> implements a &quot;subset match&quot;; fields not present in the pattern are ignored.
+As an example, the following expression evaluates to <code>1</code>:</p>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">case(makeRecord({ &quot;a&quot; = lit(1), &quot;b&quot; = lit(2) }),
+  [ (recordPat({ &quot;a&quot; = varPat(&quot;x&quot;) }), local(&quot;x&quot;))
+  , (anyPat, lit(3))
+  ])
+</span></pre>
+<p>Everything else in patterns should have fairly intuitive semantics.</p>
+<h2 id="exprs-and-toplevelitems-the-fp-looking-parts"><code>Expr</code>s and <code>TopLevelItem</code>s, the FP-looking parts</h2>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">Expr ::= local(LocalName)
+      |  global(GlobalName)
+      |  lit(Literal)
+      |  let(LocalName, Expr, Expr)
+      |  letrec(Map&lt;LocalName, Expr&gt;, Expr)
+      |  lam(List&lt;LocalName&gt;, Expr)
+      |  call(Expr, List&lt;Expr&gt;)
+      |  error(Expr)
+      |  thunk(Expr)
+      |  force(Expr)
+      |  case(Expr, List&lt;Pair&lt;Pattern, Expr&gt;&gt;)
+      |  pureForeign(String, List&lt;Expr&gt;)
+      |  impureForeign(String, List&lt;Expr&gt;)
+      |  makeRecord(Map&lt;String, Expr&gt;)
+      |  getRecordMember(String, Expr)
+      |  ...
+
+TopLevelItem ::= globalDecl(GlobalName, Expr)
+              |  ...
+
+Program ::= Set&lt;TopLevelItem&gt;
+</span></pre>
+<p>Most of what appears here should look &quot;fairly normal&quot; for a dynamically-typed, call-by-value, functional language with multi-argument functions and optional laziness.
+(Well, I guess I said &quot;tastes like Scheme&quot; in more words...)</p>
+<p>SilvIR is a call-by-value language, but supports thunks as a built-in type in order to support Silver's demand-driven attribute evaluation strategy.
+Thunks are created with the <code>thunk</code> AST node, but also result from using <code>global</code> to access global variables, and <code>local</code> to access variables bound by a <code>letrec</code>.
+This is because laziness is also used to implement circular/recursive values, which one can create with both global bindings and letrec-created bindings.</p>
+<p>Calls to foreign functions are split into &quot;pure&quot; and &quot;impure&quot; versions.
+Essentially, a call is considered pure if there is no non-UB way for the function to exhibit side effects, <em>including non-termination</em>.
+This gives the optimizer leeway to aggressively transform, duplicate, or eliminate calls to these functions.
+Examples of pure foreign functions are arithmetic operators on integers, string concatenation, and <code>reflect</code>.
+Examples of impure foreign functions are <code>genInt</code> and <code>error</code> (though, <code>error</code> has its own AST node to facilitate debugger integration).</p>
+<p>At program startup, a global environment is established from the top-level items.
+The expression <code>call(force(global(&quot;main&quot;)))</code> is then evaluated.</p>
+<h2 id="exprs-and-toplevelitems-the-attribute-grammar-specific-parts"><code>Expr</code>s and <code>TopLevelItem</code>s, the attribute-grammar-specific parts</h2>
+<pre style="background-color:#272822;">
+<span style="color:#f8f8f2;">Expr ::= ...
+      |  cons(ProdName, List&lt;Pair&lt;IsChildDecorable, Expr&gt;&gt;)
+      |  getChild(Nat, Expr)
+      |  getAttr(AttrName, Expr)
+      |  setAttr(AttrName, Expr, Expr, Expr)
+      |  combineAttr(AttrName, Expr, Expr, Expr, Expr)
+      |  copyTree(Expr)
+      |  decorate(Expr, Map&lt;AttrName, Expr&gt;)
+      |  undecorate(Expr)
+
+IsChildDecorable ::= childIsDecorable
+                  |  childIsntDecorable
+
+TopLevelItem ::= ...
+              |  prodDecl(ProdName, NTName)
+	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
+	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
+
+Priority ::= Nat
+</span></pre>
+<p>The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.</p>
+<p>TODO: copy-paste tree vs term here</p>
+<p>Undecorated terms can be constructed with the <code>cons</code> expression.
+It takes the name of the production the value belongs to (sometimes referred to as the tag) and a list of arguments, as well as a flag describing whether the child is decorable.
+This flag (formerly, misleadingly, known as <code>IsChildDeclaredDecorated</code>) determines whether the child will be traversed at tree-construction time.
+This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via <code>prodDecl</code> instead.
+Most nonterminal types should be declared <code>childIsDecorable</code>.
+Examples of types for which this should be <code>childIsntDecorable</code> are <code>Integer</code> (since integers aren't nonterminal types), <code>Decorated Foo</code> (since references to other trees shouldn't be redecorated), and skolem variables (since these may be instantiated to one of the former).
+If the exact semantics of this are unclear, they should hopefully become more clear later, when the execution semantics are gone over.</p>
+<p><code>getChild</code> simply reads a child from a term or tree.
+It's UB to read a child that doesn't exist, etc, etc.</p>
+<p><code>getAttr</code> reads an attribute off of a tree.</p>
+<p><code>setAttr</code> and <code>combineAttr</code> are used at tree-construction time to write attributes to a tree.
+<code>setAttr(attr, tree, value, next)</code> evaluates to the same value <code>next</code> evaluates to, after performing the side effect of setting the attribute <code>attr</code> on the tree <code>tree</code> to the value that results from evaluating <code>value</code>.
+This possibly replaces a previous value of the attribute.
+<code>combineAttr(attr, tree, value, func, next)</code> is similar, and is used to implement collection attributes.
+If <code>attr</code> was already set on <code>tree</code>, it sets it to the result of evaluating <code>call(func, getAttr(attr, tree), value)</code>.
+If <code>attr</code> was not already set on <code>tree</code>, it sets it to the result of evaluating <code>value</code>.
+This whole <code>combineAttr</code> expression then evalutes to the result of evaluating <code>next</code>.</p>
+<p><code>copyTree</code> simply copies a tree, so mutations can be made on it without disturbing the original.
+This copy is deep in the decorable-term-structure of the tree, but shallow in the attributes and in the non-decorable-children.
+(This isn't needed by current Silver semantics, but will come in handy for Lucas' redecoration work, and is easy.)</p>
+<p><code>undecorate</code> returns a copy of a tree as a term, stripping off all attributes on decorable children.
+This copy is deep in the decorable-term-structure of the tree, but shallow in the non-decorable-children.</p>
+<p>All these pieces come together with <code>decorate</code>.
+TODO Finish`</p>
+<h2 id="remarks">Remarks</h2>
+<p>For a worked-through example of a simple grammar translated to this IR and run, see <a href="https://remexre.xyz/silvir/arithmetic-example.html">here</a>.</p>
+<p>TODO mention annotations lol</p>
+
+</article>
+<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
+		issue-number="11" label="comments" theme="github-dark"
+		crossorigin="anonymous" async>
+	</script>
+	<div class="comments">
+		<!-- This needs to be in a div because the NoScript extension transforms noscript
+		elements into spans, while also getting rid of id and class, so applying CSS is no
+		longer possible (without awful, awful hacks). -->
+		<noscript>
+			<hr>
+			Comments (powered by
+			<a href="https://utteranc.es">utteranc.es</a>) require
+			JavaScript. However, you can comment directly on the
+			<a href="https://github.com/remexre/remexre.github.io/issues/11">GitHub issue</a>
+			that stores the comments.
+		</noscript>
+	</div>
+
+		<div class="spacer"></div>
+		
+<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
+<script>
+	const anchors = new AnchorJS();
+	anchors.options.class = "icon subtle";
+	anchors.options.placement = "left";
+	anchors.add("article h1:not(.title), article h2");
+</script>
+
+	</body>
+</html>
