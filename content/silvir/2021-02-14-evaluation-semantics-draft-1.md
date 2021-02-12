@@ -2,6 +2,9 @@
 title = "SilvIR: Evaluation Semantics, Draft 1"
 draft = true
 
+[render_options]
+quotes_to_code = "haskell"
+
 [taxonomies]
 tags = ["silvir"]
 
@@ -17,4 +20,5 @@ This post might have a higher "difficulty of read to usefulness of reading" rati
 I'll try to precisely specify the evaluation semantics of the IR defined in the previous draft here.
 This 
 
-> module Language.SilvIR
+> module Main where
+> main = putStrLn "Hello, world!"

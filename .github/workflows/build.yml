@@ -11,7 +11,7 @@ jobs:
     - name: Install GraphViz
       run: sudo apt-get install graphviz
     - name: Install Zola
-      run: curl -LO https://github.com/remexre/zola/releases/download/remexre-fork-pr-883-v2/zola
+      run: curl -LO https://github.com/remexre/zola/releases/download/fork-v3/zola
     - name: chmod Zola
       run: chmod +x zola
     - name: Run Zola
