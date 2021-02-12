@@ -56,7 +56,7 @@ Expr ::= local(LocalName)
       |  decorate(Expr, Map&amp;lt;AttrName, Expr&amp;gt;)
       |  undecorate(Expr)
 
-Priority ::= Nat
+Priority ::= Int
 
 TopLevelItem ::= globalDecl(GlobalName, Expr)
               |  prodDecl(ProdName, NTName)
@@ -148,15 +148,16 @@ TopLevelItem ::= ...
 	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
 	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
 
-Priority ::= Nat
+Priority ::= Int
 &lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;
 &lt;p&gt;The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.&lt;&#x2F;p&gt;
-&lt;p&gt;TODO: copy-paste tree vs term here&lt;&#x2F;p&gt;
+&lt;p&gt;We refer to data values that immediately result from applying a constructor to arguments as terms (often as &lt;strong&gt;undecorated terms&lt;&#x2F;strong&gt; for clarity).
+We call the results of the process in which inherited attributes are applied and attribute thunks are created trees (often as &lt;strong&gt;decorated trees&lt;&#x2F;strong&gt; for clarity).&lt;&#x2F;p&gt;
 &lt;p&gt;Undecorated terms can be constructed with the &lt;code&gt;cons&lt;&#x2F;code&gt; expression.
 It takes the name of the production the value belongs to (sometimes referred to as the tag) and a list of arguments, as well as a flag describing whether the child is decorable.
 This flag (formerly, misleadingly, known as &lt;code&gt;IsChildDeclaredDecorated&lt;&#x2F;code&gt;) determines whether the child will be traversed at tree-construction time.
-This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via &lt;code&gt;prodDecl&lt;&#x2F;code&gt; instead.
-Most nonterminal types should be declared &lt;code&gt;childIsDecorable&lt;&#x2F;code&gt;.
+This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via &lt;code&gt;prodDecl&lt;&#x2F;code&gt; instead.&lt;&#x2F;p&gt;
+&lt;p&gt;Most children of nonterminal type should be declared &lt;code&gt;childIsDecorable&lt;&#x2F;code&gt;.
 Examples of types for which this should be &lt;code&gt;childIsntDecorable&lt;&#x2F;code&gt; are &lt;code&gt;Integer&lt;&#x2F;code&gt; (since integers aren&#x27;t nonterminal types), &lt;code&gt;Decorated Foo&lt;&#x2F;code&gt; (since references to other trees shouldn&#x27;t be redecorated), and skolem variables (since these may be instantiated to one of the former).
 If the exact semantics of this are unclear, they should hopefully become more clear later, when the execution semantics are gone over.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;getChild&lt;&#x2F;code&gt; simply reads a child from a term or tree.
@@ -164,8 +165,8 @@ It&#x27;s UB to read a child that doesn&#x27;t exist, etc, etc.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;getAttr&lt;&#x2F;code&gt; reads an attribute off of a tree.&lt;&#x2F;p&gt;
 &lt;p&gt;&lt;code&gt;setAttr&lt;&#x2F;code&gt; and &lt;code&gt;combineAttr&lt;&#x2F;code&gt; are used at tree-construction time to write attributes to a tree.
 &lt;code&gt;setAttr(attr, tree, value, next)&lt;&#x2F;code&gt; evaluates to the same value &lt;code&gt;next&lt;&#x2F;code&gt; evaluates to, after performing the side effect of setting the attribute &lt;code&gt;attr&lt;&#x2F;code&gt; on the tree &lt;code&gt;tree&lt;&#x2F;code&gt; to the value that results from evaluating &lt;code&gt;value&lt;&#x2F;code&gt;.
-This possibly replaces a previous value of the attribute.
-&lt;code&gt;combineAttr(attr, tree, value, func, next)&lt;&#x2F;code&gt; is similar, and is used to implement collection attributes.
+This possibly replaces a previous value of the attribute.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;code&gt;combineAttr(attr, tree, value, func, next)&lt;&#x2F;code&gt; is similar, and is used to implement collection attributes.
 If &lt;code&gt;attr&lt;&#x2F;code&gt; was already set on &lt;code&gt;tree&lt;&#x2F;code&gt;, it sets it to the result of evaluating &lt;code&gt;call(func, getAttr(attr, tree), value)&lt;&#x2F;code&gt;.
 If &lt;code&gt;attr&lt;&#x2F;code&gt; was not already set on &lt;code&gt;tree&lt;&#x2F;code&gt;, it sets it to the result of evaluating &lt;code&gt;value&lt;&#x2F;code&gt;.
 This whole &lt;code&gt;combineAttr&lt;&#x2F;code&gt; expression then evalutes to the result of evaluating &lt;code&gt;next&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
@@ -175,10 +176,22 @@ This copy is deep in the decorable-term-structure of the tree, but shallow in th
 &lt;p&gt;&lt;code&gt;undecorate&lt;&#x2F;code&gt; returns a copy of a tree as a term, stripping off all attributes on decorable children.
 This copy is deep in the decorable-term-structure of the tree, but shallow in the non-decorable-children.&lt;&#x2F;p&gt;
 &lt;p&gt;All these pieces come together with &lt;code&gt;decorate&lt;&#x2F;code&gt;.
-TODO Finish`&lt;&#x2F;p&gt;
+&lt;code&gt;decorate&lt;&#x2F;code&gt;&#x27;s first argument is a term to perform tree-construction on.
+First, a tree is allocated, mirroring the structure of the term, replacing decorable children with freshly allocated trees.
+Then, tree-construction proceeds; for each node:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Collect the production bodies that apply to this term, and sort them by priority, low to high.
+This is every &lt;code&gt;prodBodyDecl&lt;&#x2F;code&gt; that has the same &lt;code&gt;ProdName&lt;&#x2F;code&gt; as the term, as well as every &lt;code&gt;defaultProdBodyDecl&lt;&#x2F;code&gt; that has the same &lt;code&gt;NTName&lt;&#x2F;code&gt; as the one associated to the term by the &lt;code&gt;prodDecl&lt;&#x2F;code&gt; that declared the production.&lt;&#x2F;li&gt;
+&lt;li&gt;Run every production body that has a negative priority in a priority-respecting order.
+Production bodies should be structured essentially as the identity function, but with side effects via &lt;code&gt;setAttr&lt;&#x2F;code&gt; and &lt;code&gt;combineAttr&lt;&#x2F;code&gt;.&lt;&#x2F;li&gt;
+&lt;li&gt;Run this process for each decorable child, from lowest index to highest.&lt;&#x2F;li&gt;
+&lt;li&gt;Run every production body that has a non-negative priority in a priority-respecting order.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Priorities allow for default productions and the various automatic attributes to be implemented correctly, and negative priorities allow for the optimization where inherited attributes are passed down strictly, avoiding a traversal back up the tree when they&#x27;re demanded.&lt;&#x2F;p&gt;
 &lt;h2 id=&quot;remarks&quot;&gt;Remarks&lt;&#x2F;h2&gt;
-&lt;p&gt;For a worked-through example of a simple grammar translated to this IR and run, see &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;arithmetic-example.html&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
-&lt;p&gt;TODO mention annotations lol&lt;&#x2F;p&gt;
+&lt;p&gt;For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;arithmetic-example.html&quot;&gt;here&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Annotations aren&#x27;t covered here; I think they can be transformed to children?
+In the next post, we&#x27;ll look at the execution semantics of this IR in more depth.&lt;&#x2F;p&gt;
 </description>
             </item>
         

@@ -21,7 +21,7 @@
 		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;">SilvIR: Definition, Draft 1</a>
 		<span class="spacer"></span>
 		<span class="meta">
-			Draft</span>
+			2021-02-12</span>
 	</h1>
 	<p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/introduction/">previous one in the series</a>.</em></p>
 <p>As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
@@ -65,7 +65,7 @@ Expr ::= local(LocalName)
       |  decorate(Expr, Map&lt;AttrName, Expr&gt;)
       |  undecorate(Expr)
 
-Priority ::= Nat
+Priority ::= Int
 
 TopLevelItem ::= globalDecl(GlobalName, Expr)
               |  prodDecl(ProdName, NTName)
@@ -157,15 +157,16 @@ TopLevelItem ::= ...
 	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
 	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
 
-Priority ::= Nat
+Priority ::= Int
 </span></pre>
 <p>The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.</p>
-<p>TODO: copy-paste tree vs term here</p>
+<p>We refer to data values that immediately result from applying a constructor to arguments as terms (often as <strong>undecorated terms</strong> for clarity).
+We call the results of the process in which inherited attributes are applied and attribute thunks are created trees (often as <strong>decorated trees</strong> for clarity).</p>
 <p>Undecorated terms can be constructed with the <code>cons</code> expression.
 It takes the name of the production the value belongs to (sometimes referred to as the tag) and a list of arguments, as well as a flag describing whether the child is decorable.
 This flag (formerly, misleadingly, known as <code>IsChildDeclaredDecorated</code>) determines whether the child will be traversed at tree-construction time.
-This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via <code>prodDecl</code> instead.
-Most nonterminal types should be declared <code>childIsDecorable</code>.
+This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via <code>prodDecl</code> instead.</p>
+<p>Most children of nonterminal type should be declared <code>childIsDecorable</code>.
 Examples of types for which this should be <code>childIsntDecorable</code> are <code>Integer</code> (since integers aren't nonterminal types), <code>Decorated Foo</code> (since references to other trees shouldn't be redecorated), and skolem variables (since these may be instantiated to one of the former).
 If the exact semantics of this are unclear, they should hopefully become more clear later, when the execution semantics are gone over.</p>
 <p><code>getChild</code> simply reads a child from a term or tree.
@@ -173,8 +174,8 @@ It's UB to read a child that doesn't exist, etc, etc.</p>
 <p><code>getAttr</code> reads an attribute off of a tree.</p>
 <p><code>setAttr</code> and <code>combineAttr</code> are used at tree-construction time to write attributes to a tree.
 <code>setAttr(attr, tree, value, next)</code> evaluates to the same value <code>next</code> evaluates to, after performing the side effect of setting the attribute <code>attr</code> on the tree <code>tree</code> to the value that results from evaluating <code>value</code>.
-This possibly replaces a previous value of the attribute.
-<code>combineAttr(attr, tree, value, func, next)</code> is similar, and is used to implement collection attributes.
+This possibly replaces a previous value of the attribute.</p>
+<p><code>combineAttr(attr, tree, value, func, next)</code> is similar, and is used to implement collection attributes.
 If <code>attr</code> was already set on <code>tree</code>, it sets it to the result of evaluating <code>call(func, getAttr(attr, tree), value)</code>.
 If <code>attr</code> was not already set on <code>tree</code>, it sets it to the result of evaluating <code>value</code>.
 This whole <code>combineAttr</code> expression then evalutes to the result of evaluating <code>next</code>.</p>
@@ -184,10 +185,22 @@ This copy is deep in the decorable-term-structure of the tree, but shallow in th
 <p><code>undecorate</code> returns a copy of a tree as a term, stripping off all attributes on decorable children.
 This copy is deep in the decorable-term-structure of the tree, but shallow in the non-decorable-children.</p>
 <p>All these pieces come together with <code>decorate</code>.
-TODO Finish`</p>
+<code>decorate</code>'s first argument is a term to perform tree-construction on.
+First, a tree is allocated, mirroring the structure of the term, replacing decorable children with freshly allocated trees.
+Then, tree-construction proceeds; for each node:</p>
+<ul>
+<li>Collect the production bodies that apply to this term, and sort them by priority, low to high.
+This is every <code>prodBodyDecl</code> that has the same <code>ProdName</code> as the term, as well as every <code>defaultProdBodyDecl</code> that has the same <code>NTName</code> as the one associated to the term by the <code>prodDecl</code> that declared the production.</li>
+<li>Run every production body that has a negative priority in a priority-respecting order.
+Production bodies should be structured essentially as the identity function, but with side effects via <code>setAttr</code> and <code>combineAttr</code>.</li>
+<li>Run this process for each decorable child, from lowest index to highest.</li>
+<li>Run every production body that has a non-negative priority in a priority-respecting order.</li>
+</ul>
+<p>Priorities allow for default productions and the various automatic attributes to be implemented correctly, and negative priorities allow for the optimization where inherited attributes are passed down strictly, avoiding a traversal back up the tree when they're demanded.</p>
 <h2 id="remarks">Remarks</h2>
-<p>For a worked-through example of a simple grammar translated to this IR and run, see <a href="https://remexre.xyz/silvir/arithmetic-example.html">here</a>.</p>
-<p>TODO mention annotations lol</p>
+<p>For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see <a href="https://remexre.xyz/silvir/arithmetic-example.html">here</a>.</p>
+<p>Annotations aren't covered here; I think they can be transformed to children?
+In the next post, we'll look at the execution semantics of this IR in more depth.</p>
 
 </article>
 <script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
