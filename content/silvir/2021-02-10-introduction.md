@@ -11,7 +11,8 @@ comment_issue = 10
 I'm planning to work on an IR for [Silver](https://github.com/melt-umn/silver), an attribute-grammar based language for compiler construction.
 This'll probably form the core of my MS thesis work, so my advisor recommended I blog about it as a way to communicate everything properly to the rest of the group, with the side benefits of getting a head start on laying everything out for writing the actual thesis.
 
-# Background
+Background
+==========
 
 *(If you're a MELT group member I'm making read this, feel free to skip this section.)*
 
@@ -28,7 +29,8 @@ Typical examples of synthesized attributes include the type of a term, the error
 Silver implements one particular evaluation strategy for attribute grammars, demand-driven evaluation.
 This looks approximately like a lazy functional language, and many idioms are shared between Haskell and Silver as a result.
 
-# Motivation
+Motivation
+==========
 
 Silver is super convenient to use for writing compilers with, but its performance is a lot worse than I wish it was.
 Furthermore, lots of optimizations that would be really nice to have implemented are pretty dang tricky.
@@ -52,7 +54,8 @@ Furthermore, as "stretch goals," it'd be kinda nice to have:
 - A JavaScript or WASM backend, as a step towards being able to do a non-cursed "try Silver in the browser" thing
 - A formal semantics of SilvIR in Coq or Lean, to talk about the correctness of optimizations and backends
 
-# Design Considerations
+Design Considerations
+=====================
 
 Silver supports a large number of extensions to the basic idea of attribute grammars, and supporting all of them is necessarily a goal.
 Notable extensions include:
@@ -66,3 +69,4 @@ Notable extensions include:
 - [Reference attributes](http://melt.cs.umn.edu/silver/concepts/decorated-vs-undecorated/#reference-decorated)
 
 All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.
+In the [next post](@/silvir/2021-02-12-definition-draft-1.md), we'll look at (the current draft of) the actual definition of the IR.
