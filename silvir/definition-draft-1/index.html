@@ -26,6 +26,9 @@
 	<p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/introduction/">previous one in the series</a>.</em></p>
 <p>As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
 I'll dump the full grammar, then go over it in pieces.</p>
+<p>Note that I'm intending for the actual final grammar to use <a href="https://en.wikipedia.org/wiki/Administrative_Normal_Form">Administrative Normal Form</a> as a way to make the evaluation order explicit, and make writing correct optimizations easier.
+However, this definition doesn't contain that, for simplicity's sake.
+Next post does, but I'll try and ease into it.</p>
 <pre style="background-color:#272822;">
 <span style="color:#f8f8f2;">Literal ::= Int
          |  String

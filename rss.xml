@@ -7,7 +7,23 @@
         <generator>Zola</generator>
         <language>en</language>
         <atom:link href="https://remexre.xyz/rss.xml" rel="self" type="application/rss+xml"/>
-        <lastBuildDate>Fri, 12 Feb 2021 00:00:00 +0000</lastBuildDate>
+        <lastBuildDate>Sun, 14 Feb 2021 00:00:00 +0000</lastBuildDate>
+        
+            <item>
+                <title>SilvIR: Evaluation Semantics, Draft 1</title>
+                <pubDate>Sun, 14 Feb 2021 00:00:00 +0000</pubDate>
+                <link>https://remexre.xyz/silvir/evaluation-semantics-draft-1/</link>
+                <guid>https://remexre.xyz/silvir/evaluation-semantics-draft-1/</guid>
+                <description>&lt;p&gt;Birthday post!&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;This post assumes you&#x27;ve read the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;&quot;&gt;previous one in the series&lt;&#x2F;a&gt;.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;This post might have a higher &amp;quot;difficulty of read to usefulness of reading&amp;quot; ratio than the others in the series...
+I&#x27;ll try to precisely specify the evaluation semantics of the IR defined in the previous draft here.
+This &lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;module Language.SilvIR&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+</description>
+            </item>
         
             <item>
                 <title>SilvIR: Definition, Draft 1</title>
@@ -17,6 +33,9 @@
                 <description>&lt;p&gt;&lt;em&gt;This post assumes you&#x27;ve read the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;introduction&#x2F;&quot;&gt;previous one in the series&lt;&#x2F;a&gt;.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
 I&#x27;ll dump the full grammar, then go over it in pieces.&lt;&#x2F;p&gt;
+&lt;p&gt;Note that I&#x27;m intending for the actual final grammar to use &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Administrative_Normal_Form&quot;&gt;Administrative Normal Form&lt;&#x2F;a&gt; as a way to make the evaluation order explicit, and make writing correct optimizations easier.
+However, this definition doesn&#x27;t contain that, for simplicity&#x27;s sake.
+Next post does, but I&#x27;ll try and ease into it.&lt;&#x2F;p&gt;
 &lt;pre style=&quot;background-color:#272822;&quot;&gt;
 &lt;span style=&quot;color:#f8f8f2;&quot;&gt;Literal ::= Int
          |  String
