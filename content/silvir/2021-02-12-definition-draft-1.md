@@ -13,6 +13,10 @@ comment_issue = 11
 As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
 I'll dump the full grammar, then go over it in pieces.
 
+Note that I'm intending for the actual final grammar to use [Administrative Normal Form](https://en.wikipedia.org/wiki/Administrative_Normal_Form) as a way to make the evaluation order explicit, and make writing correct optimizations easier.
+However, this definition doesn't contain that, for simplicity's sake.
+Next post does, but I'll try and ease into it.
+
 ```
 Literal ::= Int
          |  String
