@@ -1,6 +1,5 @@
 +++
 title = "SilvIR: Definition, Draft 1"
-draft = true
 
 [taxonomies]
 tags = ["silvir"]
@@ -53,7 +52,7 @@ Expr ::= local(LocalName)
       |  decorate(Expr, Map<AttrName, Expr>)
       |  undecorate(Expr)
 
-Priority ::= Nat
+Priority ::= Int
 
 TopLevelItem ::= globalDecl(GlobalName, Expr)
               |  prodDecl(ProdName, NTName)
@@ -163,18 +162,20 @@ TopLevelItem ::= ...
 	      |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
 	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
 
-Priority ::= Nat
+Priority ::= Int
 ```
 
 The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.
 
-TODO: copy-paste tree vs term here
+We refer to data values that immediately result from applying a constructor to arguments as terms (often as **undecorated terms** for clarity).
+We call the results of the process in which inherited attributes are applied and attribute thunks are created trees (often as **decorated trees** for clarity).
 
 Undecorated terms can be constructed with the `cons` expression.
 It takes the name of the production the value belongs to (sometimes referred to as the tag) and a list of arguments, as well as a flag describing whether the child is decorable.
 This flag (formerly, misleadingly, known as `IsChildDeclaredDecorated`) determines whether the child will be traversed at tree-construction time.
 This is effectively a single bit of type information; in the future, SilvIR may be changed to provide this information via `prodDecl` instead.
-Most nonterminal types should be declared `childIsDecorable`.
+
+Most children of nonterminal type should be declared `childIsDecorable`.
 Examples of types for which this should be `childIsntDecorable` are `Integer` (since integers aren't nonterminal types), `Decorated Foo` (since references to other trees shouldn't be redecorated), and skolem variables (since these may be instantiated to one of the former).
 If the exact semantics of this are unclear, they should hopefully become more clear later, when the execution semantics are gone over.
 
@@ -186,6 +187,7 @@ It's UB to read a child that doesn't exist, etc, etc.
 `setAttr` and `combineAttr` are used at tree-construction time to write attributes to a tree.
 `setAttr(attr, tree, value, next)` evaluates to the same value `next` evaluates to, after performing the side effect of setting the attribute `attr` on the tree `tree` to the value that results from evaluating `value`.
 This possibly replaces a previous value of the attribute.
+
 `combineAttr(attr, tree, value, func, next)` is similar, and is used to implement collection attributes.
 If `attr` was already set on `tree`, it sets it to the result of evaluating `call(func, getAttr(attr, tree), value)`.
 If `attr` was not already set on `tree`, it sets it to the result of evaluating `value`.
@@ -199,10 +201,22 @@ This copy is deep in the decorable-term-structure of the tree, but shallow in th
 This copy is deep in the decorable-term-structure of the tree, but shallow in the non-decorable-children.
 
 All these pieces come together with `decorate`.
-TODO Finish`
+`decorate`'s first argument is a term to perform tree-construction on.
+First, a tree is allocated, mirroring the structure of the term, replacing decorable children with freshly allocated trees.
+Then, tree-construction proceeds; for each node:
+
+- Collect the production bodies that apply to this term, and sort them by priority, low to high.
+  This is every `prodBodyDecl` that has the same `ProdName` as the term, as well as every `defaultProdBodyDecl` that has the same `NTName` as the one associated to the term by the `prodDecl` that declared the production.
+- Run every production body that has a negative priority in a priority-respecting order.
+  Production bodies should be structured essentially as the identity function, but with side effects via `setAttr` and `combineAttr`.
+- Run this process for each decorable child, from lowest index to highest.
+- Run every production body that has a non-negative priority in a priority-respecting order.
+
+Priorities allow for default productions and the various automatic attributes to be implemented correctly, and negative priorities allow for the optimization where inherited attributes are passed down strictly, avoiding a traversal back up the tree when they're demanded.
 
 ## Remarks
 
-For a worked-through example of a simple grammar translated to this IR and run, see [here]({{ get_url(path="/silvir/arithmetic-example.html") }}).
+For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see [here]({{ get_url(path="/silvir/arithmetic-example.html") }}).
 
-TODO mention annotations lol
+Annotations aren't covered here; I think they can be transformed to children?
+In the next post, we'll look at the execution semantics of this IR in more depth.
