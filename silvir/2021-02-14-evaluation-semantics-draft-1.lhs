@@ -2,6 +2,9 @@
 title = "SilvIR: Evaluation Semantics, Draft 1"
 draft = true
 
+[render_options]
+quotes_to_code = "haskell"
+
 [taxonomies]
 tags = ["silvir"]
 
@@ -15,6 +18,7 @@ Birthday post!
 
 This post might have a higher "difficulty of read to usefulness of reading" ratio than the others in the series...
 I'll try to precisely specify the evaluation semantics of the IR defined in the previous draft here.
-This 
+This post is a Literate Haskell file; if you clone [the repo backing this site](https://github.com/remexre/remexre.github.io) and run this post (`content/silvir/2021-02-14-evaluation-semantics-draft-1.lhs`) under GHCi, you can get a live version of these semantics you can play with interactively.
 
-> module Language.SilvIR
+> module Main where
+> main = putStrLn "Hello, world!"

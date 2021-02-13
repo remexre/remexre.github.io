@@ -18,11 +18,10 @@
 &lt;p&gt;&lt;em&gt;This post assumes you&#x27;ve read the &lt;a href=&quot;https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;&quot;&gt;previous one in the series&lt;&#x2F;a&gt;.&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
 &lt;p&gt;This post might have a higher &amp;quot;difficulty of read to usefulness of reading&amp;quot; ratio than the others in the series...
 I&#x27;ll try to precisely specify the evaluation semantics of the IR defined in the previous draft here.
-This &lt;&#x2F;p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;module Language.SilvIR&lt;&#x2F;p&gt;
-&lt;&#x2F;blockquote&gt;
-</description>
+This post is a Literate Haskell file; if you clone &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;remexre&#x2F;remexre.github.io&quot;&gt;the repo backing this site&lt;&#x2F;a&gt; and run this post (&lt;code&gt;content&#x2F;silvir&#x2F;2021-02-14-evaluation-semantics-draft-1.lhs&lt;&#x2F;code&gt;) under GHCi, you can get a live version of these semantics you can play with interactively.&lt;&#x2F;p&gt;
+&lt;pre style=&quot;background-color:#272822;&quot;&gt;
+&lt;span style=&quot;color:#f92672;&quot;&gt;module &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt;Main &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;where&lt;&#x2F;span&gt;
+&lt;span style=&quot;color:#f8f8f2;&quot;&gt;main &lt;&#x2F;span&gt;&lt;span style=&quot;color:#f92672;&quot;&gt;=&lt;&#x2F;span&gt;&lt;span style=&quot;color:#f8f8f2;&quot;&gt; putStrLn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#e6db74;&quot;&gt;&amp;quot;Hello, world!&amp;quot;&lt;&#x2F;span&gt;&lt;&#x2F;pre&gt;</description>
             </item>
         
             <item>
