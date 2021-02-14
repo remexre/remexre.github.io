@@ -1,0 +1,4 @@
+base_url = "https://remexre.xyz/"
+
+[external_renderers]
+dot = "set -e; echo -n '<p class=\"graphviz\">'; dot -Tsvg | tail -n +4; echo '</p>'"
