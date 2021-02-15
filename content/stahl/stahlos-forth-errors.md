@@ -1,11 +1,7 @@
 +++
 title = "StahlOS Forth: Errors"
 draft = true
-
-[taxonomies]
 tags = ["stahl"]
-
-[extra]
 # comment_issue = 3
 +++
 

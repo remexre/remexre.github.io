@@ -1,11 +1,7 @@
 +++
 title = "Pinebook Pro OSDev: Forth"
 draft = true
-
-[taxonomies]
 tags = ["forth", "osdev", "pbp"]
-
-[extra]
 # comment_issue = 5
 +++
 

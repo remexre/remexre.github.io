@@ -1,6 +1,6 @@
 +++
 title = "Projects"
-template = "minimal.html"
+template = "minimal"
 +++
 
 These are the projects that are complete enough that somebody could use the code or use the software itself. Each section is roughly sorted by the odds you could assume it will actually work to solve your problem.

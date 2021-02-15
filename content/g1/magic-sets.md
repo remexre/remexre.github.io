@@ -1,11 +1,7 @@
 +++
 title = "G1: The Magic Sets Transformation"
 draft = true
-
-[taxonomies]
 tags = ["g1", "rust"]
-
-[extra]
 # comment_issue = 4
 +++
 
@@ -32,7 +28,7 @@ The Magic Sets transformation works to ensure that only necessary tuples are com
 
 For example, take the query:
 
-```pro
+```prolog
 friend(Me, You) :-
 	edge(Me, You, "friend").
 
@@ -53,7 +49,7 @@ frenemyName(Me, YourName) :-
 
 This can be optimized to:
 
-```pro
+```prolog
 friend(Me, You) :-
 	edge(Me, You, "friend").
 

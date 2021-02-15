@@ -1,11 +1,7 @@
 +++
 title = "G1: The On-Disk Format"
 draft = true
-
-[taxonomies]
 tags = ["g1", "rust"]
-
-[extra]
 comment_issue = 1234
 +++
 

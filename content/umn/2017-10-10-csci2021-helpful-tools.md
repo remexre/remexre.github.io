@@ -179,7 +179,7 @@ int main(void) {
 
 GAS/AT&T Syntax version:
 
-```asm
+```x86asm
 main:
 	movl $20, %eax               # int n = 20;
 	jmp .test                    # while(n != 1) {
@@ -201,7 +201,7 @@ main:
 
 Intel Syntax version:
 
-```asm
+```x86asm
 main:
 	mov eax, 20                ; int n = 20;
 	jmp .test                  ; while(n != 1) {
@@ -223,12 +223,12 @@ main:
 
 As you can see, the Intel syntax version is more C-like (`n = 20` becomes `mov eax, 20`), and has less visual noise (`20` is obviously a number, you don't need to call it `$20`). This is especially noticeable in the `lea` instructions corresponding to `n = 3 * n + 1`:
 
-```asm
+```x86asm
 ; Intel
 lea eax, [eax + 2*eax + 1]
 ```
 
-```asm
+```x86asm
 # AT&T
 leal 1(%rax, %rax, 2), %eax
 ```
@@ -274,7 +274,7 @@ int main(void) {
 
 This will turn into the assembly:
 
-```asm
+```x86asm
 main:
 	; MOVing to a register that starts with e
 	; will clear the upper half of the r register

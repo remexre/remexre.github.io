@@ -1,6 +1,7 @@
 +++
 title = "Contact"
-template = "minimal.html"
+template = "minimal"
+draft = false
 +++
 
 -	[Email](mailto:remexre@gmail.com)

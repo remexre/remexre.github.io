@@ -1,10 +1,6 @@
 +++
 title = "G1: The Query Language"
-
-[taxonomies]
 tags = ["g1", "rust"]
-
-[extra]
 comment_issue = 4
 +++
 
@@ -126,11 +122,11 @@ The positivity restriction ensures a clause always computes a finite number of t
 
 Examples of violating clauses include:
 
-```pro
-// Disallowed, since this computes the set of all strings, which is infinite.
+```prolog
+% Disallowed, since this computes the set of all strings, which is infinite.
 alwaysSucceeds(X).
 
-// Disallowed, since the complement of a finite set is infinite.
+% Disallowed, since the complement of a finite set is infinite.
 color("red").
 color("green").
 color("blue").
@@ -147,22 +143,22 @@ Currently, a negative call is negated (i.e., uses the `!` operator), and a posit
 
 The stratification restriction gives an order for evaluating bottom-up and ensures a clause can be evaluated in finite time, by disallowing some forms of recursion. We want to disallow clauses like:
 
-```pro
-// Inherently paradoxical.
+```prolog
+% Inherently paradoxical.
 paradox(X) :- !paradox(X).
 
-// Could require infinite deductions.
+% Could require infinite deductions.
 foo(X) :- bar(X).
 bar(X) :- foo(X).
 ```
 
 However, we want to be able to preserve recursion like:
 
-```pro
-// A bit useless, but still well-defined.
+```prolog
+% A bit useless, but still well-defined.
 foo(X) :- foo(X).
 
-// This is well-defined, and even useful.
+% This is well-defined, and even useful.
 path(X, X) :- atom(X).
 path(X, Z) :- edge(X, Y, _), path(Y, Z).
 ```

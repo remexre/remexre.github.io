@@ -1,11 +1,7 @@
 +++
 title = "Thoughts on ML-style Modules"
 draft = true
-
-[taxonomies]
 tags = ["pl", "stahl"]
-
-# [extra]
 # comment_issue = 3
 +++
 

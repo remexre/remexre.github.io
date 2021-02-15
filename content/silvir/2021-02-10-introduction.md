@@ -1,10 +1,6 @@
 +++
 title = "SilvIR: Introduction"
-
-[taxonomies]
 tags = ["silvir"]
-
-[extra]
 comment_issue = 10
 +++
 

@@ -1,10 +1,6 @@
 +++
 title = "Pinebook Pro OSDev: Hello World"
-
-[taxonomies]
 tags = ["osdev", "pbp"]
-
-[extra]
 comment_issue = 7
 +++
 
@@ -51,7 +47,7 @@ The RK3399's [Technical Reference Manual](http://opensource.rock-chips.com/image
 
 We can write to the UART with an assembly sequence like:
 
-```arm64asm
+```armasm
 ldr x0, =0xff1a0000 /* Load the x0 register with 0xff1a0000 */
 mov x1, '!'         /* Load the x1 register with '!' (zero-extended) */
 strb w1, [x0]       /* Store the value in x1 to the address given by x0 */
@@ -59,7 +55,7 @@ strb w1, [x0]       /* Store the value in x1 to the address given by x0 */
 
 This stores the `!` character in the Transmit Holding Register of the UART. Technically, we need to wait for the Transmit Holding Register Empty Bit of the Line Status Register to be 1. We do this with:
 
-```arm64asm
+```armasm
 	ldr x0, =0xff1a0000
 wait_for_tx_ok:
 	ldrb w1, [x0, #0x14]      /* Offset the address in x0 by 0x14 */
@@ -73,7 +69,7 @@ Putting it All Together
 
 We can use the above with a bit of glue code to make our "Hello, world" program:
 
-```arm64asm
+```armasm
 .section .text
 
 .global _start
@@ -156,4 +152,4 @@ Hello, world!
 
 Finally, we're ready to run our program. Connect the Pinebook Pro to your serial port, connect Minicom to the serial port, and boot it. Hit a key to drop to the U-Boot shell, then run `loady 0x00880000` to start the upload. Hit Ctrl-A, S to open Minicom's "Send files" menu. Once the file is uploaded, run `bootelf 0x00880000`. If all's gone well, you should see `Hello, world!` printed, followed by the machine hanging.
 
-{{ asciinema(id="297430") }}
+{{ asciinema(297430) }}

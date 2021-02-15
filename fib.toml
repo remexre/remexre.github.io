@@ -1,4 +1,5 @@
-base_url = "https://remexre.xyz/"
+# base_url = "https://remexre.xyz/"
+base_url = "http://localhost/blog/"
 
 [external_renderers]
 dot = "set -e; echo -n '<p class=\"graphviz\">'; dot -Tsvg | tail -n +4; echo '</p>'"

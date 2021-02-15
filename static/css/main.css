@@ -149,7 +149,7 @@ article a code {
 article code {
 	color: #ffffff;
 	font-family: "Roboto Mono", monospace;
-	white-space: nowrap;
+	/*white-space: nowrap;*/
 }
 
 article pre {

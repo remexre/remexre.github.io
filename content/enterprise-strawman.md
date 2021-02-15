@@ -1,11 +1,7 @@
 +++
 title = "enterprise: Strawman Proposal"
 draft = true
-
-[taxonomies]
 tags = ["enterprise", "rust"]
-
-[extra]
 # comment_issue = 3
 +++
 
@@ -173,6 +169,6 @@ For our app, TODO.
 
 In `src/authorization.pro`:
 
-```pro
+```prolog
 authorized(UserID, Action). # TODO
 ```

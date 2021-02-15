@@ -1,10 +1,6 @@
 +++
 title = "Initial Impressions: Jitsi vs Zoom"
-
-[taxonomies]
 tags = []
-
-[extra]
 comment_issue = 8
 +++
 

@@ -1,10 +1,6 @@
 +++
 title = "SilvIR: Definition, Draft 1"
-
-[taxonomies]
 tags = ["silvir"]
-
-[extra]
 comment_issue = 11
 +++
 
@@ -220,7 +216,7 @@ Priorities allow for default productions and the various automatic attributes to
 
 ## Remarks
 
-For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see [here]({{ get_url(path="/silvir/arithmetic-example.html") }}).
+For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see [here]({{ rel(silvir/arithmetic-example.html) }}).
 
 Annotations aren't covered here; I think they can be transformed to children?
-In the [next post](@/silvir/2021-02-14-evaluation-semantics-draft-1.lhs), we'll look at the execution semantics of this IR in more depth.
+In the next post, we'll look at the execution semantics of this IR in more depth.

@@ -1,18 +1,10 @@
 +++
 title = "SilvIR: Evaluation Semantics, Draft 1"
 draft = true
-
-[render_options]
-quotes_to_code = "haskell"
-
-[taxonomies]
 tags = ["silvir"]
-
-[extra]
-comment_issue = 12
+# comment_issue = 12
+quotes_to_code = "haskell"
 +++
-
-Birthday post!
 
 *This post assumes you've read the [previous one in the series](@/silvir/2021-02-12-definition-draft-1.md).*
 
