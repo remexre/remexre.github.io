@@ -22,6 +22,7 @@ jobs:
         chown -R $(id -u):$(id -g) public
         find public -type d -exec chmod 755 {} \;
         find public -type f -exec chmod 644 {} \;
+        ls -lR public
     - name: GitHub Pages Deploy
       uses: JamesIves/github-pages-deploy-action@4.0.0
       with:
