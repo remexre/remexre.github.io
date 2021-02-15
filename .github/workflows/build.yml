@@ -23,7 +23,7 @@ jobs:
         BASE_BRANCH: authoring
         BRANCH: master
         CLEAN: true
-        FOLDER: public
+        FOLDER: result
     - name: Purge cache
       uses: jakejarvis/cloudflare-purge-action@master
       env:
