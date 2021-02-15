@@ -20,7 +20,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@4.0.0
       with:
         branch: master
-        folder: public
+        folder: result
     - name: Purge cache
       uses: jakejarvis/cloudflare-purge-action@master
       env:
