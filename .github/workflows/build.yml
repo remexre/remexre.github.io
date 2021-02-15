@@ -15,18 +15,12 @@ jobs:
       with:
         nix_path: nixpkgs=channel:nixos-unstable
     - name: Build
-      run: |
-        nix build
-        mkdir public
-        cp -r result/* public
+      run: nix build
     - name: GitHub Pages Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
+      uses: JamesIves/github-pages-deploy-action@releases/v4.0.0
       with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BASE_BRANCH: authoring
-        BRANCH: master
-        CLEAN: true
-        FOLDER: public
+        branch: master
+        folder: public
     - name: Purge cache
       uses: jakejarvis/cloudflare-purge-action@master
       env:
