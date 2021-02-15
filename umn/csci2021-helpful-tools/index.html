@@ -1,91 +1,74 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Helpful Tools for CSCI2021 &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;umn&#x2F;csci2021-helpful-tools&#x2F;">Helpful Tools for CSCI2021</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			2017-10-10</span>
-	</h1>
-	<h1 id="radare2">radare2</h1>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>Helpful Tools for CSCI2021</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/umn/csci2021-helpful-tools">Helpful Tools for CSCI2021</a><span class="spacer"></span><span class="meta">2017-10-10</span></h1><h1>radare2</h1>
 <p><a href="http://rada.re/r/">radare2</a> can replace GDB, and has many more analysis tools.</p>
-<h2 id="installing">Installing</h2>
+<h2>Installing</h2>
 <p>Check your repos. It's in the repos for Arch, Ubuntu, and Homebrew (for you macOS kids).</p>
-<h2 id="example-of-usage">Example of Usage</h2>
+<h2>Example of Usage</h2>
 <p>Start radare2 with <code>radare2 -d &lt;program&gt;</code>.</p>
 <p>Radare2 has very terse commands, unlike GDB. Reading a tutorial is <em>highly</em>, <strong>highly</strong>, <em><strong>highly</strong></em> recommended; try <a href="http://sushant94.me/2015/05/31/Introduction_to_radare2/">this one</a>.</p>
 <p>However, here's a cool demo of one of the more useful things. Load your bomblab file with the above commands.</p>
 <p>Then run the commands:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">aaa
+<pre class="hljs"><code class="">aaa
 VV @ sym.initialize_bomb
-</span></pre>
+</code></pre>
 <p>You can now use the arrow keys or Vim-style <code>hjkl</code> scrolling to pan around the control-flow graph of your bomb.</p>
-<p><img src="https://remexre.xyz/umn/csci2021-helpful-tools/radare2-cfg.png" alt="" /></p>
-<h1 id="godbolt">godbolt</h1>
+<p><img src="radare2-cfg.png" alt="" /></p>
+<h1>godbolt</h1>
 <p><a href="https://gcc.godbolt.org/">godbolt</a> is a useful online tool for reading the assembly output of C code. It highlights the lines different blocks of assembly come from too, which makes reading it much easier.</p>
 <p>Protip: Use <code>-O1</code> in the &quot;Compiler Flags&quot; field -- it makes the code a lot more efficient without sacrificing much readability (and sometimes improving it).</p>
-<p><img src="https://remexre.xyz/umn/csci2021-helpful-tools/godbolt-o1-example.png" alt="" /></p>
-<h1 id="clang">clang</h1>
+<p><img src="godbolt-o1-example.png" alt="" /></p>
+<h1>clang</h1>
 <p>Clang gives much better error messages than GCC. Just replace gcc in your commands with clang. It's the default C compiler on macOS, and is installed on the CSELabs machines (and again is probably in your standard repos).</p>
 <p>For example, instead of:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">gcc -o main main.c
-</span></pre>
+<pre class="hljs"><code class="">gcc -o main main.c
+</code></pre>
 <p>run</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">clang -o main main.c
-</span></pre><h2 id="useful-flags">Useful flags</h2>
+<pre class="hljs"><code class="">clang -o main main.c
+</code></pre>
+<h2>Useful flags</h2>
 <p>Other flags that can check your code include:</p>
 <ul>
 <li><code>-Wall</code> -- add more warnings for incorrect (and likely to crash) code</li>
 <li><code>-g</code> -- emit debug information into the program, so you can debug it easier</li>
 </ul>
-<h1 id="valgrind">valgrind</h1>
+<h1>valgrind</h1>
 <p>Valgrind can help find the causes of segmentation faults and memory leaks a lot better than most programmers. Run your program with it to find them.</p>
 <p>For example, instead of:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">./main
-</span></pre>
+<pre class="hljs"><code class="">./main
+</code></pre>
 <p>run</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">valgrind ./main
-</span></pre><h2 id="installing-1">Installing</h2>
+<pre class="hljs"><code class="">valgrind ./main
+</code></pre>
+<h2>Installing</h2>
 <p>Check your repos.</p>
-<h2 id="reading-valgrind-s-output">Reading Valgrind's output</h2>
+<h2>Reading Valgrind's output</h2>
 <p>After running valgrind, you might get output like:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">==30038== Memcheck, a memory error detector
-==30038== Copyright (C) 2002-2017, and GNU GPL&#39;d, by Julian Seward et al.
+<pre class="hljs"><code class="">==30038== Memcheck, a memory error detector
+==30038== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
 ==30038== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
 ==30038== Command: ./a.out
 ==30038==
 ==30038== Invalid read of size 1
 ==30038==    at 0x108611: main (main.c:3)
-==30038==  Address 0x0 is not stack&#39;d, malloc&#39;d or (recently) free&#39;d
+==30038==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
 ==30038==
 ==30038==
 ==30038== Process terminating with default action of signal 11 (SIGSEGV): dumping core
 ==30038==  Access not within mapped region at address 0x0
 ==30038==    at 0x108611: main (main.c:3)
 ==30038==  If you believe this happened as a result of a stack
-==30038==  overflow in your program&#39;s main thread (unlikely but
+==30038==  overflow in your program's main thread (unlikely but
 ==30038==  possible), you can try to increase the size of the
 ==30038==  main thread stack using the --main-stacksize= flag.
 ==30038==  The main thread stack size used in this run was 8388608.
@@ -99,13 +82,12 @@ VV @ sym.initialize_bomb
 ==30038== For counts of detected and suppressed errors, rerun with: -v
 ==30038== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
 [1]    30038 segmentation fault (core dumped)  valgrind ./a.out
-</span></pre>
+</code></pre>
 <p>This may look difficult to read, but the important part is the middle section:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">==30038== Invalid read of size 1
+<pre class="hljs"><code class="">==30038== Invalid read of size 1
 ==30038==    at 0x108611: main (main.c:3)
-==30038==  Address 0x0 is not stack&#39;d, malloc&#39;d or (recently) free&#39;d
-</span></pre>
+==30038==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
+</code></pre>
 <p>Let's break this down line-by-line.</p>
 <p><strong><code>Invalid read of size 1</code></strong></p>
 <p>The error in your program is that it tried to read one byte from memory in a way that was invalid.</p>
@@ -115,74 +97,70 @@ VV @ sym.initialize_bomb
 <p>We know that it's in the <code>main</code> function, specifically at line 3 of <code>main.c</code>. If a line number isn't present, compile your program with <code>-g</code> and run it again.</p>
 <p><strong><code>Address 0x0 is not stack'd, malloc'd or (recently) free'd</code></strong></p>
 <p>From this, we know that the memory address we couldn't read from was <code>0x0</code>. Since this is <code>NULL</code>, we know that we're trying to read from a null pointer. <code>not stack'd, malloc'd or (recently) free'd</code> tells us that this pointer is neither a stack nor a heap pointer, which is obviously true for <code>NULL</code>.</p>
-<h1 id="nasm">NASM</h1>
+<h1>NASM</h1>
 <p><a href="http://nasm.us/">NASM</a> is an assembler that is often preferred to GAS (the assembler taught directly in class). It uses the more intuitive Intel syntax rather than the AT&amp;T syntax used by GAS, and is versatile enough to have your entire attacklab payload be created from a single assembly file, rather than needing to stich together a bunch of <code>printf</code> calls with <code>cat</code>.</p>
-<h2 id="intel-vs-at-t-syntax">Intel vs. AT&amp;T Syntax</h2>
+<h2>Intel vs. AT&amp;T Syntax</h2>
 <p>C version:</p>
-<pre style="background-color:#272822;">
-<span style="font-style:italic;color:#66d9ef;">int </span><span style="color:#a6e22e;">main</span><span style="color:#f8f8f2;">(</span><span style="font-style:italic;color:#66d9ef;">void</span><span style="color:#f8f8f2;">) {
-	</span><span style="font-style:italic;color:#66d9ef;">int</span><span style="color:#f8f8f2;"> n </span><span style="color:#f92672;">= </span><span style="color:#ae81ff;">20</span><span style="color:#f8f8f2;">;
-	</span><span style="color:#f92672;">while</span><span style="color:#f8f8f2;">(n </span><span style="color:#f92672;">!= </span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">) {
-		</span><span style="color:#f92672;">if</span><span style="color:#f8f8f2;">(n </span><span style="color:#f92672;">% </span><span style="color:#ae81ff;">2 </span><span style="color:#f92672;">== </span><span style="color:#ae81ff;">0</span><span style="color:#f8f8f2;">) {
-			n </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> n </span><span style="color:#f92672;">/ </span><span style="color:#ae81ff;">2</span><span style="color:#f8f8f2;">;
-		} </span><span style="color:#f92672;">else </span><span style="color:#f8f8f2;">{
-			n </span><span style="color:#f92672;">= </span><span style="color:#ae81ff;">3 </span><span style="color:#f92672;">*</span><span style="color:#f8f8f2;"> n </span><span style="color:#f92672;">+ </span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">;
+<pre class="hljs"><code class="language-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+	<span class="hljs-keyword">int</span> n = <span class="hljs-number">20</span>;
+	<span class="hljs-keyword">while</span>(n != <span class="hljs-number">1</span>) {
+		<span class="hljs-keyword">if</span>(n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) {
+			n = n / <span class="hljs-number">2</span>;
+		} <span class="hljs-keyword">else</span> {
+			n = <span class="hljs-number">3</span> * n + <span class="hljs-number">1</span>;
 		}
 	}
-	</span><span style="color:#f92672;">return</span><span style="color:#f8f8f2;"> n </span><span style="color:#f92672;">- </span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">;
+	<span class="hljs-keyword">return</span> n - <span class="hljs-number">1</span>;
 }
-</span></pre>
+</code></pre>
 <p>GAS/AT&amp;T Syntax version:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">main:
-	movl </span><span style="color:#66d9ef;">$</span><span style="color:#ae81ff;">20</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax               </span><span style="color:#a6e22e;"># </span><span style="color:#f92672;">int </span><span style="color:#a6e22e;">n = </span><span style="color:#ae81ff;">20</span><span style="color:#75715e;">;
-	</span><span style="color:#f92672;">jmp </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test                    </span><span style="color:#a6e22e;"># while(n != </span><span style="color:#ae81ff;">1</span><span style="color:#a6e22e;">) {
-.</span><span style="color:#f92672;">loop</span><span style="color:#a6e22e;">:
-	testl </span><span style="color:#66d9ef;">$</span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax
-	</span><span style="color:#f92672;">jz </span><span style="color:#a6e22e;">.if_true                  #   if(n % </span><span style="color:#ae81ff;">2 </span><span style="color:#a6e22e;">== </span><span style="color:#ae81ff;">0</span><span style="color:#a6e22e;">)
-.if_true:                        #   {
-    shrl </span><span style="color:#66d9ef;">$</span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax                </span><span style="color:#a6e22e;">#     n = n / </span><span style="color:#ae81ff;">2</span><span style="color:#75715e;">;
-	</span><span style="color:#f92672;">jmp </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test                    </span><span style="color:#a6e22e;">#   }
-.if_false:                       #   else {
-	leal </span><span style="color:#ae81ff;">1</span><span style="color:#a6e22e;">(%</span><span style="font-style:italic;color:#fd971f;">rax</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">rax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">2</span><span style="color:#a6e22e;">)</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax  </span><span style="color:#a6e22e;">#     n = </span><span style="color:#ae81ff;">3 </span><span style="color:#f8f8f2;">* </span><span style="color:#a6e22e;">n </span><span style="color:#f8f8f2;">+ </span><span style="color:#ae81ff;">1</span><span style="color:#75715e;">;
-</span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test</span><span style="color:#a6e22e;">:                           #   }
-	cmpl </span><span style="color:#66d9ef;">$</span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax
-	</span><span style="color:#f92672;">jne </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">loop                    </span><span style="color:#a6e22e;"># }
-.end:
-	</span><span style="color:#f92672;">dec </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax                     </span><span style="color:#a6e22e;"># return n </span><span style="color:#f8f8f2;">- </span><span style="color:#ae81ff;">1</span><span style="color:#75715e;">;
-	</span><span style="color:#f92672;">ret
-</span></pre>
+<pre class="hljs"><code class="language-x86asm"><span class="hljs-symbol">main:</span>
+	movl <span class="hljs-number">$20</span>, %eax               # <span class="hljs-keyword">int</span> n = <span class="hljs-number">20</span><span class="hljs-comment">;</span>
+	<span class="hljs-keyword">jmp</span> .test                    # while(n != <span class="hljs-number">1</span>) {
+<span class="hljs-symbol">.loop:</span>
+	testl <span class="hljs-number">$1</span>, %eax
+	<span class="hljs-keyword">jz</span> .if_true                  #   if(n % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>)
+<span class="hljs-symbol">.if_true:</span>                        #   {
+    shrl <span class="hljs-number">$1</span>, %eax                #     n = n / <span class="hljs-number">2</span><span class="hljs-comment">;</span>
+	<span class="hljs-keyword">jmp</span> .test                    #   }
+<span class="hljs-symbol">.if_false:</span>                       #   else {
+	leal <span class="hljs-number">1</span>(%rax, %rax, <span class="hljs-number">2</span>), %eax  #     n = <span class="hljs-number">3</span> * n + <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+<span class="hljs-symbol">.test:</span>                           #   }
+	cmpl <span class="hljs-number">$1</span>, %eax
+	<span class="hljs-keyword">jne</span> .loop                    # }
+<span class="hljs-symbol">.end:</span>
+	<span class="hljs-keyword">dec</span> %eax                     # return n - <span class="hljs-number">1</span><span class="hljs-comment">;</span>
+	<span class="hljs-keyword">ret</span>
+</code></pre>
 <p>Intel Syntax version:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">main:
-	</span><span style="color:#f92672;">mov </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">20</span><span style="color:#75715e;">                ; int n = 20;
-	</span><span style="color:#f92672;">jmp </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test</span><span style="color:#75715e;">                  ; while(n != 1) {
-</span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">loop</span><span style="color:#a6e22e;">:
-	</span><span style="color:#f92672;">test </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">1
-	</span><span style="color:#f92672;">jz </span><span style="color:#a6e22e;">.if_true</span><span style="color:#75715e;">                ;   if(n % 2 == 0)
-</span><span style="color:#a6e22e;">.if_true:</span><span style="color:#75715e;">                      ;   {
-	</span><span style="color:#f92672;">shr </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">1</span><span style="color:#75715e;">                 ;     n = n / 2;
-	</span><span style="color:#f92672;">jmp </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test</span><span style="color:#75715e;">                  ;   }
-</span><span style="color:#a6e22e;">.if_false:</span><span style="color:#75715e;">                     ;   else {
-	</span><span style="color:#f92672;">lea </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, [</span><span style="font-style:italic;color:#fd971f;">eax </span><span style="color:#f8f8f2;">+ </span><span style="color:#ae81ff;">2</span><span style="color:#f8f8f2;">*</span><span style="font-style:italic;color:#fd971f;">eax </span><span style="color:#f8f8f2;">+ </span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">]</span><span style="color:#75715e;"> ;     n = 3 * n + 1;
-</span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">test</span><span style="color:#a6e22e;">:</span><span style="color:#75715e;">                         ;   }
-	</span><span style="color:#f92672;">cmp </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">1
-	</span><span style="color:#f92672;">jne </span><span style="color:#a6e22e;">.</span><span style="color:#f92672;">loop</span><span style="color:#75715e;">                  ; }
-</span><span style="color:#a6e22e;">.end:
-	</span><span style="color:#f92672;">dec </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#75715e;">                    ; return n - 1;
-	</span><span style="color:#f92672;">ret
-</span></pre>
+<pre class="hljs"><code class="language-x86asm"><span class="hljs-symbol">main:</span>
+	<span class="hljs-keyword">mov</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">20</span>                <span class="hljs-comment">; int n = 20;</span>
+	<span class="hljs-keyword">jmp</span> .test                  <span class="hljs-comment">; while(n != 1) {</span>
+<span class="hljs-symbol">.loop:</span>
+	<span class="hljs-keyword">test</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">1</span>
+	<span class="hljs-keyword">jz</span> .if_true                <span class="hljs-comment">;   if(n % 2 == 0)</span>
+<span class="hljs-symbol">.if_true:</span>                      <span class="hljs-comment">;   {</span>
+	<span class="hljs-keyword">shr</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">1</span>                 <span class="hljs-comment">;     n = n / 2;</span>
+	<span class="hljs-keyword">jmp</span> .test                  <span class="hljs-comment">;   }</span>
+<span class="hljs-symbol">.if_false:</span>                     <span class="hljs-comment">;   else {</span>
+	<span class="hljs-keyword">lea</span> <span class="hljs-built_in">eax</span>, [<span class="hljs-built_in">eax</span> + <span class="hljs-number">2</span>*<span class="hljs-built_in">eax</span> + <span class="hljs-number">1</span>] <span class="hljs-comment">;     n = 3 * n + 1;</span>
+<span class="hljs-symbol">.test:</span>                         <span class="hljs-comment">;   }</span>
+	<span class="hljs-keyword">cmp</span> <span class="hljs-built_in">eax</span>, <span class="hljs-number">1</span>
+	<span class="hljs-keyword">jne</span> .loop                  <span class="hljs-comment">; }</span>
+<span class="hljs-symbol">.end:</span>
+	<span class="hljs-keyword">dec</span> <span class="hljs-built_in">eax</span>                    <span class="hljs-comment">; return n - 1;</span>
+	<span class="hljs-keyword">ret</span>
+</code></pre>
 <p>As you can see, the Intel syntax version is more C-like (<code>n = 20</code> becomes <code>mov eax, 20</code>), and has less visual noise (<code>20</code> is obviously a number, you don't need to call it <code>$20</code>). This is especially noticeable in the <code>lea</code> instructions corresponding to <code>n = 3 * n + 1</code>:</p>
-<pre style="background-color:#272822;">
-<span style="color:#75715e;">; Intel
-</span><span style="color:#f92672;">lea </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, [</span><span style="font-style:italic;color:#fd971f;">eax </span><span style="color:#f8f8f2;">+ </span><span style="color:#ae81ff;">2</span><span style="color:#f8f8f2;">*</span><span style="font-style:italic;color:#fd971f;">eax </span><span style="color:#f8f8f2;">+ </span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">]
-</span></pre><pre style="background-color:#272822;">
-<span style="color:#a6e22e;"># </span><span style="color:#66d9ef;">AT</span><span style="color:#a6e22e;">&amp;T
-leal </span><span style="color:#ae81ff;">1</span><span style="color:#a6e22e;">(%</span><span style="font-style:italic;color:#fd971f;">rax</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">rax</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">2</span><span style="color:#a6e22e;">)</span><span style="color:#f8f8f2;">, </span><span style="color:#a6e22e;">%</span><span style="font-style:italic;color:#fd971f;">eax
-</span></pre>
+<pre class="hljs"><code class="language-x86asm"><span class="hljs-comment">; Intel</span>
+<span class="hljs-keyword">lea</span> <span class="hljs-built_in">eax</span>, [<span class="hljs-built_in">eax</span> + <span class="hljs-number">2</span>*<span class="hljs-built_in">eax</span> + <span class="hljs-number">1</span>]
+</code></pre>
+<pre class="hljs"><code class="language-x86asm"># <span class="hljs-meta">AT</span>&amp;T
+leal <span class="hljs-number">1</span>(%rax, %rax, <span class="hljs-number">2</span>), %eax
+</code></pre>
 <p>I really have no idea what the person who came up with <code>1(%rax, %rax, 2)</code> was thinking...</p>
-<h1 id="misc-tips">Misc. Tips</h1>
-<h2 id="argument-passing-order">Argument Passing Order</h2>
+<h1>Misc. Tips</h1>
+<h2>Argument Passing Order</h2>
 <p>The mnemonic to remember is:</p>
 <ul>
 <li><strong>Di</strong>ane's</li>
@@ -204,43 +182,29 @@ leal </span><span style="color:#ae81ff;">1</span><span style="color:#a6e22e;">(%
 <li>The <strong>$</strong> tack</li>
 </ul>
 <p>So if we have the code:</p>
-<pre style="background-color:#272822;">
-<span style="font-style:italic;color:#66d9ef;">int </span><span style="color:#a6e22e;">foo</span><span style="color:#f8f8f2;">(</span><span style="font-style:italic;color:#66d9ef;">int </span><span style="font-style:italic;color:#fd971f;">x</span><span style="color:#f8f8f2;">, </span><span style="font-style:italic;color:#66d9ef;">unsigned int </span><span style="font-style:italic;color:#fd971f;">y</span><span style="color:#f8f8f2;">, </span><span style="font-style:italic;color:#66d9ef;">char</span><span style="color:#f92672;">* </span><span style="font-style:italic;color:#fd971f;">z</span><span style="color:#f8f8f2;">);
+<pre class="hljs"><code class="language-c"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">foo</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">int</span> y, <span class="hljs-keyword">char</span>* z)</span></span>;
 
-</span><span style="font-style:italic;color:#66d9ef;">int </span><span style="color:#a6e22e;">main</span><span style="color:#f8f8f2;">(</span><span style="font-style:italic;color:#66d9ef;">void</span><span style="color:#f8f8f2;">) {
-	foo(</span><span style="color:#ae81ff;">1</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">2</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">NULL</span><span style="color:#f8f8f2;">);
-	</span><span style="color:#f92672;">return </span><span style="color:#ae81ff;">0</span><span style="color:#f8f8f2;">;
+<span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{
+	foo(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-literal">NULL</span>);
+	<span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;
 }
-</span></pre>
+</code></pre>
 <p>This will turn into the assembly:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">main:</span><span style="color:#75715e;">
-	; MOVing to a register that starts with e
-	; will clear the upper half of the r register
-	; that it corresponds to.
-	</span><span style="color:#f92672;">mov </span><span style="font-style:italic;color:#fd971f;">edi</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">1
-	</span><span style="color:#f92672;">mov </span><span style="font-style:italic;color:#fd971f;">esi</span><span style="color:#f8f8f2;">, </span><span style="color:#ae81ff;">2
-	</span><span style="color:#f92672;">xor </span><span style="font-style:italic;color:#fd971f;">edx</span><span style="color:#f8f8f2;">, </span><span style="font-style:italic;color:#fd971f;">edx</span><span style="color:#75715e;"> ; Or `mov edx, 0&#39;
-	</span><span style="color:#f92672;">call </span><span style="color:#a6e22e;">foo</span><span style="color:#75715e;">
+<pre class="hljs"><code class="language-x86asm"><span class="hljs-symbol">main:</span>
+	<span class="hljs-comment">; MOVing to a register that starts with e</span>
+	<span class="hljs-comment">; will clear the upper half of the r register</span>
+	<span class="hljs-comment">; that it corresponds to.</span>
+	<span class="hljs-keyword">mov</span> <span class="hljs-built_in">edi</span>, <span class="hljs-number">1</span>
+	<span class="hljs-keyword">mov</span> <span class="hljs-built_in">esi</span>, <span class="hljs-number">2</span>
+	<span class="hljs-keyword">xor</span> <span class="hljs-built_in">edx</span>, <span class="hljs-built_in">edx</span> <span class="hljs-comment">; Or `mov edx, 0&#x27;</span>
+	<span class="hljs-keyword">call</span> foo
 
-	; return 0
-	</span><span style="color:#f92672;">xor </span><span style="font-style:italic;color:#fd971f;">eax</span><span style="color:#f8f8f2;">, </span><span style="font-style:italic;color:#fd971f;">eax
-	</span><span style="color:#f92672;">ret
-</span></pre>
-</article>
-<div class="comments">
-		Comments are not enabled on this post.
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+	<span class="hljs-comment">; return 0</span>
+	<span class="hljs-keyword">xor</span> <span class="hljs-built_in">eax</span>, <span class="hljs-built_in">eax</span>
+	<span class="hljs-keyword">ret</span>
+</code></pre>
+</article><div class="comments">Comments are not enabled on this post.</div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

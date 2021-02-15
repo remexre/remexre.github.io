@@ -1,36 +1,22 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>SilvIR: Definition, Draft 1 &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;definition-draft-1&#x2F;">SilvIR: Definition, Draft 1</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			2021-02-12</span>
-	</h1>
-	<p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/introduction/">previous one in the series</a>.</em></p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>SilvIR: Definition, Draft 1</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/silvir/definition-draft-1">SilvIR: Definition, Draft 1</a><span class="spacer"></span><span class="meta">2021-02-12</span></h1><p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/introduction">previous one in the series</a>.</em></p>
 <p>As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
 I'll dump the full grammar, then go over it in pieces.</p>
 <p>Note that I'm intending for the actual final grammar to use <a href="https://en.wikipedia.org/wiki/Administrative_Normal_Form">Administrative Normal Form</a> as a way to make the evaluation order explicit, and make writing correct optimizations easier.
 However, this definition doesn't contain that, for simplicity's sake.
 Next post does, but I'll try and ease into it.</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">Literal ::= Int
+<pre class="hljs"><code class="">Literal ::= Int
          |  String
 
 PrimPattern ::= varPat(LocalName)
@@ -76,37 +62,34 @@ TopLevelItem ::= globalDecl(GlobalName, Expr)
 	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
 
 Program ::= Set&lt;TopLevelItem&gt;
-</span></pre><h2 id="literals"><code>Literal</code>s</h2>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">Literal ::= Int
+</code></pre>
+<h2><code>Literal</code>s</h2>
+<pre class="hljs"><code class="">Literal ::= Int
          |  String
-</span></pre>
+</code></pre>
 <p>Literals are used in a few places in the grammar; they are a subset of the runtime values that exist.
 Runtime values also include functions (which are constructed with <code>lam</code>), thunks (which are constructed with <code>thunk</code>), records (which are constructed with <code>makeRecord</code>), terms (which are constructed with <code>cons</code>), and trees (which are constructed with <code>decorate</code>).</p>
-<h2 id="patterns"><code>Pattern</code>s</h2>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">PrimPattern ::= varPat(LocalName)
+<h2><code>Pattern</code>s</h2>
+<pre class="hljs"><code class="">PrimPattern ::= varPat(LocalName)
              |  litPat(Literal)
              |  anyPat
 
 Pattern ::= recordPat(Map&lt;String, PrimPattern&gt;)
          |  treeOrTermPat(ProdName, List&lt;PrimPattern&gt;)
          |  primPat(PrimPattern)
-</span></pre>
+</code></pre>
 <p>Patterns in SilvIR are restricted to &quot;simple patterns,&quot; which disallow nested patterns.
 SilvIR patterns also do <em>not</em> interact with forwarding in any way; there will be later discussion on this.</p>
 <p>Note that <code>recordPat</code> implements a &quot;subset match&quot;; fields not present in the pattern are ignored.
 As an example, the following expression evaluates to <code>1</code>:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">case(makeRecord({ &quot;a&quot; = lit(1), &quot;b&quot; = lit(2) }),
+<pre class="hljs"><code class="">case(makeRecord({ &quot;a&quot; = lit(1), &quot;b&quot; = lit(2) }),
   [ (recordPat({ &quot;a&quot; = varPat(&quot;x&quot;) }), local(&quot;x&quot;))
   , (anyPat, lit(3))
   ])
-</span></pre>
+</code></pre>
 <p>Everything else in patterns should have fairly intuitive semantics.</p>
-<h2 id="exprs-and-toplevelitems-the-fp-looking-parts"><code>Expr</code>s and <code>TopLevelItem</code>s, the FP-looking parts</h2>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">Expr ::= local(LocalName)
+<h2><code>Expr</code>s and <code>TopLevelItem</code>s, the FP-looking parts</h2>
+<pre class="hljs"><code class="">Expr ::= local(LocalName)
       |  global(GlobalName)
       |  lit(Literal)
       |  let(LocalName, Expr, Expr)
@@ -127,7 +110,7 @@ TopLevelItem ::= globalDecl(GlobalName, Expr)
               |  ...
 
 Program ::= Set&lt;TopLevelItem&gt;
-</span></pre>
+</code></pre>
 <p>Most of what appears here should look &quot;fairly normal&quot; for a dynamically-typed, call-by-value, functional language with multi-argument functions and optional laziness.
 (Well, I guess I said &quot;tastes like Scheme&quot; in more words...)</p>
 <p>SilvIR is a call-by-value language, but supports thunks as a built-in type in order to support Silver's demand-driven attribute evaluation strategy.
@@ -140,9 +123,8 @@ Examples of pure foreign functions are arithmetic operators on integers, string 
 Examples of impure foreign functions are <code>genInt</code> and <code>error</code> (though, <code>error</code> has its own AST node to facilitate debugger integration).</p>
 <p>At program startup, a global environment is established from the top-level items.
 The expression <code>call(force(global(&quot;main&quot;)))</code> is then evaluated.</p>
-<h2 id="exprs-and-toplevelitems-the-attribute-grammar-specific-parts"><code>Expr</code>s and <code>TopLevelItem</code>s, the attribute-grammar-specific parts</h2>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">Expr ::= ...
+<h2><code>Expr</code>s and <code>TopLevelItem</code>s, the attribute-grammar-specific parts</h2>
+<pre class="hljs"><code class="">Expr ::= ...
       |  cons(ProdName, List&lt;Pair&lt;IsChildDecorable, Expr&gt;&gt;)
       |  getChild(Nat, Expr)
       |  getAttr(AttrName, Expr)
@@ -161,7 +143,7 @@ TopLevelItem ::= ...
 	      |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
 
 Priority ::= Int
-</span></pre>
+</code></pre>
 <p>The attribute-grammar-specific parts of SilvIR are the complicated part with potentially-controversial semantics, so this might be unclear.</p>
 <p>We refer to data values that immediately result from applying a constructor to arguments as terms (often as <strong>undecorated terms</strong> for clarity).
 We call the results of the process in which inherited attributes are applied and attribute thunks are created trees (often as <strong>decorated trees</strong> for clarity).</p>
@@ -200,39 +182,12 @@ Production bodies should be structured essentially as the identity function, but
 <li>Run every production body that has a non-negative priority in a priority-respecting order.</li>
 </ul>
 <p>Priorities allow for default productions and the various automatic attributes to be implemented correctly, and negative priorities allow for the optimization where inherited attributes are passed down strictly, avoiding a traversal back up the tree when they're demanded.</p>
-<h2 id="remarks">Remarks</h2>
+<h2>Remarks</h2>
 <p>For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see <a href="https://remexre.xyz/silvir/arithmetic-example.html">here</a>.</p>
 <p>Annotations aren't covered here; I think they can be transformed to children?
 In the next post, we'll look at the execution semantics of this IR in more depth.</p>
-
-</article>
-<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
-		issue-number="11" label="comments" theme="github-dark"
-		crossorigin="anonymous" async>
-	</script>
-	<div class="comments">
-		<!-- This needs to be in a div because the NoScript extension transforms noscript
-		elements into spans, while also getting rid of id and class, so applying CSS is no
-		longer possible (without awful, awful hacks). -->
-		<noscript>
-			<hr>
-			Comments (powered by
-			<a href="https://utteranc.es">utteranc.es</a>) require
-			JavaScript. However, you can comment directly on the
-			<a href="https://github.com/remexre/remexre.github.io/issues/11">GitHub issue</a>
-			that stores the comments.
-		</noscript>
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</article><script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io" issue-number="11" label="comments" theme="github-dark" crossorigin="anonymous" async></script><div class="comments"><noscript><hr>Comments (powered by <a href="https://utteranc.es">utteranc.es</a>) require JavaScript. However, you can comment directly on the <a href="https://github.com/remexre/remexre.github.io/issues/11}">GitHub issue</a> that stores the comments.</noscript></div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

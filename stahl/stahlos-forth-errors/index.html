@@ -1,83 +1,53 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>StahlOS Forth: Errors &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;stahlos-forth-errors&#x2F;">StahlOS Forth: Errors</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			Draft</span>
-	</h1>
-	<p>In <a href="https://remexre.xyz/stahl/stahlos-forth/">StahlOS Forth</a>, there are a variety of errors that can be encountered. For example, if the <code>+</code> word is executed when the stack is empty, there's no reasonable way to continue, so an error occurs. Currently, all errors are handled with the <code>panic</code> procedure (<a href="https://github.com/remexre/stahlos/blob/180befd900866e3378b41ffd03acea605f621e26/src/kernel-aarch64/panic.s">impl</a>). This procedure prints the cause of the panic, the string <code>&quot;panic!&quot;</code>, then halts the CPU.</p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>StahlOS Forth: Errors</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/stahl/stahlos-forth-errors">StahlOS Forth: Errors</a><span class="spacer"></span><span class="meta">Draft</span></h1><p>In <a href="https://remexre.xyz/stahl/stahlos-forth.md">StahlOS Forth</a>, there are a variety of errors that can be encountered. For example, if the <code>+</code> word is executed when the stack is empty, there's no reasonable way to continue, so an error occurs. Currently, all errors are handled with the <code>panic</code> procedure (<a href="https://github.com/remexre/stahlos/blob/180befd900866e3378b41ffd03acea605f621e26/src/kernel-aarch64/panic.s">impl</a>). This procedure prints the cause of the panic, the string <code>&quot;panic!&quot;</code>, then halts the CPU.</p>
 <p>However, when a REPL is being run by the Forth system directly, killing the system whenever a typo occurs is definitely overkill, especially if the REPL is being used to repair a system already in an unhealthy state. A better error-handling mechanism is therefore needed.</p>
-<h2 id="previous-mechanism">Previous Mechanism</h2>
+<h2>Previous Mechanism</h2>
 <p>In the last iteration of StahlOS (on amd64), each process' has associated with it a set of execution tokens for words that may need to be overwritten; namely, <a href="https://forth-standard.org/standard/core/ABORT"><code>ABORT</code></a>, <code>BP</code> (breakpoint), <a href="https://forth-standard.org/standard/core/EMIT"><code>EMIT</code></a>, and <a href="https://forth-standard.org/standard/core/QUIT"><code>QUIT</code></a>. In practice, this wasn't useful, since every non-REPL process would use the same definitions for these words. Additionally, there's not a ton of free space left in the <a href="https://github.com/remexre/stahlos/blob/180befd900866e3378b41ffd03acea605f621e26/doc/kernel/aarch64/abi.md#process-table">current process table</a>, and I'd rather conserve it as much as possible.</p>
-<h2 id="forth-2012-exceptions">Forth 2012 Exceptions</h2>
+<h2>Forth 2012 Exceptions</h2>
 <p>The Forth 2012 spec <a href="https://forth-standard.org/standard/exception">defines</a> a mechanism for error handling. It's fairly straightforward; there are two words <code>THROW</code> and <code>CATCH</code>. <code>CATCH</code> takes the address of code to execute, and wraps it such that <code>THROW</code> calls result in the execution completing.</p>
 <p>For example:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">: foo 1 2 3 THROW ;
+<pre class="hljs"><code class="language-forth">: foo 1 2 3 THROW ;
 : bar 4 5 6 ;
 
 7 8 9
-&#39; foo CATCH .S
-&#39; bar CATCH .S
-</span></pre>
+' foo CATCH .S
+' bar CATCH .S
+</code></pre>
 <p>will print</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">&lt;4&gt; 7 8 9 3
+<pre class="hljs"><code class="">&lt;4&gt; 7 8 9 3
 &lt;8&gt; 7 8 9 3 4 5 6 0
-</span></pre>
+</code></pre>
 <p>Notably, the specification of <code>THROW</code> makes it unsafe to consume items on the data stack before <code>THROW</code>ing; the following reads from uninitialized memory.</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">: foo + 42 THROW ;
-2 3 &#39; foo CATCH .S
-</span></pre>
+<pre class="hljs"><code class="">: foo + 42 THROW ;
+2 3 ' foo CATCH .S
+</code></pre>
 <p>With GForth on my machine, it prints <code>&lt;3&gt; 5 140418305966048 42</code> rather than the likely expected <code>&lt;2&gt; 5 42</code>.</p>
-<h2 id="conditions-inspired-exceptions">Conditions-Inspired Exceptions</h2>
+<h2>Conditions-Inspired Exceptions</h2>
 <p>A third option would be to have a more Common Lisp-like handler mechanism, where the handler is passed to <code>CATCH</code> as an execution token, and invoked at the point <code>THROW</code> is, rather than unwinding before invoking the handler. This allows a handler to perform error recovery actions inline with the code.</p>
 <p>Additional words <code>CONTINUE</code>, <code>RETURN-TO-CATCH</code>, etc. would probably be defined as well. A hypothetical example:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">: handler .&quot; caught error&quot; CR .S CONTINUE ;
+<pre class="hljs"><code class="language-forth">: handler .&quot; caught error&quot; CR .S CONTINUE ;
 : foo + THROW .&quot; after throw&quot; CR ;
-2 3 &#39; foo &#39; handler CATCH .S
-</span></pre>
+2 3 ' foo ' handler CATCH .S
+</code></pre>
 <p>The above would print:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">caught error
+<pre class="hljs"><code class="">caught error
 &lt;1&gt; 5
 after throw
 &lt;1&gt; 5
-</span></pre>
-</article>
-<div class="comments">
-		Comments are not enabled on this post.
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</code></pre>
+</article><div class="comments">Comments are not enabled on this post.</div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

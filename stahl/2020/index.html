@@ -1,30 +1,17 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>Stahl in 2020 &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;2020&#x2F;">Stahl in 2020</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			2020-01-01</span>
-	</h1>
-	<p>This is a quick roadmap for the Stahl project(s) in (at least the beginning of) 2020. I've been slowly reading <a href="https://homotopytypetheory.org/book/">Homotopy Type Theory</a> over the last week, and I'm getting a <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a> as a hackable dev platform.</p>
-<h1 id="overview">Overview</h1>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>Stahl in 2020</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/stahl/2020">Stahl in 2020</a><span class="spacer"></span><span class="meta">2020-01-01</span></h1><p>This is a quick roadmap for the Stahl project(s) in (at least the beginning of) 2020. I've been slowly reading <a href="https://homotopytypetheory.org/book/">Homotopy Type Theory</a> over the last week, and I'm getting a <a href="https://www.pine64.org/pinebook-pro/">Pinebook Pro</a> as a hackable dev platform.</p>
+<h1>Overview</h1>
 <p>Stahl (Language):</p>
 <ul>
 <li>Stahl Core interpreter</li>
@@ -40,40 +27,13 @@
 <li>Rewrite/port StahlOS for Pinebook Pro</li>
 <li>Spawn driver and process for serial console on UART</li>
 </ul>
-<h1 id="stahl-core">Stahl Core</h1>
+<h1>Stahl Core</h1>
 <p>The Stahl surface syntax is translated down to a simpler intermediate language, Stahl Core. Stahl Core uses an intensional constructive type theory. Currently, I don't think I can make it completely HoTT-friendly, since I'm not sure how to compute with the univalence axiom, but if that changes it probably will be. Lastly, &quot;normal universes&quot; are explicitly indexed with ordinals, which inhabit their own universe, <code>Ordinal</code>.</p>
 <p>I'd like to also introduce the tricks from <a href="http://jmchapman.github.io/papers/levitation.pdf">The Gentle Art of Levitation</a>, so its <code>Tag</code> and <code>Desc</code> will likely make an appearance in some form. (<code>Tag</code>, in particular, I'm likely to rename to <code>Atom</code>.)</p>
-<h1 id="stahlos">StahlOS</h1>
+<h1>StahlOS</h1>
 <p>Since the Pinebook Pro is such a well-documented machine, I want to switch to porting StahlOS to it, rather than continuing to not work on it for amd64. The current codebase is basically blocked on my not wanted to grok ACPI; <a href="https://www.devicetree.org/">DeviceTrees</a> seem much saner, and the RK3399 (the SoC the Pinebook Pro uses) looks like it has static addresses for its peripherals (e.g. the serial port is at a fixed physical address of <code>0xff1a0000</code>).</p>
-
-</article>
-<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
-		issue-number="3" label="comments" theme="github-dark"
-		crossorigin="anonymous" async>
-	</script>
-	<div class="comments">
-		<!-- This needs to be in a div because the NoScript extension transforms noscript
-		elements into spans, while also getting rid of id and class, so applying CSS is no
-		longer possible (without awful, awful hacks). -->
-		<noscript>
-			<hr>
-			Comments (powered by
-			<a href="https://utteranc.es">utteranc.es</a>) require
-			JavaScript. However, you can comment directly on the
-			<a href="https://github.com/remexre/remexre.github.io/issues/3">GitHub issue</a>
-			that stores the comments.
-		</noscript>
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</article><script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io" issue-number="3" label="comments" theme="github-dark" crossorigin="anonymous" async></script><div class="comments"><noscript><hr>Comments (powered by <a href="https://utteranc.es">utteranc.es</a>) require JavaScript. However, you can comment directly on the <a href="https://github.com/remexre/remexre.github.io/issues/3}">GitHub issue</a> that stores the comments.</noscript></div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

@@ -1,102 +1,73 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>G1: The Magic Sets Transformation &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;magic-sets&#x2F;">G1: The Magic Sets Transformation</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			Draft</span>
-	</h1>
-	<p><em>This post assumes you've read the <a href="https://remexre.xyz/g1/query-lang/">previous one in the series</a>.</em></p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>G1: The Magic Sets Transformation</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/g1/magic-sets">G1: The Magic Sets Transformation</a><span class="spacer"></span><span class="meta">Draft</span></h1><p><em>This post assumes you've read the <a href="https://remexre.xyz/g1/query-lang">previous one in the series</a>.</em></p>
 <p>One advantage of Datalog over some other query languages is the ease by which it can be computed incrementally and bottom-up. This allows for a fairly simple async IO implementation of queries with limits; in pseudo-Rust:</p>
-<pre style="background-color:#272822;">
-<span style="font-style:italic;color:#66d9ef;">let </span><span style="color:#f92672;">mut</span><span style="color:#f8f8f2;"> results </span><span style="color:#f92672;">= </span><span style="color:#f8f8f2;">QueryResults::new(</span><span style="color:#f92672;">&amp;</span><span style="color:#f8f8f2;">query);
-</span><span style="font-style:italic;color:#66d9ef;">let </span><span style="color:#f8f8f2;">(done_send, done_recv) </span><span style="color:#f92672;">= </span><span style="color:#66d9ef;">oneshot</span><span style="color:#f8f8f2;">();
-</span><span style="color:#66d9ef;">read_db_to_stream</span><span style="color:#f8f8f2;">()
-	.</span><span style="color:#66d9ef;">take_until</span><span style="color:#f8f8f2;">(done_recv)
-	.</span><span style="color:#66d9ef;">for_each</span><span style="color:#f8f8f2;">(|</span><span style="font-style:italic;color:#fd971f;">tuple</span><span style="color:#f8f8f2;">| {
-		results.</span><span style="color:#66d9ef;">insert</span><span style="color:#f8f8f2;">(tuple);
-		</span><span style="color:#f92672;">if</span><span style="color:#f8f8f2;"> results.</span><span style="color:#66d9ef;">len</span><span style="color:#f8f8f2;">() </span><span style="color:#f92672;">&gt;</span><span style="color:#f8f8f2;"> query.max_results {
-			done_send.</span><span style="color:#66d9ef;">send</span><span style="color:#f8f8f2;">(());
+<pre class="hljs"><code class="language-rust"><span class="hljs-keyword">let</span> <span class="hljs-keyword">mut</span> results = QueryResults::new(&amp;query);
+<span class="hljs-keyword">let</span> (done_send, done_recv) = oneshot();
+read_db_to_stream()
+	.take_until(done_recv)
+	.for_each(|tuple| {
+		results.insert(tuple);
+		<span class="hljs-keyword">if</span> results.len() &gt; query.max_results {
+			done_send.send(());
 		}
-	}).await;
-</span></pre>
+	}).<span class="hljs-keyword">await</span>;
+</code></pre>
 <p>In theory, this results in no IO wasted by continuing to traverse after we have the minimum required to satisfy the query. In practice, this wastes an enormous amount of IO -- it's reading the whole database in, every query! Even if a more efficient means for pulling tuples from disk were used, there would still be computation wasted: tuples are computed without regard to whether they're useful in the producing results.</p>
 <p>The Magic Sets transformation works to ensure that only necessary tuples are computed, by creating and using specialized clauses when possible.</p>
 <p>For example, take the query:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+<pre class="hljs"><code class="language-prolog">friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>) :-
+	edge(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;friend&quot;</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Other)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
+friendOfFriend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>) :-
+	friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">Other</span>),
+	friend(<span class="hljs-symbol">Other</span>, <span class="hljs-symbol">You</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">sameAtom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+sameAtom(<span class="hljs-symbol">X</span>, <span class="hljs-symbol">X</span>) :- atom(<span class="hljs-symbol">X</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">frenemyName</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">sameAtom</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+frenemyName(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">YourName</span>) :-
+	friendOfFriend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	! friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	! sameAtom(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	attr(<span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-symbol">YourName</span>).
 
-?- </span><span style="color:#a6e22e;">frenemyName</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
-</span></pre>
+?- frenemyName(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>, <span class="hljs-symbol">YourName</span>).
+</code></pre>
 <p>This can be optimized to:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+<pre class="hljs"><code class="language-prolog">friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>) :-
+	edge(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;friend&quot;</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">sameAtom_bb</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+sameAtom_bb(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>, <span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>) :-
+	atom(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">friend_bf</span><span style="color:#f8f8f2;">(You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+friend_bf(<span class="hljs-symbol">You</span>) :-
+	edge(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>, <span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;friend&quot;</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">friendOfFriend_bf</span><span style="color:#f8f8f2;">(You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friend_bf</span><span style="color:#f8f8f2;">(Other)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
+friendOfFriend_bf(<span class="hljs-symbol">You</span>) :-
+	friend_bf(<span class="hljs-symbol">Other</span>),
+	friend(<span class="hljs-symbol">Other</span>, <span class="hljs-symbol">You</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">frenemyName_bf</span><span style="color:#f8f8f2;">(YourName) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friendOfFriend_bf</span><span style="color:#f8f8f2;">(You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">friend_bf</span><span style="color:#f8f8f2;">(You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">sameAtom_bb</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+frenemyName_bf(<span class="hljs-symbol">YourName</span>) :-
+	friendOfFriend_bf(<span class="hljs-symbol">You</span>),
+	! friend_bf(<span class="hljs-symbol">You</span>),
+	! sameAtom_bb(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>, <span class="hljs-symbol">You</span>),
+	attr(<span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-symbol">YourName</span>).
 
-?- </span><span style="color:#a6e22e;">frenemyName_bf</span><span style="color:#f8f8f2;">(YourName)</span><span style="color:#f92672;">.
-</span></pre>
+?- frenemyName_bf(<span class="hljs-symbol">YourName</span>).
+</code></pre>
 <p>TODO</p>
-
-</article>
-<div class="comments">
-		Comments are not enabled on this post.
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</article><div class="comments">Comments are not enabled on this post.</div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

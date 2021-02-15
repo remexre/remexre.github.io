@@ -1,64 +1,73 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>SilvIR: Evaluation Semantics, Draft 1 &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;silvir&#x2F;evaluation-semantics-draft-1&#x2F;">SilvIR: Evaluation Semantics, Draft 1</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			Draft</span>
-	</h1>
-	<p>Birthday post!</p>
-<p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/definition-draft-1/">previous one in the series</a>.</em></p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>SilvIR: Evaluation Semantics, Draft 1</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/silvir/evaluation-semantics-draft-1">SilvIR: Evaluation Semantics, Draft 1</a><span class="spacer"></span><span class="meta">Draft</span></h1><p><em>This post assumes you've read the <a href="https://remexre.xyz/silvir/definition-draft-1">previous one in the series</a>.</em></p>
 <p>This post might have a higher &quot;difficulty of read to usefulness of reading&quot; ratio than the others in the series...
 I'll try to precisely specify the evaluation semantics of the IR defined in the previous draft here.
 This post is a Literate Haskell file; if you clone <a href="https://github.com/remexre/remexre.github.io">the repo backing this site</a> and run this post (<code>content/silvir/2021-02-14-evaluation-semantics-draft-1.lhs</code>) under GHCi, you can get a live version of these semantics you can play with interactively.</p>
-<pre style="background-color:#272822;">
-<span style="color:#f92672;">module </span><span style="color:#f8f8f2;">Main </span><span style="color:#f92672;">where</span>
-<span style="color:#f8f8f2;">main </span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;"> putStrLn </span><span style="color:#e6db74;">&quot;Hello, world!&quot;</span></pre>
-</article>
-<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
-		issue-number="12" label="comments" theme="github-dark"
-		crossorigin="anonymous" async>
-	</script>
-	<div class="comments">
-		<!-- This needs to be in a div because the NoScript extension transforms noscript
-		elements into spans, while also getting rid of id and class, so applying CSS is no
-		longer possible (without awful, awful hacks). -->
-		<noscript>
-			<hr>
-			Comments (powered by
-			<a href="https://utteranc.es">utteranc.es</a>) require
-			JavaScript. However, you can comment directly on the
-			<a href="https://github.com/remexre/remexre.github.io/issues/12">GitHub issue</a>
-			that stores the comments.
-		</noscript>
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+<p>We translate the definitions from the previous post into Haskell datatypes.</p>
+<blockquote>
+<p>data Literal
+= L'Int Integer
+| L'String Text
+deriving Show</p>
+<p>data PrimPattern
+= P'Var LocalName
+| P'Lit Literal
+| P'Any
+deriving Show</p>
+</blockquote>
+<pre class="hljs"><code class="">&gt; Pattern ::= recordPat(Map&lt;String, PrimPattern&gt;)
+&gt; |  treeOrTermPat(ProdName, List&lt;PrimPattern&gt;)
+&gt; |  primPat(PrimPattern)
+&gt; 
+&gt; IsChildDecorable ::= childIsDecorable
+&gt; |  childIsntDecorable
+&gt; 
+&gt; Expr ::= local(LocalName)
+&gt; |  global(GlobalName)
+&gt; |  lit(Literal)
+&gt; |  let(LocalName, Expr, Expr)
+&gt; |  letrec(Map&lt;LocalName, Expr&gt;, Expr)
+&gt; |  lam(List&lt;LocalName&gt;, Expr)
+&gt; |  call(Expr, List&lt;Expr&gt;)
+&gt; |  error(Expr)
+&gt; |  thunk(Expr)
+&gt; |  force(Expr)
+&gt; |  case(Expr, List&lt;Pair&lt;Pattern, Expr&gt;&gt;)
+&gt; |  pureForeign(String, List&lt;Expr&gt;)
+&gt; |  impureForeign(String, List&lt;Expr&gt;)
+&gt; |  makeRecord(Map&lt;String, Expr&gt;)
+&gt; |  getRecordMember(String, Expr)
+&gt; |  cons(ProdName, List&lt;Pair&lt;IsChildDecorable, Expr&gt;&gt;)
+&gt; |  getChild(Nat, Expr)
+&gt; |  getAttr(AttrName, Expr)
+&gt; |  setAttr(AttrName, Expr, Expr, Expr)
+&gt; |  combineAttr(AttrName, Expr, Expr, Expr, Expr)
+&gt; |  copyTree(Expr)
+&gt; |  decorate(Expr, Map&lt;AttrName, Expr&gt;)
+&gt; |  undecorate(Expr)
+&gt; 
+&gt; Priority ::= Int
+&gt; 
+&gt; TopLevelItem ::= globalDecl(GlobalName, Expr)
+&gt; |  prodDecl(ProdName, NTName)
+&gt; |  defaultProdBodyDecl(NTName, Priority, LocalName, Expr)
+&gt; |  prodBodyDecl(ProdName, Priority, LocalName, Expr)
+&gt; 
+&gt; Program ::= Set&lt;TopLevelItem&gt;
+</code></pre>
+</article><div class="comments">Comments are not enabled on this post.</div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

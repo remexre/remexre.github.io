@@ -1,100 +1,59 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>G1: A simple graph store, written in Rust &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;g1&#x2F;intro&#x2F;">G1: A simple graph store, written in Rust</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			2019-12-15</span>
-	</h1>
-	<h1 id="motivation">Motivation</h1>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>G1: A simple graph store, written in Rust</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/g1/intro">G1: A simple graph store, written in Rust</a><span class="spacer"></span><span class="meta">2019-12-15</span></h1><h1>Motivation</h1>
 <p>Over the next few weeks/months, I'm planning to implement a graph store in Rust, <a href="https://github.com/remexre/g1">G1</a>. I mainly want to do this because <a href="https://github.com/mozilla/mentat">mentat</a> became unmaintained, and I like the idea of Datalog as a database query language. Implementing a database also seems like a reasonable enough way to learn about one.</p>
-<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into <a href="https://remexre.xyz/stahl/dream/">the Stahl project</a>.)</p>
-<h1 id="data-model">Data Model</h1>
+<p>I also want a &quot;database of everything&quot; at some point -- a single database I put all my information into, and can query against in a single, unified way. (This also ties into <a href="https://remexre.xyz/stahl/dream">the Stahl project</a>.)</p>
+<h1>Data Model</h1>
 <p><strong>Atoms</strong>: Atoms are the nodes of the graph. Each is represented as a UUID.</p>
 <p><strong>Names</strong>: Names uniquely identify an Atom. They have a namespace and a title, both of which are Strings.</p>
 <p><strong>Edges</strong>: Edges are directed, with an Atom at both endpoints. Edges have a String label associated with them. At most one edge between two Atoms with a given label may exist.</p>
 <p><strong>Attributes</strong>: Attributes are attached to Atoms. They have a key and a value, both of which are Strings.</p>
 <p><strong>Blobs</strong>: Blobs are attached to Atoms. They have a kind, which is a String; a type, which is a MIME type; and contents, which are an arbitrarily large binary string. Blobs are referred to by a SHA256 hash.</p>
 <p>Strings are UTF-8 strings, which should be no longer than 256 bytes.</p>
-<h1 id="query-language">Query Language</h1>
+<h1>Query Language</h1>
 <p>The query language is a variant of <a href="https://en.wikipedia.org/wiki/Datalog">Datalog</a>. Datalog can be very efficient to evaluate, and complex queries are (in my opinion) much easier to read than similar SQL queries. It also expresses queries on graphs very naturally.</p>
 <p>An example of a query:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">edge</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;friend&quot;</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+<pre class="hljs"><code class="language-prolog">friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>) :-
+	edge(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;friend&quot;</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Other)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">friend</span><span style="color:#f8f8f2;">(Other</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">.
+friendOfFriend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>) :-
+	friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">Other</span>),
+	friend(<span class="hljs-symbol">Other</span>, <span class="hljs-symbol">You</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">sameAtom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f92672;">, </span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">) </span><span style="color:#f92672;">:- </span><span style="color:#a6e22e;">atom</span><span style="color:#f8f8f2;">(</span><span style="color:#66d9ef;">X</span><span style="color:#f8f8f2;">)</span><span style="color:#f92672;">.
+sameAtom(<span class="hljs-symbol">X</span>, <span class="hljs-symbol">X</span>) :- atom(<span class="hljs-symbol">X</span>).
 
-</span><span style="font-style:italic;color:#fd971f;">frenemyName</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName) </span><span style="color:#f92672;">:-
-	</span><span style="font-style:italic;color:#fd971f;">friendOfFriend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">friend</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	! </span><span style="color:#a6e22e;">sameAtom</span><span style="color:#f8f8f2;">(Me</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> You)</span><span style="color:#f92672;">,
-	</span><span style="font-style:italic;color:#fd971f;">attr</span><span style="color:#f8f8f2;">(You</span><span style="color:#f92672;">, </span><span style="color:#e6db74;">&quot;name&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
+frenemyName(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">YourName</span>) :-
+	friendOfFriend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	! friend(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	! sameAtom(<span class="hljs-symbol">Me</span>, <span class="hljs-symbol">You</span>),
+	attr(<span class="hljs-symbol">You</span>, <span class="hljs-string">&quot;name&quot;</span>, <span class="hljs-symbol">YourName</span>).
 
-?- </span><span style="color:#a6e22e;">frenemyName</span><span style="color:#f8f8f2;">(</span><span style="color:#e6db74;">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> YourName)</span><span style="color:#f92672;">.
-</span></pre>
+?- frenemyName(<span class="hljs-string">&quot;59760f34-eee0-44e2-9358-f48d46c686ee&quot;</span>, <span class="hljs-symbol">YourName</span>).
+</code></pre>
 <p>This query finds the names of the friends of the friends of the user represented by the atom with a UUID of <code>59760f34-eee0-44e2-9358-f48d46c686ee</code>, excluding that user and their direct friends. I'll describe the language more fully in a later post.</p>
-<h1 id="roadmap">Roadmap</h1>
+<h1>Roadmap</h1>
 <p>Currently, I'm tracking work on the implementation in <a href="https://github.com/remexre/g1/issues">GitHub Issues</a>, but note that at the time of writing, these issues are in the context of a laughably unoptimized implementation on top of SQLite.</p>
 <p>In terms of the blog posts, I'm thinking of roughly the order:</p>
 <ul>
-<li><a href="https://remexre.xyz/g1/query-lang/">G1's Query Language</a></li>
-<li><a href="https://remexre.xyz/g1/disk/">How G1 Stores Data On Disk</a></li>
-<li><a href="https://remexre.xyz/g1/magic-sets/">The Magic Sets Transformation</a></li>
+<li><a href="https://remexre.xyz/g1/query-lang">G1's Query Language</a></li>
+<li><a href="https://remexre.xyz/g1/disk">How G1 Stores Data On Disk</a></li>
+<li><a href="https://remexre.xyz/g1/magic-sets">The Magic Sets Transformation</a></li>
 <li>How G1 Stores Data In Memory</li>
 <li>Implementing Transactions in G1</li>
 <li>Ensuring Crash-Safety in G1</li>
 </ul>
-
-</article>
-<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
-		issue-number="2" label="comments" theme="github-dark"
-		crossorigin="anonymous" async>
-	</script>
-	<div class="comments">
-		<!-- This needs to be in a div because the NoScript extension transforms noscript
-		elements into spans, while also getting rid of id and class, so applying CSS is no
-		longer possible (without awful, awful hacks). -->
-		<noscript>
-			<hr>
-			Comments (powered by
-			<a href="https://utteranc.es">utteranc.es</a>) require
-			JavaScript. However, you can comment directly on the
-			<a href="https://github.com/remexre/remexre.github.io/issues/2">GitHub issue</a>
-			that stores the comments.
-		</noscript>
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</article><script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io" issue-number="2" label="comments" theme="github-dark" crossorigin="anonymous" async></script><div class="comments"><noscript><hr>Comments (powered by <a href="https://utteranc.es">utteranc.es</a>) require JavaScript. However, you can comment directly on the <a href="https://github.com/remexre/remexre.github.io/issues/2}">GitHub issue</a> that stores the comments.</noscript></div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

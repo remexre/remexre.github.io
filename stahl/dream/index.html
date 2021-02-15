@@ -1,45 +1,32 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>The StahlDream &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;stahl&#x2F;dream&#x2F;">The StahlDream</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			2020-02-06</span>
-	</h1>
-	<p>The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases. (And that's before I get to any actual applications.)</p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>The StahlDream</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz/stahl/dream">The StahlDream</a><span class="spacer"></span><span class="meta">2020-02-06</span></h1><p>The StahlDream is the shorthand I use for constructing a personal computing system, from the hardware up. This encompasses several programming languages, an operating system, at least two databases. (And that's before I get to any actual applications.)</p>
 <p>I realized I don't actually have all this written down in one place anywhere, so this serves as a snapshot into the current vision.</p>
 <p>This is certainly inspired by <a href="https://en.wikipedia.org/wiki/Oberon_(operating_system)">Oberon</a>, which showed one could create a single-machine system in a few thousand lines of code (12,227 by <a href="http://www.edm2.com/0608/oberon.html">one count</a>). I don't think I can fit a system in so few lines of code, but I also want to have a much more complicated language in use for most of the system.</p>
-<h1 id="stahlos">StahlOS</h1>
+<h1>StahlOS</h1>
 <p>The part I'm currently working on is an operating system on which the rest of the system runs. The system is quite minimal — there's neither MMU-based process isolation, nor pre-emptive multitasking (though the latter point may change).</p>
-<p>The StahlOS model fundamentally relies on all actual machine code executed by the CPU to be trustworthy, and disallows loading binaries other than the kernel itself. Instead, system drivers and essential processes are written in <a href="https://remexre.xyz/stahl/dream/#stahlos-forth">StahlOS Forth</a>, which user programs are compiled to at runtime. Even the Forth programs themselves are only loadable from a read-only filesystem (excepting those that are compiled into the kernel), since Forth is low-level enough that it might as well be machine code, security-wise.</p>
+<p>The StahlOS model fundamentally relies on all actual machine code executed by the CPU to be trustworthy, and disallows loading binaries other than the kernel itself. Instead, system drivers and essential processes are written in <a href="#stahlos-forth">StahlOS Forth</a>, which user programs are compiled to at runtime. Even the Forth programs themselves are only loadable from a read-only filesystem (excepting those that are compiled into the kernel), since Forth is low-level enough that it might as well be machine code, security-wise.</p>
 <p>Each of the compiler processes only produce memory-safe code; assuming this property and the correctness of the above TCB, all code the system can run is memory-safe. This allows wholly ignoring the MMU as a security mechanism. Instead, memory ownership is implicit, and controlled at the page level. Each process (with exceptions such as a low-level debugging REPL) is shared-nothing, with message-passing as a fundamental operation, implemented as the transfer of page ownership. (I haven't ruled out eventually allowing shared pages with <a href="https://en.wikipedia.org/wiki/Software_transactional_memory">STM</a> or similar for concurrent modification, but I'm leery of shared pointers.)</p>
-<p>StahlOS will also provide Erlang-like mechanisms for orchestrating processes (i.e. monitors and links). However, cross-machine message-passing will not be directly supported (and for this reason, message-passing should only really be considered a intra-app mechanism, despite being inter-process). Instead, applications should generally use the <a href="https://remexre.xyz/stahl/dream/#tuple-space">tuple space</a> as a synchronization point: it's not significantly more expensive than message passing for local communications, but allows remote communications.</p>
-<h1 id="languages">Languages</h1>
-<h2 id="stahl">Stahl</h2>
+<p>StahlOS will also provide Erlang-like mechanisms for orchestrating processes (i.e. monitors and links). However, cross-machine message-passing will not be directly supported (and for this reason, message-passing should only really be considered a intra-app mechanism, despite being inter-process). Instead, applications should generally use the <a href="#tuple-space">tuple space</a> as a synchronization point: it's not significantly more expensive than message passing for local communications, but allows remote communications.</p>
+<h1>Languages</h1>
+<h2>Stahl</h2>
 <p>The primary language being designed currently, and the most complicated one by far, is Stahl. Stahl is a dependently typed lambda calculus with a Lisp-like syntax.</p>
 <p>I'm probably basing the core type theory on the type theory presented in <a href="https://homotopytypetheory.org/book/">Homotopy Type Theory</a>, but without the univalence axiom (at least, until I can figure out how to make it computable).</p>
 <p>I also want to make the language the testbed for experimenting with automated theorem proving and making manual theorem proving convenient in a &quot;casual&quot; setting (e.g. from a smartphone while on a bus).</p>
-<h2 id="stahlos-forth">StahlOS Forth</h2>
+<h2>StahlOS Forth</h2>
 <p>StahlOS uses a Forth dialect as the low-level programming language. <a href="https://en.wikipedia.org/wiki/Forth_(programming_language)">Forth</a> is the best language I've found for bare-metal development. A Forth system can be constructed with amazingly little machine code; the resulting language is capable of Common Lisp-tier metaprogramming, while also being able to peek and poke at memory, without needing dynamic memory allocation.</p>
-<h1 id="databases">Databases</h1>
-<h2 id="tuple-space">Tuple Space</h2>
+<h1>Databases</h1>
+<h2>Tuple Space</h2>
 <p><a href="https://en.wikipedia.org/wiki/Tuple_space">Tuple spaces</a> are a sufficiently old, and sufficiently nice-seeming database abstraction that I'm honestly surprised there isn't a high-quality implementation some programming subculture is smugly using (in same way similar subcultures exist for e.g. Smalltalk, Erlang, Common Lisp).</p>
 <p>Essentially, a tuple space is a distributed multiset with five primitive operations:</p>
 <ul>
@@ -51,39 +38,12 @@
 </ul>
 <p>With a sufficiently expressive pattern language, it becomes easy to have applications sharing a database with loose coupling between them.</p>
 <p>I need more design work to determine many of the details of this tuple space (as well as a name for it!) — particularly, I'm unsure of how precisely I want to make the database distributed. Given that I'm using it as a coordination mechanism as well as a (short-term) database, it's not clear what semantics I actually want on netsplit. Furthermore, it seems like there ought to be a large class of optimizations I could apply to make common patterns of use more efficient, though these might require real-world usage data to evaluate.</p>
-<h2 id="g1">G1</h2>
-<p>I'm already writing about G1 <a href="https://remexre.xyz/g1/intro/">elsewhere</a> on this blog, but I'll summarize how it fits into the larger StahlDream.</p>
+<h2>G1</h2>
+<p>I'm already writing about G1 <a href="https://remexre.xyz/g1/intro">elsewhere</a> on this blog, but I'll summarize how it fits into the larger StahlDream.</p>
 <p>The tuple space doesn't seem particularly good as a database for bulk storage — I'm planning to implement it with the expectation that it will contain at most a few megabytes of data at once. I therefore want a flexible database for storing and querying larger data.</p>
 <p>I'm planning to implement the tuple space on top of both StahlOS and some Linux system, likely with the Linux implementation being in Rust. The thinking here is somewhat similar to Erlang's port drivers, which allow interfacing with a native-code process as if it were an Erlang process. G1 can then be easily bridged to StahlOS, by acting on the tuple space directly.</p>
-
-</article>
-<script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io"
-		issue-number="5" label="comments" theme="github-dark"
-		crossorigin="anonymous" async>
-	</script>
-	<div class="comments">
-		<!-- This needs to be in a div because the NoScript extension transforms noscript
-		elements into spans, while also getting rid of id and class, so applying CSS is no
-		longer possible (without awful, awful hacks). -->
-		<noscript>
-			<hr>
-			Comments (powered by
-			<a href="https://utteranc.es">utteranc.es</a>) require
-			JavaScript. However, you can comment directly on the
-			<a href="https://github.com/remexre/remexre.github.io/issues/5">GitHub issue</a>
-			that stores the comments.
-		</noscript>
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+</article><script src="https://utteranc.es/client.js" repo="remexre/remexre.github.io" issue-number="5" label="comments" theme="github-dark" crossorigin="anonymous" async></script><div class="comments"><noscript><hr>Comments (powered by <a href="https://utteranc.es">utteranc.es</a>) require JavaScript. However, you can comment directly on the <a href="https://github.com/remexre/remexre.github.io/issues/5}">GitHub issue</a> that stores the comments.</noscript></div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>

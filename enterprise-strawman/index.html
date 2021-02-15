@@ -1,165 +1,396 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title>enterprise: Strawman Proposal &mdash; remexre.xyz</title>
-		<link rel="stylesheet" type="text/css" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;css/main.css">
-		<style>article { width: calc(100% - 1.0rem); }</style>
-	</head>
-	<body>
-		<header>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;">Home</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;tags">Tags</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;contact">Contact</a>
-			<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;projects">Projects</a>
-		</header>
-		<div class="spacer"></div>
-		
-<article>
-	<h1 class="title">
-		<a class="subtle" href="https:&#x2F;&#x2F;remexre.xyz&#x2F;enterprise-strawman&#x2F;">enterprise: Strawman Proposal</a>
-		<span class="spacer"></span>
-		<span class="meta">
-			Draft</span>
-	</h1>
-	<p>A friend (<a href="https://iptq.io/">Michael Zhang</a>) and I may be working on a web framework for Rust, <a href="https://crates.io/crates/enterprise"><code>enterprise</code></a>. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.</p>
+  <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><title>enterprise: Strawman Proposal</title><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/main.css"><link rel="stylesheet" type="text/css"
+       href="https://remexre.xyz/css/monokai-sublime.min.css"><style>article { width: calc(100% - 1.0rem); }</style></head>
+  <body>
+    <header>
+      <a class="subtle" href="https://remexre.xyz/">Home</a>
+      <a class="subtle" href="https://remexre.xyz/contact">Contact</a>
+      <a class="subtle" href="https://remexre.xyz/projects">Projects</a>
+    </header>
+    <div class="spacer"></div>
+    <article><h1 class="title"><a class="subtle" href="https://remexre.xyz//enterprise-strawman">enterprise: Strawman Proposal</a><span class="spacer"></span><span class="meta">Draft</span></h1><p>A friend (<a href="https://iptq.io/">Michael Zhang</a>) and I may be working on a web framework for Rust, <a href="https://crates.io/crates/enterprise"><code>enterprise</code></a>. This post serves as a strawman proposal for this framework, and as documentation for what the framework may eventually be.</p>
 <p>Also note that despite the authorial &quot;we,&quot; this is almost entirely my vision (hence the S-expressions, use of Prolog, etc.), so expect this to be a strawman that's lit aflame rather than fortified.</p>
-<h1 id="introduction">Introduction</h1>
+<h1>Introduction</h1>
 <p>The model we use for webapps is described by a dependency diagram:</p>
-<pre style="background-color:#272822;">
-<span style="font-style:italic;color:#66d9ef;">digraph </span><span style="color:#e6db74;">&quot;dependency graph&quot; </span><span style="color:#f8f8f2;">{
-	</span><span style="font-style:italic;color:#66d9ef;">graph</span><span style="color:#f8f8f2;">[</span><span style="color:#66d9ef;">bgcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#1e1f29&quot;</span><span style="color:#f8f8f2;">];
-
-	BLogic[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">label</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;Business</span><span style="color:#ae81ff;">\n</span><span style="color:#e6db74;">Logic&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#business-logic&quot;</span><span style="color:#f8f8f2;">];
-	Actions[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#actions&quot;</span><span style="color:#f8f8f2;">];
-	Schema[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#schema&quot;</span><span style="color:#f8f8f2;">];
-	Views[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#views&quot;</span><span style="color:#f8f8f2;">];
-	ViewAdapters[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">label</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;View</span><span style="color:#ae81ff;">\n</span><span style="color:#e6db74;">Adapters&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#view-adapters&quot;</span><span style="color:#f8f8f2;">];
-	Authentication[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#authentication&quot;</span><span style="color:#f8f8f2;">];
-	Authorization[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#authorization&quot;</span><span style="color:#f8f8f2;">];
-
-	Actions -&gt; Schema [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Authorization -&gt; Actions [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Authorization -&gt; Authentication [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Authorization -&gt; Schema [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	BLogic -&gt; Actions [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	BLogic -&gt; Authentication [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	BLogic -&gt; Schema [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Views -&gt; Authentication [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Views -&gt; Schema [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-	Views -&gt; ViewAdapters [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4346&quot;</span><span style="color:#f8f8f2;">];
-}
-</span></pre>
+<pre><code class="language-dot"><p class="graphviz"><!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: dependency graph Pages: 1 -->
+<svg width="537pt" height="223pt"
+ viewBox="0.00 0.00 537.36 223.48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 219.48)">
+<title>dependency graph</title>
+<polygon fill="#1e1f29" stroke="transparent" points="-4,4 -4,-219.48 533.36,-219.48 533.36,4 -4,4"/>
+<!-- BLogic -->
+<g id="node1" class="node">
+<title>BLogic</title>
+<g id="a_node1"><a xlink:href="#business-logic" xlink:title="Business\nLogic">
+<ellipse fill="none" stroke="#8be9fe" cx="216.49" cy="-188.61" rx="55.72" ry="26.74"/>
+<text text-anchor="middle" x="216.49" y="-192.41" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Business</text>
+<text text-anchor="middle" x="216.49" y="-177.41" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Logic</text>
+</a>
+</g>
+</g>
+<!-- Actions -->
+<g id="node2" class="node">
+<title>Actions</title>
+<g id="a_node2"><a xlink:href="#actions" xlink:title="Actions">
+<ellipse fill="none" stroke="#8be9fe" cx="107.49" cy="-98.87" rx="43.59" ry="18"/>
+<text text-anchor="middle" x="107.49" y="-95.17" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Actions</text>
+</a>
+</g>
+</g>
+<!-- BLogic&#45;&gt;Actions -->
+<g id="edge5" class="edge">
+<title>BLogic&#45;&gt;Actions</title>
+<path fill="none" stroke="#fc4346" d="M188.71,-165.24C172.16,-151.93 151.26,-135.1 134.8,-121.85"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="136.63,-118.83 126.65,-115.29 132.24,-124.28 136.63,-118.83"/>
+</g>
+<!-- Schema -->
+<g id="node3" class="node">
+<title>Schema</title>
+<g id="a_node3"><a xlink:href="#schema" xlink:title="Schema">
+<ellipse fill="none" stroke="#8be9fe" cx="143.49" cy="-18" rx="46.59" ry="18"/>
+<text text-anchor="middle" x="143.49" y="-14.3" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Schema</text>
+</a>
+</g>
+</g>
+<!-- BLogic&#45;&gt;Schema -->
+<g id="edge7" class="edge">
+<title>BLogic&#45;&gt;Schema</title>
+<path fill="none" stroke="#fc4346" d="M205.41,-162C191.8,-130.58 168.85,-77.56 155.04,-45.66"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="158.08,-43.89 150.9,-36.1 151.66,-46.67 158.08,-43.89"/>
+</g>
+<!-- Authentication -->
+<g id="node6" class="node">
+<title>Authentication</title>
+<g id="a_node6"><a xlink:href="#authentication" xlink:title="Authentication">
+<ellipse fill="none" stroke="#f0fb8c" cx="284.49" cy="-98.87" rx="76.89" ry="18"/>
+<text text-anchor="middle" x="284.49" y="-95.17" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">Authentication</text>
+</a>
+</g>
+</g>
+<!-- BLogic&#45;&gt;Authentication -->
+<g id="edge6" class="edge">
+<title>BLogic&#45;&gt;Authentication</title>
+<path fill="none" stroke="#fc4346" d="M235.44,-163.17C244.76,-151.14 255.98,-136.67 265.33,-124.6"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="268.1,-126.73 271.46,-116.69 262.57,-122.45 268.1,-126.73"/>
+</g>
+<!-- Actions&#45;&gt;Schema -->
+<g id="edge1" class="edge">
+<title>Actions&#45;&gt;Schema</title>
+<path fill="none" stroke="#fc4346" d="M115.13,-81.14C119.87,-70.76 126.06,-57.18 131.46,-45.37"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="134.78,-46.52 135.75,-35.97 128.41,-43.62 134.78,-46.52"/>
+</g>
+<!-- Views -->
+<g id="node4" class="node">
+<title>Views</title>
+<g id="a_node4"><a xlink:href="#views" xlink:title="Views">
+<ellipse fill="none" stroke="#fc4cb4" cx="389.49" cy="-188.61" rx="36.29" ry="18"/>
+<text text-anchor="middle" x="389.49" y="-184.91" font-family="Times-Roman" font-size="14.00" fill="#fc4cb4">Views</text>
+</a>
+</g>
+</g>
+<!-- Views&#45;&gt;Schema -->
+<g id="edge9" class="edge">
+<title>Views&#45;&gt;Schema</title>
+<path fill="none" stroke="#fc4346" d="M392.03,-170.58C394.73,-145.54 395.65,-98.88 370.49,-72 347.36,-47.28 257.5,-32.23 198.01,-24.77"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="198.36,-21.29 188.01,-23.55 197.52,-28.24 198.36,-21.29"/>
+</g>
+<!-- ViewAdapters -->
+<g id="node5" class="node">
+<title>ViewAdapters</title>
+<g id="a_node5"><a xlink:href="#view-adapters" xlink:title="View\nAdapters">
+<ellipse fill="none" stroke="#f0fb8c" cx="473.49" cy="-98.87" rx="55.72" ry="26.74"/>
+<text text-anchor="middle" x="473.49" y="-102.67" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">View</text>
+<text text-anchor="middle" x="473.49" y="-87.67" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">Adapters</text>
+</a>
+</g>
+</g>
+<!-- Views&#45;&gt;ViewAdapters -->
+<g id="edge10" class="edge">
+<title>Views&#45;&gt;ViewAdapters</title>
+<path fill="none" stroke="#fc4346" d="M404.51,-171.92C415.34,-160.61 430.32,-144.96 443.56,-131.14"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="446.31,-133.33 450.69,-123.69 441.25,-128.49 446.31,-133.33"/>
+</g>
+<!-- Views&#45;&gt;Authentication -->
+<g id="edge8" class="edge">
+<title>Views&#45;&gt;Authentication</title>
+<path fill="none" stroke="#fc4346" d="M371.68,-172.73C355.3,-159.04 330.76,-138.53 311.88,-122.76"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="314.1,-120.05 304.18,-116.32 309.61,-125.42 314.1,-120.05"/>
+</g>
+<!-- Authorization -->
+<g id="node7" class="node">
+<title>Authorization</title>
+<g id="a_node7"><a xlink:href="#authorization" xlink:title="Authorization">
+<ellipse fill="none" stroke="#fc4cb4" cx="71.49" cy="-188.61" rx="71.49" ry="18"/>
+<text text-anchor="middle" x="71.49" y="-184.91" font-family="Times-Roman" font-size="14.00" fill="#fc4cb4">Authorization</text>
+</a>
+</g>
+</g>
+<!-- Authorization&#45;&gt;Actions -->
+<g id="edge2" class="edge">
+<title>Authorization&#45;&gt;Actions</title>
+<path fill="none" stroke="#fc4346" d="M78.43,-170.69C83.61,-158.07 90.79,-140.58 96.71,-126.15"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="100.02,-127.32 100.57,-116.74 93.54,-124.66 100.02,-127.32"/>
+</g>
+<!-- Authorization&#45;&gt;Schema -->
+<g id="edge4" class="edge">
+<title>Authorization&#45;&gt;Schema</title>
+<path fill="none" stroke="#fc4346" d="M62.75,-170.7C51.84,-147.02 36.65,-103.39 54.49,-72 64.24,-54.85 81.97,-42.67 99.06,-34.34"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="100.76,-37.42 108.43,-30.11 97.88,-31.04 100.76,-37.42"/>
+</g>
+<!-- Authorization&#45;&gt;Authentication -->
+<g id="edge3" class="edge">
+<title>Authorization&#45;&gt;Authentication</title>
+<path fill="none" stroke="#fc4346" d="M107.15,-172.92C143.28,-158.04 199.34,-134.95 238.73,-118.72"/>
+<polygon fill="#fc4346" stroke="#fc4346" points="240.46,-121.8 248.37,-114.75 237.79,-115.32 240.46,-121.8"/>
+</g>
+</g>
+</svg>
+</p>
+</code></pre>
 <p>As well as a dataflow diagram for server-side rendering:</p>
-<pre style="background-color:#272822;">
-<span style="font-style:italic;color:#66d9ef;">digraph </span><span style="color:#e6db74;">&quot;dataflow graph&quot; </span><span style="color:#f8f8f2;">{
-	</span><span style="font-style:italic;color:#66d9ef;">graph</span><span style="color:#f8f8f2;">[</span><span style="color:#66d9ef;">bgcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#1e1f29&quot;</span><span style="color:#f8f8f2;">];
-
-	HTTP[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot; </span><span style="color:#66d9ef;">shape</span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;">plaintext];
-	Databases[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot; </span><span style="color:#66d9ef;">label</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;Databases and</span><span style="color:#ae81ff;">\n</span><span style="color:#e6db74;">External Services&quot; </span><span style="color:#66d9ef;">shape</span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;">plaintext];
-
-	Authorization[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#authorization&quot;</span><span style="color:#f8f8f2;">];
-	Actions[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#actions&quot;</span><span style="color:#f8f8f2;">];
-	BLogic[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#8be9fe&quot; </span><span style="color:#66d9ef;">label</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;Business</span><span style="color:#ae81ff;">\n</span><span style="color:#e6db74;">Logic&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#business-logic&quot;</span><span style="color:#f8f8f2;">];
-	DAL[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#data-access-layer&quot;</span><span style="color:#f8f8f2;">];
-	Router[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#router&quot;</span><span style="color:#f8f8f2;">];
-	ViewAdapters[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">label</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;View</span><span style="color:#ae81ff;">\n</span><span style="color:#e6db74;">Adapters&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#view-adapters&quot;</span><span style="color:#f8f8f2;">];
-	Views[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#fc4cb4&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#views&quot;</span><span style="color:#f8f8f2;">];
-	Authentication[</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">fontcolor</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#f0fb8c&quot; </span><span style="color:#66d9ef;">URL</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#authentication&quot;</span><span style="color:#f8f8f2;">];
-
-	{</span><span style="color:#66d9ef;">rank</span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;">same; Authentication, ViewAdapters};
-	{</span><span style="color:#66d9ef;">rank</span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;">same; BLogic, Views};
-	{</span><span style="color:#66d9ef;">rank</span><span style="color:#f92672;">=</span><span style="color:#f8f8f2;">same; Actions, Authorization};
-
-	HTTP -&gt; Router [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot;</span><span style="color:#f8f8f2;">];
-	Router -&gt; HTTP [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot;</span><span style="color:#f8f8f2;">];
-	Databases -&gt; DAL [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot;</span><span style="color:#f8f8f2;">];
-	DAL -&gt; Databases [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#cfcfcf&quot;</span><span style="color:#f8f8f2;">];
-
-	</span><span style="color:#75715e;">// When the router gets a request, it passes it to the business logic,
-	// along with the results of authentication.
-</span><span style="color:#f8f8f2;">	Router -&gt; BLogic [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	Router -&gt; Authentication [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	Authentication -&gt; BLogic [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-
-	</span><span style="color:#75715e;">// The business logic performs actions (and gets data from them).
-</span><span style="color:#f8f8f2;">	BLogic -&gt; Actions [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	Actions -&gt; BLogic [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-
-	</span><span style="color:#75715e;">// Actions are allowed or disallowed based on the results of
-	// authorization, which is also informed by authentication and the
-	// database (via the DAL).
-</span><span style="color:#f8f8f2;">	Authentication -&gt; Authorization [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	Authorization -&gt; Actions [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	DAL -&gt; Authorization [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-
-	</span><span style="color:#75715e;">// Actions communicate with the database via the DAL.
-</span><span style="color:#f8f8f2;">	Actions -&gt; DAL [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	DAL -&gt; Actions [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-
-	</span><span style="color:#75715e;">// The business logic then communicates the response to views, which
-	// are rendered with view adapters, which then send a rendered response
-	// to the router.
-</span><span style="color:#f8f8f2;">	BLogic -&gt; Views [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	Views -&gt; ViewAdapters [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-	ViewAdapters -&gt; Router [</span><span style="color:#66d9ef;">color</span><span style="color:#f92672;">=</span><span style="color:#e6db74;">&quot;#50fb7c&quot;</span><span style="color:#f8f8f2;">];
-}
-</span></pre>
+<pre><code class="language-dot"><p class="graphviz"><!-- Generated by graphviz version 2.43.0 (0)
+ -->
+<!-- Title: dataflow graph Pages: 1 -->
+<svg width="371pt" height="513pt"
+ viewBox="0.00 0.00 371.36 513.48" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 509.48)">
+<title>dataflow graph</title>
+<polygon fill="#1e1f29" stroke="transparent" points="-4,4 -4,-509.48 367.36,-509.48 367.36,4 -4,4"/>
+<!-- HTTP -->
+<g id="node1" class="node">
+<title>HTTP</title>
+<text text-anchor="middle" x="216.49" y="-483.78" font-family="Times-Roman" font-size="14.00" fill="#cfcfcf">HTTP</text>
+</g>
+<!-- Router -->
+<g id="node7" class="node">
+<title>Router</title>
+<g id="a_node7"><a xlink:href="#router" xlink:title="Router">
+<ellipse fill="none" stroke="#f0fb8c" cx="216.49" cy="-415.48" rx="40.09" ry="18"/>
+<text text-anchor="middle" x="216.49" y="-411.78" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">Router</text>
+</a>
+</g>
+</g>
+<!-- HTTP&#45;&gt;Router -->
+<g id="edge1" class="edge">
+<title>HTTP&#45;&gt;Router</title>
+<path fill="none" stroke="#cfcfcf" d="M210.58,-469.18C209.78,-461.46 209.56,-452.19 209.9,-443.59"/>
+<polygon fill="#cfcfcf" stroke="#cfcfcf" points="213.39,-443.8 210.6,-433.58 206.41,-443.32 213.39,-443.8"/>
+</g>
+<!-- Databases -->
+<g id="node2" class="node">
+<title>Databases</title>
+<text text-anchor="middle" x="204.49" y="-22.8" font-family="Times-Roman" font-size="14.00" fill="#cfcfcf">Databases and</text>
+<text text-anchor="middle" x="204.49" y="-7.8" font-family="Times-Roman" font-size="14.00" fill="#cfcfcf">External Services</text>
+</g>
+<!-- DAL -->
+<g id="node6" class="node">
+<title>DAL</title>
+<g id="a_node6"><a xlink:href="#data-access-layer" xlink:title="DAL">
+<ellipse fill="none" stroke="#f0fb8c" cx="204.49" cy="-92" rx="28.7" ry="18"/>
+<text text-anchor="middle" x="204.49" y="-88.3" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">DAL</text>
+</a>
+</g>
+</g>
+<!-- Databases&#45;&gt;DAL -->
+<g id="edge3" class="edge">
+<title>Databases&#45;&gt;DAL</title>
+<path fill="none" stroke="#cfcfcf" d="M210.47,-38.2C211.24,-46.08 211.43,-55.47 211.06,-64.12"/>
+<polygon fill="#cfcfcf" stroke="#cfcfcf" points="207.57,-63.95 210.33,-74.17 214.55,-64.45 207.57,-63.95"/>
+</g>
+<!-- Authorization -->
+<g id="node3" class="node">
+<title>Authorization</title>
+<g id="a_node3"><a xlink:href="#authorization" xlink:title="Authorization">
+<ellipse fill="none" stroke="#fc4cb4" cx="71.49" cy="-164" rx="71.49" ry="18"/>
+<text text-anchor="middle" x="71.49" y="-160.3" font-family="Times-Roman" font-size="14.00" fill="#fc4cb4">Authorization</text>
+</a>
+</g>
+</g>
+<!-- Actions -->
+<g id="node4" class="node">
+<title>Actions</title>
+<g id="a_node4"><a xlink:href="#actions" xlink:title="Actions">
+<ellipse fill="none" stroke="#8be9fe" cx="204.49" cy="-164" rx="43.59" ry="18"/>
+<text text-anchor="middle" x="204.49" y="-160.3" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Actions</text>
+</a>
+</g>
+</g>
+<!-- Authorization&#45;&gt;Actions -->
+<g id="edge11" class="edge">
+<title>Authorization&#45;&gt;Actions</title>
+<path fill="none" stroke="#50fb7c" d="M143.19,-164C145.68,-164 148.17,-164 150.66,-164"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="150.91,-167.5 160.91,-164 150.91,-160.5 150.91,-167.5"/>
+</g>
+<!-- BLogic -->
+<g id="node5" class="node">
+<title>BLogic</title>
+<g id="a_node5"><a xlink:href="#business-logic" xlink:title="Business\nLogic">
+<ellipse fill="none" stroke="#8be9fe" cx="204.49" cy="-244.87" rx="55.72" ry="26.74"/>
+<text text-anchor="middle" x="204.49" y="-248.67" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Business</text>
+<text text-anchor="middle" x="204.49" y="-233.67" font-family="Times-Roman" font-size="14.00" fill="#8be9fe">Logic</text>
+</a>
+</g>
+</g>
+<!-- Actions&#45;&gt;BLogic -->
+<g id="edge9" class="edge">
+<title>Actions&#45;&gt;BLogic</title>
+<path fill="none" stroke="#50fb7c" d="M210.15,-181.93C210.99,-189.58 211.34,-198.91 211.22,-208"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="207.72,-207.93 210.87,-218.05 214.72,-208.17 207.72,-207.93"/>
+</g>
+<!-- Actions&#45;&gt;DAL -->
+<g id="edge13" class="edge">
+<title>Actions&#45;&gt;DAL</title>
+<path fill="none" stroke="#50fb7c" d="M198.62,-146.05C197.79,-138.23 197.55,-128.75 197.9,-119.98"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="201.41,-120.01 198.63,-109.79 194.43,-119.51 201.41,-120.01"/>
+</g>
+<!-- BLogic&#45;&gt;Actions -->
+<g id="edge8" class="edge">
+<title>BLogic&#45;&gt;Actions</title>
+<path fill="none" stroke="#50fb7c" d="M198.11,-218.05C197.64,-209.71 197.62,-200.44 198.05,-192.02"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="201.55,-192.17 198.84,-181.93 194.57,-191.63 201.55,-192.17"/>
+</g>
+<!-- Views -->
+<g id="node9" class="node">
+<title>Views</title>
+<g id="a_node9"><a xlink:href="#views" xlink:title="Views">
+<ellipse fill="none" stroke="#fc4cb4" cx="314.49" cy="-244.87" rx="36.29" ry="18"/>
+<text text-anchor="middle" x="314.49" y="-241.17" font-family="Times-Roman" font-size="14.00" fill="#fc4cb4">Views</text>
+</a>
+</g>
+</g>
+<!-- BLogic&#45;&gt;Views -->
+<g id="edge15" class="edge">
+<title>BLogic&#45;&gt;Views</title>
+<path fill="none" stroke="#50fb7c" d="M260.78,-244.87C263.11,-244.87 265.44,-244.87 267.77,-244.87"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="267.99,-248.37 277.99,-244.87 267.99,-241.37 267.99,-248.37"/>
+</g>
+<!-- DAL&#45;&gt;Databases -->
+<g id="edge4" class="edge">
+<title>DAL&#45;&gt;Databases</title>
+<path fill="none" stroke="#cfcfcf" d="M198.65,-74.17C197.83,-66.48 197.56,-57.14 197.86,-48.41"/>
+<polygon fill="#cfcfcf" stroke="#cfcfcf" points="201.37,-48.4 198.51,-38.2 194.39,-47.96 201.37,-48.4"/>
+</g>
+<!-- DAL&#45;&gt;Authorization -->
+<g id="edge12" class="edge">
+<title>DAL&#45;&gt;Authorization</title>
+<path fill="none" stroke="#50fb7c" d="M183.32,-104.14C163.7,-114.47 134.02,-130.09 110.16,-142.65"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="108.23,-139.71 101.01,-147.46 111.49,-145.9 108.23,-139.71"/>
+</g>
+<!-- DAL&#45;&gt;Actions -->
+<g id="edge14" class="edge">
+<title>DAL&#45;&gt;Actions</title>
+<path fill="none" stroke="#50fb7c" d="M210.36,-109.79C211.19,-117.59 211.44,-127.07 211.09,-135.85"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="207.58,-135.83 210.37,-146.05 214.57,-136.33 207.58,-135.83"/>
+</g>
+<!-- Router&#45;&gt;HTTP -->
+<g id="edge2" class="edge">
+<title>Router&#45;&gt;HTTP</title>
+<path fill="none" stroke="#cfcfcf" d="M222.39,-433.58C223.19,-441.27 223.43,-450.53 223.1,-459.15"/>
+<polygon fill="#cfcfcf" stroke="#cfcfcf" points="219.6,-458.96 222.41,-469.18 226.59,-459.44 219.6,-458.96"/>
+</g>
+<!-- Router&#45;&gt;BLogic -->
+<g id="edge5" class="edge">
+<title>Router&#45;&gt;BLogic</title>
+<path fill="none" stroke="#50fb7c" d="M215.28,-397.39C213.36,-370.41 209.58,-317.38 207.05,-281.78"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="210.54,-281.51 206.34,-271.78 203.56,-282.01 210.54,-281.51"/>
+</g>
+<!-- Authentication -->
+<g id="node10" class="node">
+<title>Authentication</title>
+<g id="a_node10"><a xlink:href="#authentication" xlink:title="Authentication">
+<ellipse fill="none" stroke="#f0fb8c" cx="111.49" cy="-334.61" rx="76.89" ry="18"/>
+<text text-anchor="middle" x="111.49" y="-330.91" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">Authentication</text>
+</a>
+</g>
+</g>
+<!-- Router&#45;&gt;Authentication -->
+<g id="edge6" class="edge">
+<title>Router&#45;&gt;Authentication</title>
+<path fill="none" stroke="#50fb7c" d="M196.74,-399.65C181.22,-387.99 159.35,-371.55 141.64,-358.25"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="143.43,-355.22 133.33,-352.01 139.22,-360.82 143.43,-355.22"/>
+</g>
+<!-- ViewAdapters -->
+<g id="node8" class="node">
+<title>ViewAdapters</title>
+<g id="a_node8"><a xlink:href="#view-adapters" xlink:title="View\nAdapters">
+<ellipse fill="none" stroke="#f0fb8c" cx="307.49" cy="-334.61" rx="55.72" ry="26.74"/>
+<text text-anchor="middle" x="307.49" y="-338.41" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">View</text>
+<text text-anchor="middle" x="307.49" y="-323.41" font-family="Times-Roman" font-size="14.00" fill="#f0fb8c">Adapters</text>
+</a>
+</g>
+</g>
+<!-- ViewAdapters&#45;&gt;Router -->
+<g id="edge17" class="edge">
+<title>ViewAdapters&#45;&gt;Router</title>
+<path fill="none" stroke="#50fb7c" d="M281.04,-358.54C268.63,-369.29 253.92,-382.04 241.68,-392.65"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="239.3,-390.08 234.04,-399.27 243.89,-395.37 239.3,-390.08"/>
+</g>
+<!-- Views&#45;&gt;ViewAdapters -->
+<g id="edge16" class="edge">
+<title>Views&#45;&gt;ViewAdapters</title>
+<path fill="none" stroke="#50fb7c" d="M313.12,-263.03C312.35,-272.77 311.34,-285.34 310.4,-297.17"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="306.9,-297.04 309.59,-307.29 313.88,-297.6 306.9,-297.04"/>
+</g>
+<!-- Authentication&#45;&gt;Authorization -->
+<g id="edge10" class="edge">
+<title>Authentication&#45;&gt;Authorization</title>
+<path fill="none" stroke="#50fb7c" d="M107.44,-316.52C100.49,-287.23 86.26,-227.23 77.94,-192.16"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="81.27,-191.06 75.56,-182.14 74.46,-192.68 81.27,-191.06"/>
+</g>
+<!-- Authentication&#45;&gt;BLogic -->
+<g id="edge7" class="edge">
+<title>Authentication&#45;&gt;BLogic</title>
+<path fill="none" stroke="#50fb7c" d="M129.42,-316.69C141.65,-305.16 158.18,-289.57 172.61,-275.95"/>
+<polygon fill="#50fb7c" stroke="#50fb7c" points="175.07,-278.45 179.94,-269.04 170.26,-273.35 175.07,-278.45"/>
+</g>
+</g>
+</svg>
+</p>
+</code></pre>
 <p>In the above diagrams, <span style="color: #f0fb8c">yellow</span> components are provided by <code>enterprise</code>, <span style="color: #8be9fe">blue</span> components are written by the application author in Rust, and <span style="color: #fc4cb4">pink</span> components are written by the application author in a DSL.</p>
 <p>The Schema and DAL components are taken from <a href="https://www.tedinski.com/2018/09/11/stateless-mvc.html">Ted Kaminski's &quot;Stateless MVC,&quot;</a> which describes them in detail.</p>
-<h1 id="schema">Schema</h1>
+<h1>Schema</h1>
 <p>The Schema component contains type declarations for each of the &quot;domain objects.&quot; If a type ends up being sent over the network, it should probably be declared here. <a href="https://iptq.io/magic-forms-with-proc-macros/">Derive macros</a> are provided to allow the Router to validate these values.</p>
 <p>The only exports of the Schema should be types -- if you find yourself exporting functions, they probably belong in the business logic.</p>
-<h1 id="actions">Actions</h1>
+<h1>Actions</h1>
 <p>Actions are the atomic primitive functions that are used to define the business logic. Macros are available to define CRUD actions for types in the Schema (relative to some data store supported by the DAL).</p>
-<h1 id="business-logic">Business Logic</h1>
+<h1>Business Logic</h1>
 <p>The Business Logic module transforms requests into data that can be handled directly by a View.</p>
-<h1 id="views">Views</h1>
+<h1>Views</h1>
 <p>Views are written in a React-like DSL.</p>
-<h1 id="view-adapters">View Adapters</h1>
+<h1>View Adapters</h1>
 <p>View Adapters are backends for Views -- one exists to translate to HTML, another to translate to JSON, and another that performs tree-diffing to efficiently update HTML.</p>
-<h1 id="auth">Auth</h1>
+<h1>Auth</h1>
 <p>The generic phrase &quot;auth&quot; confusingly can refer to either &quot;authentication&quot; or &quot;authorization.&quot; These are conflated both by the term and in many people's heads, so we avoid it, and make a strong split between the two.</p>
-<h2 id="authentication">Authentication</h2>
+<h2>Authentication</h2>
 <p>Authentication is the answer to the question &quot;what user does this request correspond to?&quot; As with other parts of a web application, <code>enterprise</code> simplifies authentication by abstracting it heavily.</p>
 <p>For our app, we want to allow a plethora of authentication methods, while also allowing a user to have multiple authentication methods. (This is useful since a user might forget whether they registered with their Google account or email, and it allows an anonymous user to add an email and stop being anonymous!)</p>
 <p>In <code>app.sexp</code>:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">(authentication
-  (multiple true)
-  (providers
-    anonymous</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">cookie
-    (email</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">password :reset email)
-    oauth</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">facebook
-    oauth</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">google
-    oauth</span><span style="color:#f92672;">-</span><span style="color:#f8f8f2;">twitter))
-</span></pre>
+<pre class="hljs"><code class="language-lisp">(<span class="hljs-name">authentication</span>
+  (<span class="hljs-name">multiple</span> true)
+  (<span class="hljs-name">providers</span>
+    anonymous-cookie
+    (<span class="hljs-name">email-password</span> <span class="hljs-symbol">:reset</span> email)
+    oauth-facebook
+    oauth-google
+    oauth-twitter))
+</code></pre>
 <p>In <code>views/login.sexp</code>:</p>
-<pre style="background-color:#272822;">
-<span style="color:#f8f8f2;">TODO
-</span></pre><h2 id="authorization">Authorization</h2>
+<pre class="hljs"><code class="language-lisp">TODO
+</code></pre>
+<h2>Authorization</h2>
 <p>Authorization is the answer to the question &quot;can this user perform this action?&quot; This is almost entirely application-specific, so we leave the logic here to the app author.</p>
 <p>But wait, we're using logic on a question with a boolean answer? Well, I know the best way to do this! <code>enterprise</code> apps specify authorization information with a Prolog dialect.</p>
 <p>For our app, TODO.</p>
 <p>In <code>src/authorization.pro</code>:</p>
-<pre style="background-color:#272822;">
-<span style="color:#a6e22e;">authorized</span><span style="color:#f8f8f2;">(UserID</span><span style="color:#f92672;">,</span><span style="color:#f8f8f2;"> Action)</span><span style="color:#f92672;">. </span><span style="color:#75715e;"># TODO
-</span></pre>
-</article>
-<div class="comments">
-		Comments are not enabled on this post.
-	</div>
-
-		<div class="spacer"></div>
-		
-<script src="https:&#x2F;&#x2F;remexre.xyz&#x2F;ext/anchor.min.js"></script>
-<script>
-	const anchors = new AnchorJS();
-	anchors.options.class = "icon subtle";
-	anchors.options.placement = "left";
-	anchors.add("article h1:not(.title), article h2");
-</script>
-
-	</body>
+<pre class="hljs"><code class="language-prolog">authorized(<span class="hljs-symbol">UserID</span>, <span class="hljs-symbol">Action</span>). # <span class="hljs-symbol">TODO</span>
+</code></pre>
+</article><div class="comments">Comments are not enabled on this post.</div>
+    <div class="spacer"></div>
+    <script src="https://remexre.xyz/ext/anchor.min.js"></script><script>const anchors = new AnchorJS();anchors.options.class = "icon subtle";anchors.options.placement = "left";anchors.add("article h1:not(.title), article h2");</script>
+  </body>
 </html>
