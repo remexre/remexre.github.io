@@ -1,0 +1,3 @@
+[submodule "fib"]
+	path = fib
+	url = https://git.sr.ht/~remexre/fib
