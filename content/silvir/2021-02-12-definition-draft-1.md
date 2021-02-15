@@ -4,7 +4,7 @@ tags = ["silvir"]
 comment_issue = 11
 +++
 
-*This post assumes you've read the [previous one in the series](@/silvir/2021-02-10-introduction.md).*
+*This post assumes you've read the [previous one in the series](@/silvir/introduction).*
 
 As covered in the previous post, Silver has a bunch of features that require some trickiness in SilvIR to make implementable.
 I'll dump the full grammar, then go over it in pieces.
@@ -216,7 +216,7 @@ Priorities allow for default productions and the various automatic attributes to
 
 ## Remarks
 
-For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see [here]({{ rel(silvir/arithmetic-example.html) }}).
+For a worked-through example of a simple grammar translated to (a very slightly older version of) this IR and run, see [here](@/silvir/arithmetic-example.html).
 
 Annotations aren't covered here; I think they can be transformed to children?
 In the next post, we'll look at the execution semantics of this IR in more depth.

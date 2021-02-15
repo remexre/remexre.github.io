@@ -65,4 +65,4 @@ Notable extensions include:
 - [Reference attributes](http://melt.cs.umn.edu/silver/concepts/decorated-vs-undecorated/#reference-decorated)
 
 All of these are used within the implementation of Silver, so must be supported before Silver can be bootstrapped on SilvIR.
-In the [next post](@/silvir/2021-02-12-definition-draft-1.md), we'll look at (the current draft of) the actual definition of the IR.
+In the [next post](@/silvir/definition-draft-1), we'll look at (the current draft of) the actual definition of the IR.

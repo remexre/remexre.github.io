@@ -5,7 +5,7 @@ tags = ["g1", "rust"]
 comment_issue = 1234
 +++
 
-*This post assumes you've read the [previous one in the series](@/g1/2020-02-01-query-lang.md).*
+*This post assumes you've read the [previous one in the series](@/g1/query-lang).*
 
 Currently, I'm not caring all that much about maximum efficiency, instead preferring a simple approach. This approach is therefore based off of what a "real" database might do, but much simpler.
 

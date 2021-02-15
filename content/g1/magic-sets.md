@@ -5,7 +5,7 @@ tags = ["g1", "rust"]
 # comment_issue = 4
 +++
 
-*This post assumes you've read the [previous one in the series](@/g1/2020-02-01-query-lang.md).*
+*This post assumes you've read the [previous one in the series](@/g1/query-lang).*
 
 One advantage of Datalog over some other query languages is the ease by which it can be computed incrementally and bottom-up. This allows for a fairly simple async IO implementation of queries with limits; in pseudo-Rust:
 
